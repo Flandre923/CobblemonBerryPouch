@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+# This script provides an interactive way of setting up project properties. The
+# script is designed to be invoked initially but may also be used later in the
+# developement process. Beware that certain files within the project directory
+# will most likely be modified hence it is adviced to backup the project
+# beforehand (e.g. with git).
+#
+# Further Notes:
+# - This script requires bash 4 or higher.
+# - The script must be invoked from the project root.
+# - The script wil not work properly if the project is in a malformed state. Refer
+#   to the README to see how project properties affect the structure of the project.
+
+TOOLS_PATH="${TOOLS_PATH:-tools}"
+sub_projects="common fabric forge neoforge"
+
+# keys of fields in gradle.properties
+mod_name_key="mod_name="
+mod_id_key="mod_id="
+mod_author_key="mod_author="
+mod_version_key="mod_version="
+mod_description_key="mod_description="
+mod_group_key="maven_group="
+
+# get current properties
+old_mod_name=$(grep -m 1 -o "^$mod_name_key.*" gradle.properties);               old_mod_name=${old_mod_name:${#mod_name_key}}
+old_mod_id=$(grep -m 1 -o "^$mod_id_key.*" gradle.properties);                   old_mod_id=${old_mod_id:${#mod_id_key}}
+old_mod_author=$(grep -m 1 -o "^$mod_author_key.*" gradle.properties);           old_mod_author=${old_mod_author:${#mod_author_key}}
+old_mod_version=$(grep -m 1 -o "^$mod_version_key.*" gradle.properties);         old_mod_version=${old_mod_version:${#mod_version_key}}
+old_mod_description=$(grep -m 1 -o "^$mod_description_key.*" gradle.properties); old_mod_description=${old_mod_description:${#mod_description_key}}
+old_mod_group=$(grep -m 1 -o "^$mod_group_key.*" gradle.properties);             old_mod_group=${old_mod_group:${#mod_group_key}}
+
+# prompt for new properties
+echo "Project Properties:"
+read -e -i "$old_mod_name"        -p "  Mod Name    : " new_mod_name
+read -e -i "$old_mod_id"          -p "  Mod Id      : " new_mod_id
+read -e -i "$old_mod_author"      -p "  Author      : " new_mod_author
+read -e -i "$old_mod_version"     -p "  Version     : " new_mod_version
+read -e -i "$old_mod_description" -p "  Description : " new_mod_description
+read -e -i "$old_mod_group"       -p "  Maven Group : " new_mod_group
+read -e -i "$sub_projects"        -p "  Sub Projects: " sub_projects
+
+# sanity check
+echo "This script might modify several files and the struture of the project"
+echo "itself. Make sure there is a backup of the current project state."
+read -p "Type 'confirm' to continue: " answer
+
+if [ "$answer" != "confirm" ]; then
+    echo "Aborted!"
+    exit 0
+fi
+
+# update the project
+echo "- updating fields in 'gradle.properties'"
+sed -i -e s/"$mod_name_key.*"/"$mod_name_key$new_mod_name"/ \
+    -e s/"$mod_id_key.*"/"$mod_id_key$new_mod_id"/ \
+    -e s/"$mod_author_key.*"/"$mod_author_key$new_mod_author"/ \
+    -e s/"$mod_version_key.*"/"$mod_version_key$new_mod_version"/ \
+    -e s/"$mod_description_key.*"/"$mod_description_key$new_mod_description"/ \
+    -e s/"$mod_group_key.*"/"$mod_group_key$new_mod_group"/ gradle.properties
+
+old_package_path="${old_mod_group//./\/}/$old_mod_id"
+new_package_path="${new_mod_group//./\/}/$new_mod_id"
+
+for project in ${sub_projects}; do
+    old_package_path_project="$project/src/main/java/$old_package_path"
+    new_package_path_project="$project/src/main/java/$new_package_path"
+    old_source_files_project="$(find $old_package_path_project -name *.java)"
+
+    echo "- updating MOD_NAME and MOD_ID fields in 'ModCommon' of project '$project'"
+    sed -i -e s/"MOD_NAME\s*=\s*\".*\"\s*;"/"MOD_NAME = \"$new_mod_name\";"/ \
+        -e s/"MOD_ID\s*=\s*\".*\"\s*;"/"MOD_ID = \"$new_mod_id\";"/ "$old_package_path_project/ModCommon.java" 2> /dev/null
+
+    echo "- updating/adding license headers in source files of project '$project'"
+    "$TOOLS_PATH"/licensify LGPL3 "$new_mod_name" "$new_mod_author" $old_source_files_project
+    
+    mv "$project/src/main/resources/$old_mod_id.mixins.json" "$project/src/main/resources/$new_mod_id.mixins.json" 2> /dev/null
+    mv "$project/src/main/resources/$old_mod_id.mixins.refmap.json" "$project/src/main/resources/$new_mod_id.mixins.refmap.json" 2> /dev/null
+
+    if [ "$new_mod_group" != "$old_mod_group" -o "$new_mod_id" != "$old_mod_id" ]; then
+        echo "- reorganizing package structure of project '$project'"
+        sed -i s/"$old_mod_group.$old_mod_id"/"$new_mod_group.$new_mod_id"/g $old_source_files_project
+
+        if [ "$project" == "common" ]; then
+            mkdir -p "$project/src/main/tmp~/$(dirname $new_package_path)" && mv "$old_package_path_project" "$project/src/main/tmp~/$new_package_path" && rm -r $project/src/main/java && mv $project/src/main/tmp~ $project/src/main/java
+        else
+            mkdir -p "$project/src/main/tmp~/$new_package_path" && mv "$old_package_path_project" "$project/src/main/tmp~/$new_package_path" && rm -r $project/src/main/java && mv $project/src/main/tmp~ $project/src/main/java
+        fi
+    fi
+done
+
+# final feedback
+echo "---------------------------------------------------------------"
+echo "Operation complete! The project is now set up. Please review"
+echo "any changes before committing to them (e.g. with 'git status')."

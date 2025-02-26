@@ -1,0 +1,16 @@
+{
+  "projects": [
+    {
+      "slug": "cobblemon",
+      "type": "requiredDependency"
+    },
+    {
+      "slug": "radical-cobblemon-trainers-api",
+      "type": "requiredDependency"
+    },
+    {
+      "slug": "forge-config-api-port-fabric",
+      "type": "requiredDependency"
+    }
+  ]
+}

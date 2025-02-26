@@ -1,0 +1,329 @@
+#!/bin/bash
+#
+# usage: publish [<mod_version>] [<minecraft_version>]
+#
+# If either version is not provided it is inferred from the projects configuration
+# files. Otherwise said configuration files are updated with the given version.
+# The release type is inferred from the suffix of the mod version (i.e. a suffix
+# of '-alpha' or '-beta' will result in an alpha or beta release, otherwise a full
+# release is published).
+set -e
+
+# config
+config_files=( "gradle.properties" )
+mod_loaders=( "neoforge" "fabric" ) # [common, forge, neoforge, fabric]
+
+minecraft_version_key="minecraft_version"
+mod_version_key="mod_version"
+mod_id_key="mod_id"
+
+function assert() {
+    if [ -z "$2" ]; then
+        echo "error: $1" >&2
+        exit 1
+    fi
+
+    if [ -z "$1" ]; then
+        echo "error: $2" >&2
+        exit 1
+    fi
+}
+
+function assert_curl() {
+    response=$(curl "$@")
+
+    if [ -n "$(echo $response | grep '"error":')" ]; then
+        assert "$response"
+    fi
+    
+    if [ -n "$(echo $response | grep '"errorCode":')" ]; then
+        assert "$response"
+    fi
+
+    echo "$response"
+}
+
+function get_version() {
+    assert "$1", "get_version: missing version key"
+    version_key="$1="
+    
+    for file in $(find -name gradle.properties); do
+        result=$(grep "^$version_key" "$file")
+
+        if [ -n "$result" ]; then
+            result="${result:${#version_key}}"
+            break
+        fi
+    done
+
+    assert "$result" "get_version: $1 not found"
+    echo "$result"
+}
+
+function set_version() {
+    assert "$1", "set_version: missing version key"
+    assert "$2", "set_version: missing version value"
+    version_key="$1"
+
+    for file in "${config_files[@]}"; do
+        sed -i "s/^$version_key=[^ ]*/$version_key=$2/g" "$file"
+    done
+}
+
+function get_mod_id() {
+    _mod_id_key="$mod_id_key="
+
+    for file in $(find -name gradle.properties); do
+        result=$(grep "^$_mod_id_key" "$file")
+
+        if [ -n "$result" ]; then
+            result="${result:${#_mod_id_key}}"
+            break
+        fi
+    done
+
+    assert "$result" "get_mod_id: $mod_id_key not found"
+    echo "$result"
+}
+
+function as_json() {
+    echo "$1" | sed -z 's/\n/\\n/g; s/..$//' | sed 's/"/\\"/g'
+}
+
+# parse command line args
+while [ $# -gt 0 ]; do
+    case "$1" in
+        *)
+            if [ -z "$target_mod_version" ]; then
+                target_mod_version="$1"
+            elif [ -z "$target_minecraft_version" ]; then
+                target_minecraft_version="$1"
+            else
+                assert "invalid argument '$1'"
+            fi
+
+            shift ;;
+    esac
+done
+
+# check repo state
+if [ "$(git status --porcelain)" ]; then
+    assert "there are uncommited or untracked changes"
+fi
+
+# pull latest state
+git pull
+
+# reset uncommited changes upon completion (can only happen in case of an error)
+trap "git reset --hard" EXIT
+
+# retrieve or set versions for publishing
+if [ -n "$target_mod_version" ]; then
+    set_version "$mod_version_key" "$target_mod_version"
+    set_version "version" "\"$target_mod_version\"" # e.g. mods.toml
+    mod_version="$target_mod_version"
+else
+    mod_version=$(get_version "$mod_version_key")
+fi
+
+if [ -n "$target_minecraft_version" ]; then
+    set_version "$minecraft_version_key" "$target_minecraft_version"
+    minecraft_version="$target_minecraft_version"
+else
+    minecraft_version=$(get_version "$minecraft_version_key")
+fi
+
+# check if tag is unique
+version_tag="v$mod_version-$minecraft_version"
+
+if [ -n "$(git tag -l $version_tag)" ]; then
+    echo "The tag '$version_tag' already exists."
+    read -p "Type 'confirm' to skip tag creation: " answer
+
+    if [ "$answer" != "confirm" ]; then
+        assert "aborted"
+    fi
+
+    skip_tag=1
+    unset answer
+fi
+
+# update version in changelog (optional)
+changelog update -t $mod_version
+
+# infer release type
+case $mod_version in
+    *-alpha)
+        release_type="alpha"
+        release_title="alpha" ;;
+    *-beta)
+        release_type="beta"
+        release_title="beta" ;;
+    *)
+        release_type="release"
+        release_title="full" ;;
+esac
+
+# sanity check
+echo "- preparing to publish $release_title-release from the branch '$(git branch --show-current)'"
+echo "- minecraft version: '$minecraft_version'"
+echo "- mod version: '$mod_version'"
+echo "- mod loaders: $(echo ${mod_loaders[@]} | sed 's/ /, /g')"
+read -p "Press <enter> to review the changelog..."
+echo "========================"
+changelog cat -e 0
+echo "========================"
+read -p "Type 'confirm' to continue: " answer
+
+if [ "$answer" != "confirm" ]; then
+    assert "aborted"
+fi
+
+# create clean build
+./gradlew clean --console=plain
+./gradlew build --console=plain
+
+# commit changes if version was updated
+if [ "$(git status --porcelain)" ]; then
+    echo "Versions have been updated"
+    read -p "Type 'confirm' to continue: " answer
+
+    if [ "$answer" != "confirm" ]; then
+        assert "aborted"
+    fi
+
+    git add .
+    git commit -m "Updated version"
+fi
+
+# retrieve mod_id
+mod_id=$(get_mod_id)
+
+#####################################################
+#                    Curseforge                     #
+#####################################################
+
+curseforge_url=https://minecraft.curseforge.com
+
+# curseforge will give an error response if a certain version id has an invalid
+# type (output $minecraft_version_ids to inspect what type the id had)
+minecraft_version_type_backlist=( "1", "615" )
+
+# escape common regex special characters
+minecraft_version_esc="${minecraft_version//./\\.}"
+minecraft_version_esc="${minecraft_version_esc//+/\\+}"
+
+# retrieve version ids for minecraft versions from curseforge
+minecraft_version_ids=$(assert_curl -sX GET $curseforge_url/api/game/minecraft/versions \
+  -H 'Accept: application/json' \
+  -H "X-Api-Token: $CURSE_API_KEY")
+
+# filter version ids for the given minecraft version
+minecraft_version_ids=$(echo "$minecraft_version_ids" | grep -o "\{[^\}]*\"$minecraft_version_esc\"[^\}]*\}")
+
+# output version ids for the given minecraft version
+# echo "$minecraft_version_ids"
+
+# filter blacklisted version types
+for blacklisted_type in "${minecraft_version_type_backlist[@]}"; do
+    minecraft_version_ids=$(echo "$minecraft_version_ids" | grep -v "\"gameVersionTypeID\":$blacklisted_type")
+done
+
+# remove unused information
+minecraft_version_ids=$(echo $minecraft_version_ids \
+  | grep -o "\{[^\}]*\"$minecraft_version_esc\"[^\}]*\}" \
+  | grep -o "\"id\":[0-9]*" \
+  | tr '\n' ',' | sed s/\"id\":/''/g)
+
+assert "$minecraft_version_ids" "minecraft version '$minecraft_version' not found"
+minecraft_version_ids="${minecraft_version_ids:0:-1}" # trailing comma ','
+
+# upload archives to curseforge
+for mod_loader in "${mod_loaders[@]}"; do
+    unset answer
+
+    while [ "$answer" != "y" -a "$answer" != "n" ]; do
+        read -p "Do you wish to upload '$mod_loader' to Curseforge (y/n)?: " answer
+    done
+
+    if [ "$answer" = "y" ]; then
+        # curseforge api has trouble with empty relations...
+        relations="$(cat publish/curseforge.$mod_loader.dependencies.json | tr -d "[:space:]")"
+
+        if [ "$relations" = "{}" ]; then
+            unset relations
+        else
+            relations="\"relations\": $relations,"
+        fi
+
+        metadata="{
+            $relations
+            \"changelog\": \"$(as_json "$(changelog cat)")\",
+            \"changelogType\": \"markdown\",
+            \"gameVersions\": [$minecraft_version_ids],
+            \"releaseType\": \"$release_type\",
+            \"modLoaderType\": \"${mod_loader^}\"
+        }"
+
+        mod_archive="./$mod_loader/build/libs/$mod_id-$mod_loader-$minecraft_version-$mod_version.jar"
+        response=$(assert_curl -s -F metadata="$metadata" -F file="@$mod_archive" \
+            -H 'Accept: application/json' \
+            -H "X-Api-Token: $CURSE_API_KEY" \
+            "$curseforge_url/api/projects/$CURSE_PROJECT_ID/upload-file")
+
+        echo "Published '$mod_archive' to Curseforge: $response"
+    fi
+done
+
+#####################################################
+#                     Modrinth                      #
+#####################################################
+
+modrinth_url=https://api.modrinth.com/v2
+
+# upload archives to modrinth
+for mod_loader in "${mod_loaders[@]}"; do
+    unset answer
+
+    while [ "$answer" != "y" -a "$answer" != "n" ]; do
+        read -p "Do you wish to upload '$mod_loader' to Modrinth (y/n)?: " answer
+    done
+
+    if [ "$answer" = "y" ]; then
+        metadata="{
+            \"name\": \"Version $mod_version\",
+            \"version_number\": \"$mod_version\",
+            \"changelog\": \"$(as_json "$(changelog cat -e 0)")\",
+            \"dependencies\": $(cat publish/modrinth.$mod_loader.dependencies.json | tr -d "[:space:]"),
+            \"game_versions\": [\"$minecraft_version\"],
+            \"version_type\": \"$release_type\",
+            \"loaders\": [\"$mod_loader\"],
+            \"featured\": false,
+            \"project_id\": \"$MODRINTH_PROJECT_ID\",
+            \"file_parts\": [\"$mod_id-$mod_loader-$minecraft_version-$mod_version.jar\"]
+        }"
+
+        mod_archive="./$mod_loader/build/libs/$mod_id-$mod_loader-$minecraft_version-$mod_version.jar"
+        response=$(assert_curl -s -F data="$metadata" -F file="@$mod_archive" \
+            -H 'Accept: application/json' \
+            -H "User-Agent: $mod_id/$mod_version" \
+            -H "Authorization: $MODRINTH_API_KEY" \
+            "$modrinth_url/version")
+
+        echo "Published '$mod_archive' to Modrinth: $response"
+    fi
+done
+
+#####################################################
+#                      Git Tag                      #
+#####################################################
+
+if [ -z "$skip_tag" ]; then
+    # create tag for new version
+    git tag -a $version_tag -m "Update $mod_version"
+
+    # push changes
+    git push --follow-tags
+fi
+
+set +e

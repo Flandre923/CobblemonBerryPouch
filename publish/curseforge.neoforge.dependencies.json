@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "slug": "cobblemon",
+      "type": "requiredDependency"
+    },
+    {
+      "slug": "radical-cobblemon-trainers-api",
+      "type": "requiredDependency"
+    }
+  ]
+}

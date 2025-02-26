@@ -1,0 +1,17 @@
+#!/bin/bash
+
+## Dependencies
+# - imbl installed: https://gitlab.com/srcgo/imbl
+# - msg installed: https://gitlab.com/srcmc/msg
+# - rctid installed and genttex in PATH: https://gitlab.com/srcmc/rct/rcttex
+
+## Config
+export RCT_HOME="~/Documents/projects/srcmc/rct/rctmod"
+export SKINS_PATH="~/.hdcode/msg/out/generated"
+export MSG_GEN_LIMIT=1000
+export MSG_SEED=123
+
+# Commands
+msg_genskins
+genttex
+echo "textures generated"

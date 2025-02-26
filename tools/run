@@ -1,0 +1,6 @@
+#!/bin/bash
+
+PLATFORM=${1:-neoforge}
+SIDE=${2:-client}
+
+./gradlew $PLATFORM:run${SIDE^} --console=plain "${@:3}"

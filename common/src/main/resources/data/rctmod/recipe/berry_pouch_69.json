@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "rctmod:berry_pouch_30"
+    },
+    "X": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "X#X",
+    "XXX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "rctmod:berry_pouch_69"
+  }
+}

@@ -1,0 +1,35 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "2.0.0"
+}
+
+loom {
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+}
+
+architectury {
+    common rootProject.enabled_platforms.split(',')
+}
+
+dependencies {
+    // We depend on Fabric Loader here to use the Fabric @Environment annotations,
+    // which get remapped to the correct annotations on each platform.
+    // Do NOT use other classes from Fabric Loader.
+    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+
+    // Architectury API. This is optional, and you can comment it out if you don't need it.
+    modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
+
+    modApi "com.cobblemon:mod:$rootProject.cobblemon_version"
+
+    implementation "org.jetbrains.kotlin:kotlin-reflect:2.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlin_stdlib_version"
+
+    // modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-common:${fcap_version}"
+    compileOnly "fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:$rootProject.fcap_version"//source: https://github.com/Fuzss/forgeconfigapiport-fabric
+
+    // Radical Cobblemon Trainers API
+//    modImplementation "curse.maven:radical-cobblemon-trainers-api-1152792:${rctapi_common_version}"
+    // modImplementation files("../tmp/libs/rctapi-common-1.21.1-${rctapi_min_version}.jar") // testing
+}

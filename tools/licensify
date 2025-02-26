@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+# This script prepends predefined licence headers into source files. Ignores files
+# that begin with a java like block comment "/*" (as used by the license headers).
+#
+# usage: licensify <license> <title> <author> <files>...
+
+MIT_HEADER=''
+LGPL3_HEADER="/*
+ * This file is part of <title>.
+ * Copyright (c) $(date +%Y), <author>, All rights reserved.
+ *
+ * <title> is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <title> is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along
+ * with <title>. If not, see <http://www.gnu.org/licenses/lgpl>.
+ */"
+
+case "$1" in
+    MIT)
+        header="$MIT_HEADER" ;;
+    LGPL3)
+        header="$LGPL3_HEADER" ;;
+    *)
+        echo "error: invalid license '$1'"
+        exit 1 ;;
+esac
+
+if [ -z "$2" ]; then
+    echo "error: missing title"
+    exit 1
+fi
+
+if [ -z "$3" ]; then
+    echo "error: missing author"
+    exit 1
+fi
+
+title="$2"
+author="$3"
+NL='
+'
+
+shift
+shift
+shift
+
+while [ "$#" -gt 0 ]; do
+    if [ -f "$1" ]; then
+        line="$(head "$1" -n 1)"
+
+        if [ "$line" == '/*' ]; then
+            while IFS="" read -r p || [ -n "$p" ]; do
+                if [ -z "$first" ]; then
+                    first=1
+                else
+                    if [ -n "$accept" ]; then
+                        content="${content:+$content$NL}$p"
+                    else
+                        if [ "${p:0:3}" == " */" ]; then
+                            accept=1
+                        elif [ "${p:0:2}" != " *" ]; then
+                            content="$(cat "$1")"
+                            break;
+                        fi
+                    fi
+                fi
+            done < "$1"
+        else
+            content="$(cat "$1")"
+        fi
+
+        if [ -n "$header" ]; then
+            echo "$(echo "$header" | sed -e s/"<title>"/"$title"/g -e s/"<author>"/"$author"/g)" > "$1"
+            echo "$content" >> "$1"
+        else
+            echo "$content" > "$1"
+        fi
+
+        unset first
+        unset accept
+        unset content
+    else
+        echo "warning: invalid file '$1' -> skipped"
+    fi
+
+    shift
+done

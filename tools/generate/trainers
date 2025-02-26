@@ -1,0 +1,13 @@
+#!/bin/bash
+
+## Dependencies
+# - rcttrp installed - https://gitlab.com/srcmc/rct/rcttrp
+# - trainer dump text file
+
+## Config
+RCT_HOME="~/Documents/projects/srcmc/rct/rctmod"
+TRAINER_DUMP_FILE="~/Documents/projects/srcmc/rct/rcttrp/dumps/radical_red_3_02_trainers.txt"
+
+## Commands
+rcttrp "$TRAINER_DUMP_FILE" "$RCT_HOME/common/src/main/resources/data/rctmod/trainers"
+echo "trainers generated"

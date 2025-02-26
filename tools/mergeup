@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# Cascade merges up to the latest 'version branch'. The order of the branches is
+# predefined by the branches array. Does nothing if the current branch is not
+# contained within the array. Aborts in case of merge conflicts.
+set -e
+
+for arg in "$@"; do
+    case $arg in
+        -p|--push)
+            PUSH=1 ;;
+        *)
+            echo "unknown argument '$arg'"
+            exit 1 ;;
+    esac
+done
+
+branches=( "master" "1.18.2" "1.19" "1.19.1" "1.19.2" "1.19.3" "1.19.4" "1.20" "1.20.1" "1.20.2" "1.20.3" "1.20.4" )
+
+if [ -n "$(git status --porcelain)" ]; then
+    echo "mergup: there are unstaged/uncommited changes"
+    exit 1
+fi
+
+git_branch="$(git branch --show-current)"
+target_branches=()
+
+for branch in "${branches[@]}"; do
+    if [ -n "$current_branch" ]; then
+        target_branches+=( "$branch" )
+    else
+        if [ "$git_branch" = "$branch" ]; then
+            current_branch="$branch"
+        fi
+    fi
+done
+
+if [ -z "$current_branch" ]; then
+    echo "mergup: current branch is not a 'version branch'"
+    exit 1
+fi
+
+for branch in "${target_branches[@]}"; do
+    if git checkout "$branch" --no-guess; then
+        git merge "$current_branch"
+        current_branch="$branch"
+
+        if [ -n "$PUSH" ]; then
+            git push
+        fi
+    fi
+done
+
+set +e

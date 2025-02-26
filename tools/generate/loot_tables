@@ -1,0 +1,18 @@
+#!/bin/bash
+
+## Dependencies
+# - rctltp installed: https://gitlab.com/srcmc/rct/rctltp
+
+## Config
+RCT_HOME="~/Documents/projects/srcmc/rct/rctmod"
+SHEET_URL_GENERIC="https://docs.google.com/spreadsheets/d/10JjXPP1VvcgO1uat_QU2rwqvuxp5wveNq9U3YzwxzjY/export?gid=1565936674&format=csv"
+SHEET_URL_GROUPS="https://docs.google.com/spreadsheets/d/10JjXPP1VvcgO1uat_QU2rwqvuxp5wveNq9U3YzwxzjY/export?gid=278596353&format=csv"
+SHEET_URL_SINGLE="https://docs.google.com/spreadsheets/d/10JjXPP1VvcgO1uat_QU2rwqvuxp5wveNq9U3YzwxzjY/export?gid=660850593&format=csv"
+
+## Commands
+rctltp -out "$RCT_HOME/common/src/main/resources/data/rctmod/loot_table" \
+    -sheet_url_generic "$SHEET_URL_GENERIC" \
+    -sheet_url_groups "$SHEET_URL_GROUPS" \
+    -sheet_url_single "$SHEET_URL_SINGLE"
+
+echo "loot tables generated"
