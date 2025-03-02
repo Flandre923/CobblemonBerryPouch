@@ -1,0 +1,21 @@
+{
+  "type": "berrypouch:berry_pouch_upgrade",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "berrypouch:berry_pouch_30"
+    },
+    "X": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "X#X",
+    "XXX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "berrypouch:berry_pouch_69"
+  }
+}

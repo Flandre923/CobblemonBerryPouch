@@ -74,3 +74,4 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
 }
+
