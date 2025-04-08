@@ -4,6 +4,7 @@ import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer24;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer30;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer69;
 import dev.architectury.registry.menu.MenuRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -134,6 +135,17 @@ public class BerryPouch extends Item {
             }, buf -> buf.writeBoolean(interactionHand == InteractionHand.MAIN_HAND));
         }
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(interactionHand), level.isClientSide());
+    }
+
+    public static boolean shouldUseFullModel(ItemStack stack) {
+        if (stack.isEmpty()) return false;
+        SimpleContainer inventory = getInventory(stack, Minecraft.getInstance().level);
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            if (!inventory.getItem(i).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

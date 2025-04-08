@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'Radical Cobblemon Trainers'
+rootProject.name = 'Berry Pouch'
 
 include 'common'
 include 'fabric'

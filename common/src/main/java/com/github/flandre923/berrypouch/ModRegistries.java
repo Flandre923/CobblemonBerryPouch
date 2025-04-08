@@ -54,12 +54,12 @@ public final class ModRegistries {
 
     public class Items {
         public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ModCommon.MOD_ID, Registries.ITEM);
-        //public static final RegistrySupplier<BerryPouch> BERRY_POUCH_24;
+        //public static final RegistrySupplier<BerryPouch.java> BERRY_POUCH_24;
         public static final RegistrySupplier<BerryPouch> BERRY_POUCH_30;
         public static final RegistrySupplier<BerryPouch> BERRY_POUCH_69;
 
         static {
-            //BERRY_POUCH_24 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_24"), ()->new BerryPouch(24));
+            //BERRY_POUCH_24 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_24"), ()->new BerryPouch.java(24));
             BERRY_POUCH_30 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_30"), ()->new BerryPouch(30));
             BERRY_POUCH_69 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_69"), ()->new BerryPouch(69));
         }

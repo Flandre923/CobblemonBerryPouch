@@ -17,6 +17,7 @@
  */
 package com.github.flandre923.berrypouch.neoforge.client;
 
+import com.github.flandre923.berrypouch.ModClientCommon;
 import com.github.flandre923.berrypouch.ModCommon;
 
 import com.github.flandre923.berrypouch.ModRegistries;
@@ -26,6 +27,7 @@ import com.github.flandre923.berrypouch.menu.gui.BerryPouchGui69;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 @EventBusSubscriber(modid = ModCommon.MOD_ID,bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -36,6 +38,12 @@ public class NeoForgeClient {
         event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), BerryPouchGui24::new);
         event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), BerryPouchGui30::new);
         event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(), BerryPouchGui69::new);
+    }
+
+
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        ModClientCommon.init();
     }
 
 }
