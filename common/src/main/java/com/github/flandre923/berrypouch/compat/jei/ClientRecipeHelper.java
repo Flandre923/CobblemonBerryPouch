@@ -1,4 +1,4 @@
-package com.github.flandre923.berrypouch.neoforge.compat.jei;
+package com.github.flandre923.berrypouch.compat.jei;
 
 import com.github.flandre923.berrypouch.mixins.ShapedRecipeMixin;
 import net.minecraft.client.Minecraft;

@@ -1,4 +1,4 @@
-package com.github.flandre923.berrypouch.fabric.compat.jei;
+package com.github.flandre923.berrypouch.compat.jei;
 
 import com.github.flandre923.berrypouch.ModCommon;
 import com.github.flandre923.berrypouch.recipe.BerryPouchUpgradeRecipe;

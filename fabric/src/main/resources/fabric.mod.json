@@ -21,7 +21,7 @@
       "${maven_group}.${mod_id}.fabric.server.FabricServer"
     ],
     "jei_mod_plugin": [
-      "${maven_group}.${mod_id}.fabric.compat.jei.BPPlugin"
+      "${maven_group}.${mod_id}.compat.jei.BPPlugin"
     ]
   },
   "mixins": [
