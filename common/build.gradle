@@ -28,6 +28,8 @@ dependencies {
 
     // modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-common:${fcap_version}"
     compileOnly "fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:$rootProject.fcap_version"//source: https://github.com/Fuzss/forgeconfigapiport-fabric
+    modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
+    modRuntimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
 
     // Radical Cobblemon Trainers API
 //    modImplementation "curse.maven:radical-cobblemon-trainers-api-1152792:${rctapi_common_version}"
