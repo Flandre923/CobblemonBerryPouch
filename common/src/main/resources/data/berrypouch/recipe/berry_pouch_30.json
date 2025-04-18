@@ -9,7 +9,7 @@
       "item": "minecraft:white_wool"
     },
     "B": {
-      "tag": "cobblemon:berries"
+      "tag": "berrypouch:natural_berries"
     }
   },
   "pattern": [
