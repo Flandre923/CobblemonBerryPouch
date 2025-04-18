@@ -7,11 +7,14 @@
     },
     "X": {
       "item": "minecraft:white_wool"
+    },
+    "B": {
+      "tag": "cobblemon:berries"
     }
   },
   "pattern": [
     " # ",
-    "X X",
+    "XBX",
     " X "
   ],
   "result": {
