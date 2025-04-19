@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "order": 500,
+  "slots": ["pouch"],
+  "icon": "berrypouch:gui/group/utility"
+}

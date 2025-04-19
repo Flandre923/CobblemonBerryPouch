@@ -4,6 +4,9 @@ import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer24;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer30;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer69;
 import dev.architectury.registry.menu.MenuRegistry;
+import io.wispforest.accessories.api.Accessory;
+import io.wispforest.accessories.api.AccessoryItem;
+import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,7 +24,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class BerryPouch extends Item {
+import java.util.logging.Logger;
+
+public class BerryPouch extends AccessoryItem {
 
     public static final int SMALL_SIZE = 24;
     public static final int MEDIUM_SIZE = 30;
@@ -35,6 +40,7 @@ public class BerryPouch extends Item {
     public BerryPouch(int size) {
         super(new Properties().stacksTo(1));
         this.size = size;
+
     }
 
     public final int getSize()
@@ -161,4 +167,15 @@ public class BerryPouch extends Item {
                 throw new IllegalArgumentException("Invalid berry pouch size: " + size + ". Supported sizes are: 24, 30, 69");
         }
     }
+
+    @Override
+    public boolean canEquip(ItemStack stack, SlotReference reference) {
+        return reference.slotName().equals("pouch");
+    }
+
+    @Override
+    public void onEquip(ItemStack stack, SlotReference ref) {
+    }
+
+
 }

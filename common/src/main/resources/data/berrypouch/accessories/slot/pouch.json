@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "amount": 1,
+  "operation": "set",
+  "order": 800,
+  "icon": "berrypouch:gui/slot/pouch",
+  "drop_rule": "keep"
+}
