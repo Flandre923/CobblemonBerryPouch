@@ -65,6 +65,12 @@ subprojects {
             name = "ModMaven"
             url = "https://modmaven.dev"
         }
+        maven { url 'https://maven.wispforest.io/releases' }
+        maven { url 'https://maven.su5ed.dev/releases' }
+        maven { url 'https://maven.fabricmc.net' }
+        maven { url 'https://maven.shedaniel.me/' }
+        maven { url 'https://maven.wispforest.io' }
+
     }
 
     dependencies {

@@ -54,6 +54,11 @@ dependencies {
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
+    modImplementation "io.wispforest:owo-lib-neoforge:0.12.15.1-beta.3+1.21"
+    modImplementation("io.wispforest:accessories-neoforge:${project.accessories_version}")
+    forgeRuntimeLibrary("io.wispforest:endec:0.1.8")
+    forgeRuntimeLibrary("io.wispforest.endec:gson:0.1.5")
+    forgeRuntimeLibrary("io.wispforest.endec:netty:0.1.4")
     // Radical Cobblemon Trainers API
 //    modImplementation "curse.maven:radical-cobblemon-trainers-api-1152792:${rctapi_neoforge_version}"
     // modImplementation files("../tmp/libs/rctapi-neoforge-1.21.1-${rctapi_min_version}.jar") // testing

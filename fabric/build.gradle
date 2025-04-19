@@ -45,6 +45,8 @@ dependencies {
     modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
     modRuntimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
 
+    modImplementation("io.wispforest:accessories-fabric:${project.accessories_version}")
+    modImplementation "io.wispforest:owo-lib:${project.owo_version}"
     // Radical Cobblemon Trainers API
 //    modImplementation "curse.maven:radical-cobblemon-trainers-api-1152792:${rctapi_fabric_version}"
     // modImplementation files("../tmp/libs/rctapi-fabric-1.21.1-${rctapi_min_version}.jar") // testing
