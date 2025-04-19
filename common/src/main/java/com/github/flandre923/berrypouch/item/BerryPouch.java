@@ -4,8 +4,11 @@ import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer24;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer30;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer69;
 import dev.architectury.registry.menu.MenuRegistry;
+import io.wispforest.accessories.api.AccessoriesAPI;
+import io.wispforest.accessories.api.AccessoriesCapability;
 import io.wispforest.accessories.api.Accessory;
 import io.wispforest.accessories.api.AccessoryItem;
+import io.wispforest.accessories.api.slot.SlotEntryReference;
 import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -24,6 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 public class BerryPouch extends AccessoryItem {
@@ -69,6 +73,20 @@ public class BerryPouch extends AccessoryItem {
         // a. 首先检查掉落物是否是 berry
         if (!isBerry(itemStack)) {
             return false; // 不是莓果，不进行特殊处理，返回 false 让原版逻辑处理
+        }
+
+        // 优先检查装备的 pouch 槽
+        AccessoriesCapability accessoriesCap = AccessoriesCapability.get(player);
+        if (accessoriesCap != null) {
+            List<SlotEntryReference> equippedPouches = accessoriesCap.getEquipped(
+                    stack -> stack.getItem() instanceof BerryPouch
+            );
+            for (SlotEntryReference entryRef : equippedPouches) {
+                if (tryInsertItemStack(entryRef.stack(), itemStack.copy(), player.level())) {
+                    itemEntity.discard();
+                    return true;
+                }
+            }
         }
 
         // b. 遍历玩家背包寻找 BerryPouch
