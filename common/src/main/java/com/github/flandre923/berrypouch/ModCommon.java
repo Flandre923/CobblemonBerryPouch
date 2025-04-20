@@ -12,7 +12,6 @@ public class ModCommon {
     public static void init() {
         ModRegistries.init();
         ModNetworking.register();
-
     }
 
 }

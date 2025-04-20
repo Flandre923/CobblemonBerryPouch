@@ -30,7 +30,7 @@ import java.util.Optional;
 public class ModNetworking {
 
     public static void register() {
-        NetworkManager.registerS2CPayloadType(CycleBaitPacket.TYPE, CycleBaitPacket.CODEC);
+//        NetworkManager.registerS2CPayloadType(CycleBaitPacket.TYPE, CycleBaitPacket.CODEC);
 
         // 注册服务器端接收器 (C2S = Client to Server)
         // 当服务器收到 ID 为 OPEN_POUCH_PACKET_ID 的包时，调用 handleOpenPouch 方法

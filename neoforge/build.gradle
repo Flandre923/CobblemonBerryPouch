@@ -54,14 +54,22 @@ dependencies {
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
-    modImplementation "io.wispforest:owo-lib-neoforge:0.12.15.1-beta.3+1.21"
+
+    forgeRuntimeLibrary(implementation("blue.endless:jankson:1.2.2"))
+    forgeRuntimeLibrary("io.wispforest:endec:${rootProject.endec_version}")
+    forgeRuntimeLibrary("io.wispforest.endec:gson:${rootProject.endec_gson_version}")
+    forgeRuntimeLibrary("io.wispforest.endec:jankson:${rootProject.endec_jankson_version}")
+    forgeRuntimeLibrary("io.wispforest.endec:netty:${rootProject.endec_netty_version}")
+
+//    implementation("org.sinytra:forgified-fabric-loader:${project.ffloader_version}")
+//    modApi("org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308dedd1") { exclude group: "fabric-api" }
+//    implementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:${project.ffapi_version}"
+
     modImplementation("io.wispforest:accessories-neoforge:${project.accessories_version}")
-    forgeRuntimeLibrary("io.wispforest:endec:0.1.8")
-    forgeRuntimeLibrary("io.wispforest.endec:gson:0.1.5")
-    forgeRuntimeLibrary("io.wispforest.endec:netty:0.1.4")
+    modImplementation "io.wispforest:owo-lib-neoforge:${project.owo_neo_version}"
+
     // Radical Cobblemon Trainers API
 //    modImplementation "curse.maven:radical-cobblemon-trainers-api-1152792:${rctapi_neoforge_version}"
-    // modImplementation files("../tmp/libs/rctapi-neoforge-1.21.1-${rctapi_min_version}.jar") // testing
 
     // Carry On (testing)
     // runtimeOnly "curse.maven:carry-on-274259:5649344"

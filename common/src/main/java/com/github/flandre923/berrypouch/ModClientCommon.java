@@ -17,8 +17,7 @@ public class ModClientCommon {
         ItemProperties.register(ModRegistries.Items.BERRY_POUCH_69.get(),
                 ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "full"),
                 (stack, level, entity, seed) -> FindBerryPouchItemClient.shouldUseFullModel(stack) ? 1.0F : 0.0F);
-
-        ClientLifecycleEvent.CLIENT_SETUP.register(__ -> KeyBindingManager.register());
+        KeyBindingManager.register();
         ClientTickEvent.CLIENT_POST.register(__ -> KeyBindingManager.checkKeyInputs());
     }
 }

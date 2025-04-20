@@ -28,11 +28,13 @@ dependencies {
 
     // modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-common:${fcap_version}"
     compileOnly "fuzs.forgeconfigapiport:forgeconfigapiport-common-neoforgeapi:$rootProject.fcap_version"//source: https://github.com/Fuzss/forgeconfigapiport-fabric
-    modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
-    modRuntimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
-    modImplementation "io.wispforest:owo-lib:${project.owo_version}"
+//    modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
+//    modRuntimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
+    modCompileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    modCompileOnly("org.sinytra.forgified-fabric-api:fabric-networking-api-v1:4.2.2+a92978fd19") { exclude group: "fabric-api" }
+
     modImplementation("io.wispforest:accessories-common:${project.accessories_version}")
-//    compileOnly("io.wispforest:accessories-common:${project.accessories_version}-mojmap")
+    modApi annotationProcessor("io.wispforest:owo-lib:${project.owo_version}")
 
     // Radical Cobblemon Trainers API
 //    modImplementation "curse.maven:radical-cobblemon-trainers-api-1152792:${rctapi_common_version}"

@@ -1,6 +1,7 @@
 package com.github.flandre923.berrypouch.client.input;
 
 import com.github.flandre923.berrypouch.ModCommon;
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -19,12 +20,12 @@ public class KeyBindingManager {
     private static final Map<KeyMapping, KeyAction> KEY_ACTIONS = new HashMap<>();
     public static void register() {
         registerKeyBinding(
-                new KeyMapping(KEY_OPEN_POUCH, GLFW.GLFW_KEY_K, KEY_CATEGORY),
+                new KeyMapping(KEY_OPEN_POUCH, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, KEY_CATEGORY),
                 new OpenPouchAction()
         );
 
         registerKeyBinding(
-                new KeyMapping(KEY_CYCLE_BAIT, GLFW.GLFW_KEY_O, KEY_CATEGORY),
+                new KeyMapping(KEY_CYCLE_BAIT,InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, KEY_CATEGORY),
                 new CycleBaitAction()
         );
     }
