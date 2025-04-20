@@ -17,7 +17,6 @@ public class FindBerryPouchItemClient {
                 .anyMatch(p-> !p.stack().isEmpty() && p.stack().getItem() instanceof  BerryPouch);
     }
 
-
     public static boolean shouldUseFullModel(ItemStack stack) {
         if (stack.isEmpty()) return false;
         if(stack.getItem() instanceof BerryPouch){
