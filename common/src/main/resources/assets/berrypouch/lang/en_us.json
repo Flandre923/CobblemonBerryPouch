@@ -3,5 +3,13 @@
   "item.berrypouch.berry_pouch_69": "Large Berry Pouch",
   "berrypouch.berry_pouch.tab": "Berry Pouch",
   "key.categories.berrypouch": "BerryPouch",
-  "key.berrypouch.open_pouch": "Open the Berry Pouch in Accessories Slot"
+  "key.berrypouch.open_pouch": "Open the Berry Pouch in Accessories Slot",
+
+  "message.berrypouch.not_holding_rod": "You must hold a Cobblemon fishing rod",
+  "message.berrypouch.capability_missing": "Accessory system error",
+  "message.berrypouch.need_pouch": "You need to equip a Berry Pouch",
+  "message.berrypouch.no_bait_in_pouch": "No available berries in pouch",
+  "message.berrypouch.switched_bait": "Switched bait to: %s",
+  "message.berrypouch.bait_dropped": "Your pouch is full, dropped %s to the ground",
+  "message.berrypouch.autobait": "Auto-equipped bait: %s"
 }

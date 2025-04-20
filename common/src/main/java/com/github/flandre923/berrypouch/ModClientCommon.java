@@ -22,8 +22,5 @@ public class ModClientCommon {
             KeyBindings.register();
         });
 
-        ClientTickEvent.CLIENT_POST.register(client -> {
-            KeyBindings.checkKeyInput();
-        });
     }
 }

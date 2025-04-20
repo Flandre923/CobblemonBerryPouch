@@ -18,6 +18,7 @@
 package com.github.flandre923.berrypouch;
 
 
+import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.item.BerryPouch;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer24;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer30;
@@ -92,6 +93,9 @@ public final class ModRegistries {
             Tabs.TAB.register();
             Recipes.RECIPE_SERIALIZERS.register();
             ModRegistries.initialized = true;
+
+            // event
+            FishingRodEventHandler.register();
         }
     }
     private static boolean initialized=false;
