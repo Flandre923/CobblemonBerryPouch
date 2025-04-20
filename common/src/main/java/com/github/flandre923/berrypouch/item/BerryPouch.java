@@ -5,13 +5,10 @@ import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer24;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer30;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer69;
 import dev.architectury.registry.menu.MenuRegistry;
-import io.wispforest.accessories.api.AccessoriesAPI;
 import io.wispforest.accessories.api.AccessoriesCapability;
-import io.wispforest.accessories.api.Accessory;
 import io.wispforest.accessories.api.AccessoryItem;
 import io.wispforest.accessories.api.slot.SlotEntryReference;
 import io.wispforest.accessories.api.slot.SlotReference;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -29,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class BerryPouch extends AccessoryItem {
 
@@ -187,16 +183,6 @@ public class BerryPouch extends AccessoryItem {
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
-    public static boolean shouldUseFullModel(ItemStack stack) {
-        if (stack.isEmpty()) return false;
-        SimpleContainer inventory = getInventory(stack, Minecraft.getInstance().level);
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            if (!inventory.getItem(i).isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 
     @Override
@@ -207,6 +193,4 @@ public class BerryPouch extends AccessoryItem {
     @Override
     public void onEquip(ItemStack stack, SlotReference ref) {
     }
-
-
 }

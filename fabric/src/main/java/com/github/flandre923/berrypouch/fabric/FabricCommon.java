@@ -23,6 +23,7 @@ import net.fabricmc.api.ModInitializer;
 
 public class FabricCommon implements ModInitializer {
     public FabricCommon() {
+
     }
 
     @Override
