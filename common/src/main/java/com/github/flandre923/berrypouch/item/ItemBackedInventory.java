@@ -39,7 +39,7 @@ public class ItemBackedInventory extends SimpleContainer {
     @Override
     public boolean canPlaceItem(int slot, @NotNull ItemStack stack) {
         if (pouchStorageSlot != null) {
-            return pouchStorageSlot.isSlotItem(slot + 1, stack.getItem());
+            return pouchStorageSlot.matchesSlotItem(slot + 1, stack.getItem());
         }
         return true;
     }
