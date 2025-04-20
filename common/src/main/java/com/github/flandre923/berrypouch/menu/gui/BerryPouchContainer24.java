@@ -1,6 +1,7 @@
 package com.github.flandre923.berrypouch.menu.gui;
 
 import com.github.flandre923.berrypouch.ModRegistries;
+import com.github.flandre923.berrypouch.client.FindBerryPouchItemClient;
 import com.github.flandre923.berrypouch.item.BerryPouch;
 import com.github.flandre923.berrypouch.menu.SlotLocked;
 import net.minecraft.network.FriendlyByteBuf;
@@ -109,7 +110,7 @@ public class BerryPouchContainer24 extends AbstractContainerMenu {
     public boolean stillValid(Player player) {
         ItemStack main = player.getMainHandItem();
         ItemStack off = player.getOffhandItem();
-        return !main.isEmpty() && main == bag || !off.isEmpty() && off == bag;
+        return !main.isEmpty() && main == bag || !off.isEmpty() && off == bag || FindBerryPouchItemClient.hasPouch(player);
     }
 
 

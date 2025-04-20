@@ -1,5 +1,6 @@
 package com.github.flandre923.berrypouch.item;
 
+import com.github.flandre923.berrypouch.ModCommon;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer24;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer30;
 import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer69;
@@ -141,24 +142,49 @@ public class BerryPouch extends AccessoryItem {
         }
         return false;
     }
+
+    // **新**: 提取的静态方法，用于打开GUI (服务器端)
+    public static void openPouchGUI(ServerPlayer player, ItemStack pouchStack, BerryPouch pouchItem,InteractionHand interactionHand) {
+        if (player.level().isClientSide || pouchStack.isEmpty() || !(pouchStack.getItem() instanceof BerryPouch)) return; // Safety checks
+        MenuRegistry.openExtendedMenu(player, new MenuProvider() {
+            @Override
+            public Component getDisplayName() {
+                return pouchStack.getHoverName(); // Use the specific pouch stack
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player p) {
+                return createMenuForPouch(syncId, inv, pouchStack, pouchItem.getSize());
+            }
+        }, buf -> {
+            buf.writeBoolean(interactionHand == InteractionHand.MAIN_HAND);
+        });
+    }
+
+    // **新**: 辅助方法，根据大小创建菜单 (可能需要修改你的Container构造函数)
+    // 这个方法现在接收 ItemStack 参数
+    public static AbstractContainerMenu createMenuForPouch(int syncId, Inventory inv, ItemStack pouchStack, int size) {
+        switch (size) {
+            case SMALL_SIZE:
+                return new BerryPouchContainer24(syncId, inv, pouchStack);
+            case MEDIUM_SIZE:
+                return new BerryPouchContainer30(syncId, inv, pouchStack);
+            case LARGE_SIZE:
+                return new BerryPouchContainer69(syncId, inv, pouchStack);
+            default:
+                ModCommon.LOG.error("Attempted to create menu for invalid pouch size: {}", size);
+                return null; // 或者抛出异常
+        }
+    }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
-        if (!level.isClientSide) {
+        ItemStack stack = player.getItemInHand(interactionHand);
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer && stack.getItem() instanceof BerryPouch pouchItem) {
             level.playSound(null,player.getX(),player.getY(),player.getZ(), SoundEvents.BUNDLE_INSERT, SoundSource.BLOCKS,0.5f,level.random.nextFloat() * 0.1F + 0.9F);
-            ItemStack stack = player.getItemInHand(interactionHand);
-            MenuRegistry.openExtendedMenu((ServerPlayer) player,new MenuProvider() {
-                @Override
-                public Component getDisplayName() {
-                    return stack.getHoverName();
-                }
-
-                @Override
-                public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-                    return getItemMenu(syncId,inv,player,getSize());
-                }
-            }, buf -> buf.writeBoolean(interactionHand == InteractionHand.MAIN_HAND));
+            openPouchGUI(serverPlayer, stack, pouchItem,interactionHand);
         }
-        return InteractionResultHolder.sidedSuccess(player.getItemInHand(interactionHand), level.isClientSide());
+        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
     public static boolean shouldUseFullModel(ItemStack stack) {
@@ -172,19 +198,6 @@ public class BerryPouch extends AccessoryItem {
         return false;
     }
 
-
-    public static AbstractContainerMenu getItemMenu(int syncId, Inventory inv, Player player, int size) {
-        switch (size) {
-            case 24:
-                return new BerryPouchContainer24(syncId, inv, player.getItemInHand(InteractionHand.MAIN_HAND));
-            case 30:
-                return new BerryPouchContainer30(syncId, inv, player.getItemInHand(InteractionHand.MAIN_HAND));
-            case 69:
-                return new BerryPouchContainer69(syncId, inv, player.getItemInHand(InteractionHand.MAIN_HAND));
-            default:
-                throw new IllegalArgumentException("Invalid berry pouch size: " + size + ". Supported sizes are: 24, 30, 69");
-        }
-    }
 
     @Override
     public boolean canEquip(ItemStack stack, SlotReference reference) {

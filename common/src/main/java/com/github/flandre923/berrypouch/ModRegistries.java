@@ -68,7 +68,6 @@ public final class ModRegistries {
     public class Recipes{
         private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create( ModCommon.MOD_ID,Registries.RECIPE_SERIALIZER);
         public static final Supplier<RecipeSerializer<?>> BACKPACK_UPGRADE_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("berry_pouch_upgrade", BerryPouchUpgradeRecipe.Serializer::new);
-
     }
 
     public class Tabs{
@@ -83,9 +82,8 @@ public final class ModRegistries {
                         pOutput.accept(Items.BERRY_POUCH_69.get());
                     }).build();
         });
-
-
     }
+
 
     public static void init() {
         if(!ModRegistries.initialized) {

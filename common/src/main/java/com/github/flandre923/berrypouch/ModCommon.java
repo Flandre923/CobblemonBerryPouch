@@ -1,5 +1,6 @@
 package com.github.flandre923.berrypouch;
 
+import com.github.flandre923.berrypouch.network.ModNetworking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,7 @@ public class ModCommon {
 
     public static void init() {
         ModRegistries.init();
+        ModNetworking.register();
     }
 
 }

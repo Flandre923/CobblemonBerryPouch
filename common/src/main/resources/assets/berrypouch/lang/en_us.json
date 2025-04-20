@@ -1,5 +1,7 @@
 {
   "item.berrypouch.berry_pouch_30": "Small Berry Pouch",
   "item.berrypouch.berry_pouch_69": "Large Berry Pouch",
-  "berrypouch.berry_pouch.tab": "Berry Pouch"
+  "berrypouch.berry_pouch.tab": "Berry Pouch",
+  "key.categories.berrypouch": "BerryPouch",
+  "key.berrypouch.open_pouch": "Open the Berry Pouch in Accessories Slot"
 }

@@ -1,13 +1,15 @@
 package com.github.flandre923.berrypouch;
 
+import com.github.flandre923.berrypouch.client.KeyBindings;
 import com.github.flandre923.berrypouch.item.BerryPouch;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import dev.architectury.event.events.client.ClientLifecycleEvent;
+import dev.architectury.event.events.client.ClientTickEvent;
 
 public class ModClientCommon {
 
-
-    public static void init(){
+    public static void init() {
         ItemProperties.register(ModRegistries.Items.BERRY_POUCH_30.get(),
                 ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "full"),
                 (stack, level, entity, seed) -> BerryPouch.shouldUseFullModel(stack) ? 1.0F : 0.0F);
@@ -15,5 +17,13 @@ public class ModClientCommon {
         ItemProperties.register(ModRegistries.Items.BERRY_POUCH_69.get(),
                 ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "full"),
                 (stack, level, entity, seed) -> BerryPouch.shouldUseFullModel(stack) ? 1.0F : 0.0F);
+
+        ClientLifecycleEvent.CLIENT_SETUP.register(client -> {
+            KeyBindings.register();
+        });
+
+        ClientTickEvent.CLIENT_POST.register(client -> {
+            KeyBindings.checkKeyInput();
+        });
     }
 }

@@ -1,5 +1,7 @@
 {
   "item.berrypouch.berry_pouch_30": "小树果袋",
   "item.berrypouch.berry_pouch_69": "大树果袋",
-  "berrypouch.berry_pouch.tab": "树果袋"
+  "berrypouch.berry_pouch.tab": "树果袋",
+  "key.categories.berrypouch": "BerryPouch",
+  "key.berrypouch.open_pouch": "打开饰品栏的树果袋"
 }
