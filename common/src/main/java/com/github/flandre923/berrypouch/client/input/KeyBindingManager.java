@@ -20,7 +20,7 @@ public class KeyBindingManager {
     private static final Map<KeyMapping, KeyAction> KEY_ACTIONS = new HashMap<>();
     public static void register() {
         registerKeyBinding(
-                new KeyMapping(KEY_OPEN_POUCH, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, KEY_CATEGORY),
+                new KeyMapping(KEY_OPEN_POUCH, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, KEY_CATEGORY),
                 new OpenPouchAction()
         );
 
