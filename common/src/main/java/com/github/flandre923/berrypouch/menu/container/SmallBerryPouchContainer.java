@@ -25,7 +25,7 @@ public class SmallBerryPouchContainer extends AbstractBerryPouchContainer{
         ItemStack item;
         if(isHand  == 0){
             item = inv.player.getItemInHand(InteractionHand.MAIN_HAND);
-        }else if(isHand == -1){
+        }else if(isHand == 1){
             item = inv.player.getItemInHand(InteractionHand.OFF_HAND);
         }else{
             item = FindBerryPouchItemClient.findBerryPouch(inv.player);
