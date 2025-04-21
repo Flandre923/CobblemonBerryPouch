@@ -20,9 +20,11 @@ package com.github.flandre923.berrypouch;
 
 import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.item.BerryPouch;
-import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer24;
-import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer30;
-import com.github.flandre923.berrypouch.menu.gui.BerryPouchContainer69;
+import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
+import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
+import com.github.flandre923.berrypouch.menu.container.LargeBerryPouchContainer;
+import com.github.flandre923.berrypouch.menu.container.MediumBerryPouchContainer;
+import com.github.flandre923.berrypouch.menu.container.SmallBerryPouchContainer;
 import com.github.flandre923.berrypouch.recipe.BerryPouchUpgradeRecipe;
 import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -42,15 +44,15 @@ public final class ModRegistries {
     public class ModMenuTypes {
         public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ModCommon.MOD_ID, Registries.MENU);
 
-        public static final RegistrySupplier<MenuType<BerryPouchContainer24>> BERRY_POUCH_CONTAINER_24 =
+        public static final RegistrySupplier<MenuType<SmallBerryPouchContainer>> BERRY_POUCH_CONTAINER_24 =
                 MENU_TYPES.register("berry_pouch_container_24", () ->
-                        MenuRegistry.ofExtended(BerryPouchContainer24::fromNetwork));
-        public static final RegistrySupplier<MenuType<BerryPouchContainer30>> BERRY_POUCH_CONTAINER_30 =
+                        MenuRegistry.ofExtended(SmallBerryPouchContainer::fromNetwork));
+        public static final RegistrySupplier<MenuType<MediumBerryPouchContainer>> BERRY_POUCH_CONTAINER_30 =
                 MENU_TYPES.register("berry_pouch_container_30", () ->
-                        MenuRegistry.ofExtended(BerryPouchContainer30::fromNetwork));
-        public static final RegistrySupplier<MenuType<BerryPouchContainer69>> BERRY_POUCH_CONTAINER_69 =
+                        MenuRegistry.ofExtended(MediumBerryPouchContainer::fromNetwork));
+        public static final RegistrySupplier<MenuType<LargeBerryPouchContainer>> BERRY_POUCH_CONTAINER_69 =
                 MENU_TYPES.register("berry_pouch_container_69", () ->
-                        MenuRegistry.ofExtended(BerryPouchContainer69::fromNetwork));
+                        MenuRegistry.ofExtended(LargeBerryPouchContainer::fromNetwork));
     }
 
     public class Items {
@@ -61,8 +63,8 @@ public final class ModRegistries {
 
         static {
             //BERRY_POUCH_24 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_24"), ()->new BerryPouch.java(24));
-            BERRY_POUCH_30 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_30"), ()->new BerryPouch(30));
-            BERRY_POUCH_69 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_69"), ()->new BerryPouch(69));
+            BERRY_POUCH_30 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_30"), ()->new BerryPouch(BerryPouchType.MEDIUM));
+            BERRY_POUCH_69 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_69"), ()->new BerryPouch(BerryPouchType.LARGE));
         }
     }
 

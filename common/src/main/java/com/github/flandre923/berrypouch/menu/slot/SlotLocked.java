@@ -1,4 +1,4 @@
-package com.github.flandre923.berrypouch.menu;
+package com.github.flandre923.berrypouch.menu.slot;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;

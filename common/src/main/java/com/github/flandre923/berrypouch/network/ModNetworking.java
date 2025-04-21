@@ -4,7 +4,9 @@ import com.cobblemon.mod.common.item.interactive.PokerodItem;
 import com.github.flandre923.berrypouch.ModCommon;
 import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.item.BerryPouch;
+import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.registry.menu.MenuRegistry;
 import io.netty.buffer.Unpooled; // For creating an empty buffer
 import io.wispforest.accessories.api.AccessoriesCapability;
 import io.wispforest.accessories.api.slot.SlotEntryReference;
@@ -14,8 +16,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level; // Import Level
@@ -69,11 +75,11 @@ public class ModNetworking {
                     .findFirst()
                     .ifPresent(entry -> {
                         ItemStack pouchStack = entry.stack();
-                        if (!pouchStack.isEmpty() && pouchStack.getItem() instanceof BerryPouch pouchItem) {
+                        if (!pouchStack.isEmpty() && pouchStack.getItem() instanceof BerryPouch pouchItem && !player.level().isClientSide) {
                             // Play sound on the server
                             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BUNDLE_INSERT, SoundSource.BLOCKS, 0.5f, level.random.nextFloat() * 0.1F + 0.9F);
                             // Use the helper method to open the GUI
-                            BerryPouch.openPouchGUI(player, pouchStack, pouchItem,InteractionHand.MAIN_HAND);
+                            BerryPouchManager.openPouchGUI(player, pouchStack, 2);
                         }
                     });
         });
@@ -103,7 +109,7 @@ public class ModNetworking {
 
         // 3. 获取树果袋库存
         ItemStack pouchStack = pouchRefOpt.get().stack();
-        SimpleContainer pouchInventory = BerryPouch.getInventory(pouchStack, level);
+        SimpleContainer pouchInventory = BerryPouchManager.getInventory(pouchStack, level);
 
         // 4. 收集所有不同类型的Cobblemon树果
         List<Item> availableBerryTypes = new ArrayList<>();

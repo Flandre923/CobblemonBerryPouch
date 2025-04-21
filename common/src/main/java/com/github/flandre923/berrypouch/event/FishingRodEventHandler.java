@@ -2,6 +2,7 @@ package com.github.flandre923.berrypouch.event;// 创建一个新的事件监听
 import com.cobblemon.mod.common.api.fishing.FishingBaits;
 import com.cobblemon.mod.common.item.interactive.PokerodItem;
 import com.github.flandre923.berrypouch.item.BerryPouch;
+import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import dev.architectury.event.CompoundEventResult;
 import dev.architectury.event.events.common.InteractionEvent;
 import net.minecraft.core.RegistryAccess;
@@ -57,7 +58,7 @@ public class FishingRodEventHandler {
             // 4. 遍历 Pouch 寻找第一个可用的 Cobblemon 树果
             for (SlotEntryReference pouchRef : equippedPouches) {
                 ItemStack pouchStack = pouchRef.stack();
-                SimpleContainer pouchInventory = BerryPouch.getInventory(pouchStack, level);
+                SimpleContainer pouchInventory = BerryPouchManager.getInventory(pouchStack, level);
                 for (int i = 0; i < pouchInventory.getContainerSize(); i++) {
                     ItemStack potentialBait = pouchInventory.getItem(i);
                     if (!potentialBait.isEmpty() && isCobblemonBerry(potentialBait)) { // 确保是 Cobblemon 的树果

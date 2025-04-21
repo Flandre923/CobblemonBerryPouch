@@ -1,14 +1,15 @@
 package com.github.flandre923.berrypouch.item;
 
 import com.cobblemon.mod.common.CobblemonItems;
+import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import net.minecraft.world.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BerryPouchGui24StorageSlot extends  AbstractBerryPouchStorageSlot{
-    public BerryPouchGui24StorageSlot() {
-        super(BerryPouch.SMALL_SIZE); // Pass the size to the parent constructor
+    public BerryPouchGui24StorageSlot(int size) {
+        super(size); // Pass the size to the parent constructor
     }
 
     @Override

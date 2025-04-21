@@ -21,9 +21,9 @@ import com.github.flandre923.berrypouch.ModClientCommon;
 import com.github.flandre923.berrypouch.ModCommon;
 
 import com.github.flandre923.berrypouch.ModRegistries;
-import com.github.flandre923.berrypouch.menu.gui.BerryPouchGui24;
-import com.github.flandre923.berrypouch.menu.gui.BerryPouchGui30;
-import com.github.flandre923.berrypouch.menu.gui.BerryPouchGui69;
+import com.github.flandre923.berrypouch.menu.screen.LargeBerryPouchScreen;
+import com.github.flandre923.berrypouch.menu.screen.MediumBerryPouchScreen;
+import com.github.flandre923.berrypouch.menu.screen.SmallBerryPouchScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -35,9 +35,9 @@ public class NeoForgeClient {
     @SubscribeEvent
     public static  void registerScreen(RegisterMenuScreensEvent event)
     {
-        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), BerryPouchGui24::new);
-        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), BerryPouchGui30::new);
-        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(), BerryPouchGui69::new);
+        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), SmallBerryPouchScreen::new);
+        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), MediumBerryPouchScreen::new);
+        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(), LargeBerryPouchScreen::new);
     }
 
 

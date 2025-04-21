@@ -19,23 +19,21 @@ package com.github.flandre923.berrypouch.fabric.client;
 
 import com.github.flandre923.berrypouch.ModClientCommon;
 import com.github.flandre923.berrypouch.ModRegistries;
-import com.github.flandre923.berrypouch.menu.gui.BerryPouchGui24;
-import com.github.flandre923.berrypouch.menu.gui.BerryPouchGui30;
-import com.github.flandre923.berrypouch.menu.gui.BerryPouchGui69;
+import com.github.flandre923.berrypouch.menu.screen.LargeBerryPouchScreen;
+import com.github.flandre923.berrypouch.menu.screen.MediumBerryPouchScreen;
+import com.github.flandre923.berrypouch.menu.screen.SmallBerryPouchScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public class FabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), BerryPouchGui24::new);
-        MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), BerryPouchGui30::new);
-        MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(), BerryPouchGui69::new);
+        MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), SmallBerryPouchScreen::new);
+        MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), MediumBerryPouchScreen::new);
+        MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(), LargeBerryPouchScreen::new);
         ModClientCommon.init();
     }
 }
