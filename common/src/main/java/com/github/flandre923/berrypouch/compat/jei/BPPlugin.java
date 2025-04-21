@@ -10,12 +10,13 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
+// Inspired by Sophisticated Backpacks by P3pp3rF1y (https://github.com/P3pp3rF1y/SophisticatedBackpacks)
 
 @SuppressWarnings("unused")
 @JeiPlugin
 public class BPPlugin implements IModPlugin {
 
-        @Override
+    @Override
     public void registerRecipes(IRecipeRegistration registration) {
 //        IModPlugin.super.registerRecipes(registration);
         registration.addRecipes(RecipeTypes.CRAFTING, ClientRecipeHelper.transformAllRecipesOfType(RecipeType.CRAFTING, BerryPouchUpgradeRecipe.class, ClientRecipeHelper::copyShapedRecipe));

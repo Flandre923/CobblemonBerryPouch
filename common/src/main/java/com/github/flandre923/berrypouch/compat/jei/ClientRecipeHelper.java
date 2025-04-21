@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+// Inspired by Sophisticated Backpacks by P3pp3rF1y (https://github.com/P3pp3rF1y/SophisticatedBackpacks)
 public class ClientRecipeHelper {
 	private ClientRecipeHelper() {}
 
