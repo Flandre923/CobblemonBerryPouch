@@ -2,6 +2,20 @@
   "item.berrypouch.berry_pouch_30": "小树果袋",
   "item.berrypouch.berry_pouch_69": "大树果袋",
   "berrypouch.berry_pouch.tab": "树果袋",
-  "key.categories.berrypouch": "BerryPouch",
-  "key.berrypouch.open_pouch": "打开饰品栏的树果袋"
+  "key.categories.berry.pouch": "树果袋",
+  "key.berrypouch.open_pouch": "打开饰品栏中的树果袋",
+
+  "key.berrypouch.bait_left": "向左切换鱼饵",
+  "key.berrypouch.bait_right": "向右切换鱼饵",
+
+  "message.berrypouch.not_holding_rod": "你必须手持Cobblemon钓竿",
+  "message.berrypouch.capability_missing": "饰品系统错误",
+  "message.berrypouch.need_pouch": "你需要装备树果袋",
+  "message.berrypouch.no_bait_in_pouch": "树果袋中没有可用的树果",
+  "message.berrypouch.switched_bait": "已切换鱼饵为： %s",
+  "message.berrypouch.bait_dropped": "你的树果袋已满， %s 已被丢到地上",
+  "message.berrypouch.autobait": "自动装备鱼饵： %s",
+
+  "accessories.slot.pouch": "袋",
+  "accessories.slot_group.utility": "方块宝可梦"
 }
