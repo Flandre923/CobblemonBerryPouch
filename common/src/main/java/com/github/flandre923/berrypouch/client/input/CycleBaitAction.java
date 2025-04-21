@@ -12,10 +12,17 @@ import net.minecraft.world.entity.player.Player;
 public class CycleBaitAction implements KeyAction{
     private static final Component NEED_POUCH_MESSAGE =
             Component.translatable("message.berrypouch.need_pouch");
+
+    private final boolean isLeftCycle;
+
+    public CycleBaitAction(boolean isLeftCycle) {
+        this.isLeftCycle = isLeftCycle;
+    }
+
     @Override
     public void onKeyPressed(Minecraft client) {
         NetworkManager.sendToServer(
-                new CycleBaitPacket(isMainHandRod(client.player))
+                new CycleBaitPacket(isMainHandRod(client.player), isLeftCycle)
         );
     }
 

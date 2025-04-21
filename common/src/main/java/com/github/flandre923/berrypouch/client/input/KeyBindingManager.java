@@ -16,6 +16,8 @@ public class KeyBindingManager {
 
     public static final String KEY_OPEN_POUCH = "key."+ModCommon.MOD_ID+".open_pouch";
     public static final String KEY_CYCLE_BAIT = "key."+ModCommon.MOD_ID+".cycle_bait";
+    public static final String KEY_CYCLE_BAIT_LEFT = "key." + ModCommon.MOD_ID + ".cycle_bait_left";
+    public static final String KEY_CYCLE_BAIT_RIGHT = "key." + ModCommon.MOD_ID + ".cycle_bait_right";
 
     private static final Map<KeyMapping, KeyAction> KEY_ACTIONS = new HashMap<>();
     public static void register() {
@@ -25,8 +27,12 @@ public class KeyBindingManager {
         );
 
         registerKeyBinding(
-                new KeyMapping(KEY_CYCLE_BAIT,InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, KEY_CATEGORY),
-                new CycleBaitAction()
+                new KeyMapping(KEY_CYCLE_BAIT_LEFT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_BRACKET, KEY_CATEGORY),
+                new CycleBaitAction(true)
+        );
+        registerKeyBinding(
+                new KeyMapping(KEY_CYCLE_BAIT_RIGHT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_BRACKET, KEY_CATEGORY),
+                new CycleBaitAction(false)
         );
     }
     private static void registerKeyBinding(KeyMapping mapping, KeyAction action) {

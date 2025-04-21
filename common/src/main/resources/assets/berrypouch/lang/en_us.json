@@ -2,10 +2,12 @@
   "item.berrypouch.berry_pouch_30": "Small Berry Pouch",
   "item.berrypouch.berry_pouch_69": "Large Berry Pouch",
   "berrypouch.berry_pouch.tab": "Berry Pouch",
-  "key.categories.open_pouch": "Open the Berry Pouch in the Accessory slot",
 
+  "key.categories.open_pouch": "Open the Berry Pouch in the Accessory slot",
   "key.berrypouch.bait_left": "Switch the bait to the Left",
   "key.berrypouch.bait_right": "Switch the bait to the Right",
+  "key.berrypouch.cycle_bait_left": "Switch the bait to the Left",
+  "key.berrypouch.cycle_bait_right": "Switch the bait to the Right",
 
   "message.berrypouch.not_holding_rod": "You must hold a Cobblemon fishing rod",
   "message.berrypouch.capability_missing": "Accessory system error",

@@ -36,8 +36,6 @@ import java.util.Optional;
 public class ModNetworking {
 
     public static void register() {
-//        NetworkManager.registerS2CPayloadType(CycleBaitPacket.TYPE, CycleBaitPacket.CODEC);
-
         // 注册服务器端接收器 (C2S = Client to Server)
         // 当服务器收到 ID 为 OPEN_POUCH_PACKET_ID 的包时，调用 handleOpenPouch 方法
         NetworkManager.registerReceiver(
@@ -52,7 +50,7 @@ public class ModNetworking {
                 CycleBaitPacket.CODEC,
                 (packet, context) -> {
                     ServerPlayer player = (ServerPlayer) context.getPlayer();
-                    context.queue(() -> handleCycleBaitRequest(player, packet.isMainHand()));
+                    context.queue(() -> handleCycleBaitRequest(player, packet.isMainHand(), packet.isLeftCycle()));
                 }
         );
     }
@@ -84,7 +82,7 @@ public class ModNetworking {
                     });
         });
     }
-    private static void handleCycleBaitRequest(ServerPlayer player, boolean isMainHand) {
+    private static void handleCycleBaitRequest(ServerPlayer player, boolean isMainHand, boolean isLeftCycle) {
         Level level = player.level();
         ItemStack heldStack = isMainHand ? player.getMainHandItem() : player.getOffhandItem();
 
@@ -166,14 +164,11 @@ public class ModNetworking {
                 );
             }
         }
-
-        // 7. 计算下一个诱饵索引
         int currentIndex = currentBaitItem != null ? availableBerryTypes.indexOf(currentBaitItem) : -1;
-        int nextIndex = (currentIndex + 1) % availableBerryTypes.size();
+        int nextIndex = isLeftCycle ? (currentIndex - 1 + availableBerryTypes.size()) % availableBerryTypes.size() : (currentIndex + 1) % availableBerryTypes.size();
         Item nextBaitItem = availableBerryTypes.get(nextIndex);
-
-        // 8. 设置新诱饵并扣除
         boolean deducted = false;
+
         for (int i = 0; i < pouchInventory.getContainerSize(); i++) {
             ItemStack stackInSlot = pouchInventory.getItem(i);
             if (!stackInSlot.isEmpty() && stackInSlot.getItem() == nextBaitItem) {
