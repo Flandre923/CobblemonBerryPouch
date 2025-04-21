@@ -62,7 +62,7 @@ public class BerryPouch extends AccessoryItem {
                     stack -> stack.getItem() instanceof BerryPouch
             );
             for (SlotEntryReference entryRef : equippedPouches) {
-                if (tryInsertItemStack(entryRef.stack(), itemStack.copy(), player.level())) {
+                if (tryInsertItemStack(entryRef.stack(), itemStack.copy(), player.level(),player)) {
                     itemEntity.discard();
                     return true;
                 }
@@ -75,7 +75,7 @@ public class BerryPouch extends AccessoryItem {
             ItemStack pouchStack = playerInventory.getItem(i);
             if (pouchStack.getItem() instanceof BerryPouch berryPouch) {
                 // d. 找到 BerryPouch 后，检查对应槽位是否有空间
-                if (tryInsertItemStack(pouchStack, itemStack.copy(), player.level())) { // 尝试将掉落的莓果 ItemStack 复制一份插入 BerryPouch
+                if (tryInsertItemStack(pouchStack, itemStack.copy(), player.level(),player)) { // 尝试将掉落的莓果 ItemStack 复制一份插入 BerryPouch
                     // 如果成功插入，移除世界上的掉落物
                     itemEntity.discard();
                     return true; // 阻止原版拾取逻辑，返回 true
@@ -86,11 +86,13 @@ public class BerryPouch extends AccessoryItem {
     }
 
 
-    public static boolean tryInsertItemStack(ItemStack container, ItemStack itemToInsert, Level level) {
+    public static boolean tryInsertItemStack(ItemStack container, ItemStack itemToInsert, Level level,Player player) {
         if (!(container.getItem() instanceof BerryPouch)) {
             return false;
         }
         SimpleContainer inventory = BerryPouchManager.getInventory(container, level);
+        boolean success = false;
+
         // First try to stack with existing items
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack existingStack = inventory.getItem(i);
@@ -102,24 +104,40 @@ public class BerryPouch extends AccessoryItem {
                     itemToInsert.shrink(toTransfer);
                     if (itemToInsert.isEmpty()) {
                         inventory.setChanged(); // Add this line to save changes after stacking
-                        return true;
+                        success = true;
+                        break;
                     }
                     inventory.setChanged();
+                    success = true;
                 }
             }
         }
 
         // Then try to put in empty slot
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            if (inventory.getItem(i).isEmpty()) {
-                if (inventory.canPlaceItem(i, itemToInsert)) { // Check if item is allowed in this slot
-                    inventory.setItem(i, itemToInsert.copy());
-                    itemToInsert.setCount(0);
-                    return true;
+        if (!success && !itemToInsert.isEmpty()) {
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                if (inventory.getItem(i).isEmpty()) {
+                    if (inventory.canPlaceItem(i, itemToInsert)) {
+                        inventory.setItem(i, itemToInsert.copy());
+                        itemToInsert.setCount(0);
+                        success = true;
+                        break;
+                    }
                 }
             }
         }
-        return false;
+        // Play sound if insertion was successful
+        if (success && !level.isClientSide) {
+            // You can adjust the position, volume and pitch as needed
+            level.playSound(null,
+                    player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.ITEM_PICKUP,
+                    SoundSource.PLAYERS,
+                    0.2F,
+                    ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F
+            );
+        }
+        return success;
     }
 
     @Override
