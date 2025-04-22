@@ -87,20 +87,22 @@ public class BaitRenderHandler  implements ClientGuiEvent.RenderHud {
         RenderSystem.defaultBlendFunc();                          // 设置默认混合模式
         // 绘制左箭头
         guiGraphics.blit(GUI_ICONS_TEXTURE, leftArrowX, baseY, // 屏幕坐标
-                LEFT_ARROW_U, LEFT_ARROW_V,           // UV 坐标
                 ICON_RENDER_SIZE, ICON_RENDER_SIZE,   // 渲染尺寸
-                ICON_TEXTURE_SIZE,ICON_TEXTURE_SIZE,
+                LEFT_ARROW_U, LEFT_ARROW_V, // uv
+                ICON_TEXTURE_SIZE,ICON_TEXTURE_SIZE, // uv size
                 TEXTURE_SHEET_WIDTH, TEXTURE_SHEET_HEIGHT); // 纹理图纸尺寸
         // 绘制框
         guiGraphics.blit(GUI_ICONS_TEXTURE, frameX, baseY,
+                ICON_RENDER_SIZE, ICON_RENDER_SIZE,   // 渲染尺寸
                 FRAME_U, FRAME_V,
-                ICON_RENDER_SIZE, ICON_RENDER_SIZE,
+                ICON_TEXTURE_SIZE, ICON_TEXTURE_SIZE,
                 TEXTURE_SHEET_WIDTH, TEXTURE_SHEET_HEIGHT);
 
         // 绘制右箭头
         guiGraphics.blit(GUI_ICONS_TEXTURE, rightArrowX, baseY,
+                ICON_RENDER_SIZE, ICON_RENDER_SIZE,   // 渲染尺寸
                 RIGHT_ARROW_U, RIGHT_ARROW_V,
-                ICON_RENDER_SIZE, ICON_RENDER_SIZE,
+                ICON_TEXTURE_SIZE, ICON_TEXTURE_SIZE,
                 TEXTURE_SHEET_WIDTH, TEXTURE_SHEET_HEIGHT);
         RenderSystem.disableBlend(); // 关闭混合
 

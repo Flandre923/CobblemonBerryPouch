@@ -3,11 +3,14 @@ package com.github.flandre923.berrypouch.menu.screen;
 import com.github.flandre923.berrypouch.ModCommon;
 import com.github.flandre923.berrypouch.helper.MarkedSlotsHelper;
 import com.github.flandre923.berrypouch.helper.RenderHelper;
+import com.github.flandre923.berrypouch.item.BerryPouch;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import com.github.flandre923.berrypouch.menu.container.AbstractBerryPouchContainer;
 import com.github.flandre923.berrypouch.network.ModNetworking;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import io.wispforest.accessories.api.AccessoriesCapability;
+import io.wispforest.accessories.api.slot.SlotEntryReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,9 +19,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.Optional;
 
 public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchContainer>
         extends AbstractContainerScreen<T> {
@@ -99,14 +106,16 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
 
 
     protected void renderMarkedSlotIndicators(GuiGraphics guiGraphics) {
-        ItemStack pouchStack = menu.getPouchStack();
+        ItemStack currentPouchStack = findCurrentPouchStack();
+        if (currentPouchStack.isEmpty()) {
+            return;
+        }
         PoseStack poseStack = guiGraphics.pose();
-
         for (Slot slot : menu.slots) {
             if (slot.container == menu.getPouchInventory()) {
                 int pouchSlotIndex = slot.getContainerSlot();
 
-                if (MarkedSlotsHelper.isSlotMarked(pouchStack, pouchSlotIndex)) {
+                if (MarkedSlotsHelper.isSlotMarked(currentPouchStack, pouchSlotIndex)) {
                     poseStack.pushPose();
                     poseStack.translate(0, 0, 299);
 //                    poseStack.scale(0.3f,0.3f,1f);
@@ -124,6 +133,53 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
                 }
             }
         }
+    }
+
+    // --- Add Helper Method to find the current pouch stack ---
+    private ItemStack findCurrentPouchStack() {
+        Player player = this.minecraft.player;
+        if (player == null) {
+            return ItemStack.EMPTY;
+        }
+
+        // Get the Item type we expect based on the menu's initial stack
+        Item targetItem = this.menu.getPouchStack().getItem();
+        if (!(targetItem instanceof BerryPouch)) {
+            // Should not happen if the menu opened correctly
+            return ItemStack.EMPTY;
+        }
+
+
+        // 1. Check Main Hand
+        ItemStack mainHandStack = player.getMainHandItem();
+        if (mainHandStack.is(targetItem)) {
+            return mainHandStack;
+        }
+
+        // 2. Check Off Hand
+        ItemStack offHandStack = player.getOffhandItem();
+        if (offHandStack.is(targetItem)) {
+            return offHandStack;
+        }
+
+
+        // 3. Check Accessory Slots
+        AccessoriesCapability capability = AccessoriesCapability.get(player);
+        if (capability != null) {
+            // Use the correct method name: getFirstEquipped
+            // It returns SlotEntryReference or null directly
+            SlotEntryReference equippedRef = capability.getFirstEquipped(targetItem);
+            if (equippedRef != null) {
+                return equippedRef.stack(); // Return the stack from the accessory slot
+            }
+        }
+
+        // 4. Not found in expected locations
+        // As a last resort, return the potentially stale stack from the menu?
+        // This might cause the old behavior. Returning EMPTY is safer for ensuring correctness.
+        // ModCommon.LOG.warn("Could not find current pouch stack for rendering marks. Item: {}", targetItem); // Optional Warning
+        return ItemStack.EMPTY;
+        // return menu.getPouchStack(); // Returning this might show stale stars if the item was removed
     }
 
 

@@ -33,6 +33,7 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -41,6 +42,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public final class ModRegistries {
@@ -104,11 +106,18 @@ public final class ModRegistries {
                                 // .cacheEncoding() // Optional: Cache encoding if frequently sent/saved unchanged
                                 .build()
                 );
+        public static final RegistrySupplier<DataComponentType<Optional<ResourceLocation>>> LAST_USED_BAIT = DATA_COMPONENTS.register(
+                "last_used_bait",
+                () -> DataComponentType.<Optional<ResourceLocation>>builder()
+                        // ---> 在这里添加 .codec() <---
+                        .persistent(ResourceLocation.CODEC.optionalFieldOf("item_rl").codec())
+                        .networkSynchronized(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional))
+                        .build()
+        );
         public static void register() {
             DATA_COMPONENTS.register();
             ModCommon.LOG.info("Registered Data Components for {}", ModCommon.MOD_ID); // Add logging
         }
-
     }
 
 
