@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class KeyBindingManager {
 
-    public static final String KEY_CATEGORY = "key.categories"+ ModCommon.MOD_ID;
+    public static final String KEY_CATEGORY = "key.categories."+ ModCommon.MOD_ID;
 
     public static final String KEY_OPEN_POUCH = "key."+ModCommon.MOD_ID+".open_pouch";
     public static final String KEY_CYCLE_BAIT = "key."+ModCommon.MOD_ID+".cycle_bait";

@@ -1,6 +1,6 @@
 package com.github.flandre923.berrypouch.menu.container;
 
-import com.github.flandre923.berrypouch.client.FindBerryPouchItemClient;
+import com.github.flandre923.berrypouch.helper.PouchItemHelper;
 import com.github.flandre923.berrypouch.item.BerryPouch;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
@@ -38,7 +38,7 @@ public abstract class AbstractBerryPouchContainer extends AbstractContainerMenu 
 
     @Override
     public boolean stillValid(Player player) {
-        return BerryPouchManager.isHoldingPouch(player, pouchStack) || !FindBerryPouchItemClient.findBerryPouch(player).isEmpty();
+        return BerryPouchManager.isHoldingPouch(player, pouchStack) || !PouchItemHelper.findBerryPouch(player).isEmpty();
     }
 
     private void addInventorySlots(Inventory playerInv) {

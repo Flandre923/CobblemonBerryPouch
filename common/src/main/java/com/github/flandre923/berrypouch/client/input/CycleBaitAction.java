@@ -36,16 +36,17 @@ public class CycleBaitAction implements KeyAction{
 
         // 检查是否装备了Pouch
         AccessoriesCapability capability = AccessoriesCapability.get(player);
-        boolean hasPouch = capability != null &&
-                !capability.getFirstEquipped(stack ->
-                        stack.getItem() instanceof BerryPouch
-                ).stack().isEmpty();
-
-        if (!hasPouch) {
+        if (capability == null) {
             sendFeedback(player, NEED_POUCH_MESSAGE);
+            return false;
         }
-
-        return hasPouch;
+        // 获取第一个装备的BerryPouch
+        var entry = capability.getFirstEquipped(stack -> stack.getItem() instanceof BerryPouch);
+        if (entry == null || entry.stack().isEmpty()) {
+            sendFeedback(player, NEED_POUCH_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
     private boolean isHoldingFishingRod(Player player) {

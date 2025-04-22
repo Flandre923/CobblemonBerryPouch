@@ -6,7 +6,6 @@ import com.github.flandre923.berrypouch.client.input.KeyBindingManager;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
-import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 
 public class ModClientCommon {
