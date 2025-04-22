@@ -2,23 +2,17 @@
   "item.berrypouch.berry_pouch_30": "Small Berry Pouch",
   "item.berrypouch.berry_pouch_69": "Large Berry Pouch",
   "berrypouch.berry_pouch.tab": "Berry Pouch",
-
-  "key.categories.open_pouch": "Open the Berry Pouch in the Accessory slot",
-  "key.berrypouch.bait_left": "Switch the bait to the Left",
-  "key.berrypouch.bait_right": "Switch the bait to the Right",
-  "key.berrypouch.cycle_bait_left": "Switch the bait to the Left",
-  "key.berrypouch.cycle_bait_right": "Switch the bait to the Right",
-
-  "message.berrypouch.not_holding_rod": "You must hold a Cobblemon fishing rod",
-  "message.berrypouch.capability_missing": "Accessory system error",
+  "key.categories.berrypouch": "Berry Pouch",
+  "key.berrypouch.open_pouch": "Open the Berry Pouch in the slot",
+  "key.berrypouch.cycle_bait_left": "Previous Bait",
+  "key.berrypouch.cycle_bait_right": "Next Bait",
+  "message.berrypouch.not_holding_rod": "You must holding a Cobblemon fishing rod.",
+  "message.berrypouch.capability_missing": "Accessories system error",
   "message.berrypouch.need_pouch": "You need to equip a Berry Pouch",
   "message.berrypouch.no_bait_in_pouch": "No available berries in pouch",
-  "message.berrypouch.switched_bait": "Switched bait to: %s",
+  "message.berrypouch.switched_bait": "Bait: %s",
   "message.berrypouch.bait_dropped": "Your pouch is full, dropped %s to the ground",
   "message.berrypouch.autobait": "Auto-equipped bait: %s",
   "accessories.slot.pouch": "Pouch",
-  "accessories.slot_group.utility": "Cobblemon",
-
-  "message.berrypouch.no_marked_bait_in_pouch": "No marked bait found in pouch, cycling all available bait.",
-  "message.berrypouch.berry_missing_after_selection": "Selected bait type missing from pouch unexpectedly.",
+  "accessories.slot_group.utility": "Cobblemon"
 }
