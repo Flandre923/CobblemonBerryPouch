@@ -33,155 +33,146 @@ public class FishingRodEventHandler {
         ItemStack heldStack = player.getItemInHand(hand); // 可能是鱼竿
         Level level = player.level();
 
-        // 1. 检查是否为 Cobblemon 鱼竿
+        // 1. Check if Cobblemon fishing rod
         if (!isCobblemonFishingRod(heldStack)) {
             return CompoundEventResult.pass();
         }
 
-        // 仅在服务器端处理逻辑
+        // Server-side logic only
         if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
-            // *** 首先获取装备的袋子，因为无论鱼竿是否有饵，我们都可能需要更新它 ***
+            // Get equipped pouch
             AccessoriesCapability capability = AccessoriesCapability.get(serverPlayer);
-            if (capability == null) {
-                return CompoundEventResult.pass(); // 没有饰品能力
-            }
+            if (capability == null) return CompoundEventResult.pass();
             Optional<SlotEntryReference> pouchRefOpt = capability.getEquipped(stack -> stack.getItem() instanceof BerryPouch)
                     .stream()
                     .findFirst();
-            if (pouchRefOpt.isEmpty()) {
-                return CompoundEventResult.pass(); // 没有装备袋子
-            }
+            if (pouchRefOpt.isEmpty()) return CompoundEventResult.pass();
             ItemStack pouchStack = pouchRefOpt.get().stack();
-            if (!(pouchStack.getItem() instanceof BerryPouch berryPouch)) {
-                return CompoundEventResult.pass(); // 理论上不会发生
-            }
+            if (!(pouchStack.getItem() instanceof BerryPouch berryPouch)) return CompoundEventResult.pass();
 
-            // 2. 检查鱼竿上当前的饵料
+            // 2. Check current bait on rod
             ItemStack currentBaitStackOnRod = PokerodItem.Companion.getBaitStackOnRod(heldStack);
 
-            // ---> 新增逻辑：如果鱼竿已有饵料，尝试同步 LAST_USED_BAIT <---
+            // --- Logic based on whether the rod has bait ---
             if (!currentBaitStackOnRod.isEmpty()) {
+                // --- Logic if rod ALREADY has bait ---
                 Item rodBaitItem = currentBaitStackOnRod.getItem();
                 ResourceLocation rodBaitRL = BuiltInRegistries.ITEM.getKey(rodBaitItem);
 
-                // 如果 rodBaitRL 无效 (比如物品未注册)，则不处理
+                // Sync LAST_USED_BAIT if necessary and possible
                 if (!rodBaitRL.equals(BuiltInRegistries.ITEM.getDefaultKey())) {
                     Optional<ResourceLocation> pouchLastUsedRLOpt = PouchDataHelper.getLastUsedBait(pouchStack);
-
-                    // 检查是否需要更新: (袋子无记录 || 袋子记录与鱼竿不同)
+                    // Needs sync if pouch has no record OR pouch record differs from rod
                     boolean needsSync = pouchLastUsedRLOpt.isEmpty() || !pouchLastUsedRLOpt.get().equals(rodBaitRL);
 
                     if (needsSync) {
-                        // 在更新前，必须确认袋子里确实有这种类型的饵料
+                        // Check if the bait type on the rod actually exists in the pouch before syncing
                         ItemContainerContents pouchContents = pouchStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
                         boolean rodBaitExistsInPouch = pouchContents.stream()
                                 .anyMatch(stack -> !stack.isEmpty() && stack.is(rodBaitItem));
-
                         if (rodBaitExistsInPouch) {
-                            // 同步：将鱼竿当前的饵料类型设置为袋子的 LAST_USED_BAIT
                             PouchDataHelper.setLastUsedBait(pouchStack, rodBaitItem);
-                            // 注意：这里我们只更新了 LAST_USED_BAIT，没有修改袋子内容，
-                            // 所以不需要立即保存 CONTAINER 组件。
-                            // 如果后续没有其他修改（比如自动装饵），这个更改会在物品下次保存时生效。
+                            // Component change on pouchStack will be saved eventually or if pouch is modified later.
                         }
+                        // If needsSync was true but rodBait doesn't exist in pouch, we don't sync.
                     }
                 }
-                // 鱼竿已有饵料，事件正常传递，不做自动装饵
+                // Rod already has bait, normal fishing behaviour proceeds. Pass event.
                 return CompoundEventResult.pass();
-            }
 
-            // ---> 原有逻辑：鱼竿为空，执行自动装饵 <---
-            // (此部分代码基本不变，但现在 PouchDataHelper.getLastUsedBait 会获取到上面可能已同步的值)
+            } else {
+                // --- Logic if rod is EMPTY (Prepare for Auto-Bait) ---
 
-            // 4. 获取袋子数据 (现在 pouchStack 已经获取到了)
-            ItemContainerContents currentContents = pouchStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
-            int pouchSize = berryPouch.getSize();
-            NonNullList<ItemStack> pouchItems = NonNullList.withSize(pouchSize, ItemStack.EMPTY);
-            currentContents.copyInto(pouchItems);
+                // <<< NEW LOGIC >>> Clear the Last Used Bait record because the rod is empty.
+                // This ensures the auto-bait doesn't immediately try to use a potentially outdated preference.
+                PouchDataHelper.clearLastUsedBait(pouchStack);
 
-            List<Integer> markedSlots = MarkedSlotsHelper.getMarkedSlots(pouchStack);
-            // 重新获取一次，因为它可能刚刚被上面的同步逻辑更新了
-            Optional<ResourceLocation> lastUsedBaitRL = PouchDataHelper.getLastUsedBait(pouchStack);
+                // --- Now, proceed with the Auto-Bait logic ---
 
-            // --- 开始按优先级查找诱饵 ---
-            int foundSlotIndex = -1;
-            ItemStack baitToUse = ItemStack.EMPTY;
+                // 4. Get Pouch Data (Container, Marked Slots, etc.)
+                ItemContainerContents currentContents = pouchStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+                int pouchSize = berryPouch.getSize();
+                NonNullList<ItemStack> pouchItems = NonNullList.withSize(pouchSize, ItemStack.EMPTY);
+                currentContents.copyInto(pouchItems); // Mutable list
 
-            // 优先级 1: 查找上次使用的诱饵 (现在可能是同步后的值)
-            if (lastUsedBaitRL.isPresent()) {
-                Optional<Item> lastUsedItem = BuiltInRegistries.ITEM.getOptional(lastUsedBaitRL.get());
-                if (lastUsedItem.isPresent() && !lastUsedItem.get().equals(BuiltInRegistries.ITEM.get(BuiltInRegistries.ITEM.getDefaultKey()))) { // 确保 Item 有效
+                List<Integer> markedSlots = MarkedSlotsHelper.getMarkedSlots(pouchStack);
+                // lastUsedBaitRLOpt is no longer needed here as we just cleared it.
+                boolean hasMarkedSlots = !markedSlots.isEmpty(); // Check if any slots are marked
+
+                // --- Start Priority Search (Now starts effectively at Marked -> Any) ---
+                int foundSlotIndex = -1;
+                ItemStack baitToUse = ItemStack.EMPTY;
+                Item usedBaitItem = null; // Keep track of the item type used
+
+                // Priority 1 (Effectively Skipped because Last Used was cleared)
+
+                // Priority 2: Marked Bait (Only if there are marked slots)
+                boolean checkedMarked = false; // Flag to know if we went through marked logic
+                if (hasMarkedSlots) {
+                    checkedMarked = true; // We are attempting marked logic
+                    for (int markedIndex : markedSlots) {
+                        if (markedIndex >= 0 && markedIndex < pouchItems.size()) {
+                            ItemStack stackInSlot = pouchItems.get(markedIndex);
+                            if (!stackInSlot.isEmpty() && isCobblemonBerry(stackInSlot)) {
+                                foundSlotIndex = markedIndex;
+                                baitToUse = stackInSlot;
+                                usedBaitItem = stackInSlot.getItem();
+                                break; // Found first available marked bait
+                            }
+                        }
+                    }
+                    // Requirement 2: If we intended to use marked but found none
+                    if (foundSlotIndex == -1) {
+                        serverPlayer.sendSystemMessage(Component.translatable("message.berrypouch.marked_bait_exhausted"), true);
+                        return CompoundEventResult.pass(); // Stop auto-baiting process
+                    }
+                }
+
+                // Priority 3: Any Available Bait (Only if Marked weren't applicable or already checked and failed - though failure case returns above)
+                // This runs if hasMarkedSlots was false, OR if we somehow passed the exhaustion check above (shouldn't happen).
+                if (foundSlotIndex == -1) { // No marked slots or somehow passed marked check without finding anything
                     for (int i = 0; i < pouchItems.size(); i++) {
                         ItemStack stackInSlot = pouchItems.get(i);
-                        if (!stackInSlot.isEmpty() && stackInSlot.is(lastUsedItem.get()) && isCobblemonBerry(stackInSlot)) {
+                        if (!stackInSlot.isEmpty() && isCobblemonBerry(stackInSlot)) {
                             foundSlotIndex = i;
                             baitToUse = stackInSlot;
-                            break;
-                        }
-                    }
-                } else if (lastUsedItem.isEmpty()){
-                    // 如果 ResourceLocation 存在但找不到对应 Item (可能 Mod 移除)，清除无效记录
-                    PouchDataHelper.clearLastUsedBait(pouchStack);
-                }
-            }
-
-            // 优先级 2: 如果没找到上次的，查找标记的诱饵
-            if (foundSlotIndex == -1) {
-                for (int markedIndex : markedSlots) {
-                    if (markedIndex >= 0 && markedIndex < pouchItems.size()) {
-                        ItemStack stackInSlot = pouchItems.get(markedIndex);
-                        if (!stackInSlot.isEmpty() && isCobblemonBerry(stackInSlot)) {
-                            foundSlotIndex = markedIndex;
-                            baitToUse = stackInSlot;
-                            break;
+                            usedBaitItem = stackInSlot.getItem();
+                            break; // Found first available bait
                         }
                     }
                 }
-            }
 
-            // 优先级 3: 如果还没找到，查找第一个可用的诱饵
-            if (foundSlotIndex == -1) {
-                for (int i = 0; i < pouchItems.size(); i++) {
-                    ItemStack stackInSlot = pouchItems.get(i);
-                    if (!stackInSlot.isEmpty() && isCobblemonBerry(stackInSlot)) {
-                        foundSlotIndex = i;
-                        baitToUse = stackInSlot;
-                        break;
-                    }
+                // --- Apply Found Bait (if any) ---
+                if (foundSlotIndex != -1 && !baitToUse.isEmpty() && usedBaitItem != null) {
+                    ItemStack baitToSet = baitToUse.copyWithCount(1);
+
+                    // 5. Set bait on rod
+                    PokerodItem.Companion.setBait(heldStack, baitToSet);
+
+                    // 6. Remove bait from pouch inventory (use the mutable list)
+                    ItemStack originalStack = pouchItems.get(foundSlotIndex);
+                    originalStack.shrink(1);
+
+                    // 7. Update pouch Data Components (Inventory and Last Used)
+                    pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
+                    // Set Last Used Bait to the one we just applied
+                    PouchDataHelper.setLastUsedBait(pouchStack, usedBaitItem);
+
+                    // 8. Send message to player
+                    serverPlayer.sendSystemMessage(Component.translatable("message.berrypouch.autobait", baitToSet.getHoverName()), true);
+
+                    // 9. Interrupt event as we handled the baiting
+                    return CompoundEventResult.interruptTrue(heldStack);
+
+                } else {
+                    // No bait found according to rules (Marked -> Any), or marked bait was exhausted.
+                    // No message needed here unless specifically desired for "pouch empty".
+                    return CompoundEventResult.pass();
                 }
-            }
+            } // End of if/else block for rod bait status
+        } // End server-side check
 
-            // --- 应用找到的诱饵 ---
-            if (foundSlotIndex != -1 && !baitToUse.isEmpty()) {
-                ItemStack baitToSet = baitToUse.copyWithCount(1);
-                Item usedBaitItem = baitToUse.getItem();
-
-                // 5. 设置诱饵到鱼竿
-                PokerodItem.Companion.setBait(heldStack, baitToSet);
-
-                // 6. 从袋子库存中移除一个诱饵
-                ItemStack originalStack = pouchItems.get(foundSlotIndex);
-                originalStack.shrink(1);
-                if (originalStack.isEmpty()) {
-                    pouchItems.set(foundSlotIndex, ItemStack.EMPTY);
-                }
-
-                // 7. 更新袋子的 Data Components (库存和上次使用)
-                pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
-                PouchDataHelper.setLastUsedBait(pouchStack, usedBaitItem); // 更新为这次自动装载的
-
-                // 8. 发送消息给玩家
-                serverPlayer.sendSystemMessage(Component.translatable("message.berrypouch.autobait", baitToSet.getHoverName()), true);
-
-                // 9. 中断事件
-                return CompoundEventResult.interruptTrue(heldStack);
-            } else {
-                // 优先级 4: 袋子为空或没有可用诱饵
-                return CompoundEventResult.pass();
-            }
-        }
-
-        // 客户端或其他情况，传递事件
+        // Client side or other unhandled cases, pass event
         return CompoundEventResult.pass();
     }
 

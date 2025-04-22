@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.item.interactive.PokerodItem;
 import com.github.flandre923.berrypouch.ModCommon;
 import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.helper.MarkedSlotsHelper;
+import com.github.flandre923.berrypouch.helper.PouchDataHelper;
 import com.github.flandre923.berrypouch.item.BerryPouch;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
@@ -96,7 +97,7 @@ public class ModNetworking {
         });
     }
 
-    // --- Update handleCycleBaitRequest ---
+
     private static void handleCycleBaitRequest(ServerPlayer player, boolean isMainHand, boolean isLeftCycle) {
         Level level = player.level();
         InteractionHand hand = isMainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
@@ -117,77 +118,58 @@ public class ModNetworking {
         }
 
         ItemStack pouchStack = pouchRefOpt.get().stack(); // The Berry Pouch ItemStack
-        // --- Get Marked Slots using new Helper ---
+        if (!(pouchStack.getItem() instanceof BerryPouch pouchItem)) {
+            return; // Should not happen
+        }
+
+        // --- Get Pouch Inventory and Marked Slots ---
         List<Integer> markedSlots = MarkedSlotsHelper.getMarkedSlots(pouchStack);
+        boolean preferMarked = !markedSlots.isEmpty(); // Player's intent: cycle marked if possible
 
-        // --- Get Pouch Inventory from Data Component ---
         ItemContainerContents currentContents = pouchStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
-        // Create a mutable list representation matching the pouch size for easier manipulation
-        int pouchSize = ((BerryPouch) pouchStack.getItem()).getPouchType().getSize(); // Get size dynamically
+        int pouchSize = pouchItem.getPouchType().getSize();
         NonNullList<ItemStack> pouchItems = NonNullList.withSize(pouchSize, ItemStack.EMPTY);
-        currentContents.copyInto(pouchItems); // Populate the list
+        currentContents.copyInto(pouchItems); // Mutable list
 
-
-        // --- Collect available MARKED berry types ---
-        List<Item> availableMarkedBerryTypes = new ArrayList<>();
-        for (int markedIndex : markedSlots) {
-            if (markedIndex >= 0 && markedIndex < pouchItems.size()) { // Bounds check
-                ItemStack stackInSlot = pouchItems.get(markedIndex);
-                if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot)) {
-                    if (!availableMarkedBerryTypes.contains(stackInSlot.getItem())) {
-                        availableMarkedBerryTypes.add(stackInSlot.getItem());
+        // --- Determine Available Bait *Types* based on intent and *current* availability ---
+        List<Item> availableMarkedItemTypes = new ArrayList<>();
+        if (preferMarked) {
+            for (int markedIndex : markedSlots) {
+                if (markedIndex >= 0 && markedIndex < pouchItems.size()) {
+                    ItemStack stackInSlot = pouchItems.get(markedIndex);
+                    // Check if it's a non-empty berry and the type isn't already added
+                    if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot) && !availableMarkedItemTypes.contains(stackInSlot.getItem())) {
+                        availableMarkedItemTypes.add(stackInSlot.getItem());
                     }
                 }
             }
         }
 
-        // --- Fallback: Collect ALL berry types ---
-        List<Item> allBerryTypes = new ArrayList<>();
+        // --- Determine *all* available bait types (still needed for fallback if not preferring marked) ---
+        List<Item> allAvailableItemTypes = new ArrayList<>();
         for (ItemStack stackInSlot : pouchItems) {
-            if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot)) {
-                if (!allBerryTypes.contains(stackInSlot.getItem())) {
-                    allBerryTypes.add(stackInSlot.getItem());
-                }
+            if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot) && !allAvailableItemTypes.contains(stackInSlot.getItem())) {
+                allAvailableItemTypes.add(stackInSlot.getItem());
             }
         }
 
-        // Determine which list to use and the appropriate message
-        List<Item> finalAvailableBerryTypes;
-        Component feedbackMsg;
-        if (!availableMarkedBerryTypes.isEmpty()) {
-            finalAvailableBerryTypes = availableMarkedBerryTypes;
-            feedbackMsg = Component.translatable("message.berrypouch.no_marked_bait_in_pouch"); // Will only be shown if list becomes empty later
-        } else if (!allBerryTypes.isEmpty()){
-            finalAvailableBerryTypes = allBerryTypes;
-            feedbackMsg = Component.translatable("message.berrypouch.no_bait_in_pouch");
-        } else {
-            player.sendSystemMessage(Component.translatable("message.berrypouch.no_bait_in_pouch"), true);
-            return; // No bait at all
-        }
-
-        if (finalAvailableBerryTypes.isEmpty()) {
-            player.sendSystemMessage(feedbackMsg, true); // Should ideally not happen if checks above are correct
-            return;
-        }
-
-        // --- Handle Current Bait ---
+        // --- Handle Returning Current Bait (Needs to happen before the new check) ---
         Item currentBaitItem = null;
         ItemStack currentBaitStackOnRod = PokerodItem.Companion.getBaitStackOnRod(heldStack);
-        boolean returnedToPouch = false; // Flag to track if bait was put back
-
+        boolean returnedToPouch = false;
         if (!currentBaitStackOnRod.isEmpty()) {
             currentBaitItem = currentBaitStackOnRod.getItem();
-            ItemStack baitToReturn = currentBaitStackOnRod.copy(); // Work with a copy
+            ItemStack baitToReturn = currentBaitStackOnRod.copy();
 
-            // --- Attempt to return bait to pouch (modifying pouchItems list) ---
+            // Attempt to return logic (Priority: Marked Stack -> Any Stack -> Empty Marked -> Empty Any)
+            // ... (Code for returning bait to pouchItems - same as before) ...
             // 1. Try stacking into marked slots first
             for (int markedIndex : markedSlots) {
-                if (markedIndex >= 0 && markedIndex < pouchItems.size()) {
+                if (!returnedToPouch && markedIndex >= 0 && markedIndex < pouchItems.size()) {
                     ItemStack stackInSlot = pouchItems.get(markedIndex);
                     if (ItemStack.isSameItemSameComponents(stackInSlot, baitToReturn) && stackInSlot.getCount() < stackInSlot.getMaxStackSize()) {
                         stackInSlot.grow(1);
                         returnedToPouch = true;
-                        break;
                     }
                 }
             }
@@ -223,28 +205,75 @@ public class ModNetworking {
                 }
             }
 
-            // --- If returned, clear bait from rod and save pouch changes ---
+            // --- Handle result of returning bait ---
             if (returnedToPouch) {
-                PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY); // Clear rod
-                // Save the modified pouchItems list back to the component
-                pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
+                PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY); // Clear rod bait IF returned
+                currentBaitItem = null; // Treat as if no bait for next cycle calculation
             } else {
                 // Drop the item if it couldn't be placed back
                 ItemEntity itemEntity = new ItemEntity(level, player.getX(), player.getY() + player.getEyeHeight(), player.getZ(), baitToReturn);
                 itemEntity.setPickUpDelay(10);
                 level.addFreshEntity(itemEntity);
                 player.sendSystemMessage(Component.translatable("message.berrypouch.bait_dropped", Component.translatable(currentBaitItem.getDescriptionId())), true);
-                // Do NOT clear bait from rod here, as it wasn't put back
-                currentBaitItem = null; // Act as if there was no bait for cycle calculation if dropped
+                // Bait remains on rod, but clear currentBaitItem for cycle calc
+                currentBaitItem = null;
             }
+        } // End handling current bait return
+
+        // --- <<< NEW LOGIC CHECK >>> ---
+        // If player intended to cycle marked bait, but none are available *now*
+        if (preferMarked && availableMarkedItemTypes.isEmpty()) {
+            player.sendSystemMessage(Component.translatable("message.berrypouch.marked_bait_exhausted_switching_none"), true); // Use a new message
+            // Ensure rod bait is empty (might already be if returnedToPouch was true)
+            PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY);
+            // Save pouch state (important if bait was returned)
+            if (returnedToPouch) {
+                pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
+            }
+            // Sync inventory changes (especially rod bait)
+            player.inventoryMenu.broadcastChanges();
+            if (player.containerMenu != player.inventoryMenu) {
+                player.containerMenu.broadcastChanges();
+            }
+            // Stop further processing for this cycle request
+            return;
+        }
+
+        // --- Decide which list of types to cycle through (Only reached if the above check didn't return) ---
+        List<Item> finalAvailableBerryTypes;
+        boolean cyclingMarked = false; // Flag to track if we are operating in "marked only" mode
+
+        if (preferMarked) { // We already know availableMarkedItemTypes is not empty if we reach here
+            finalAvailableBerryTypes = availableMarkedItemTypes;
+            cyclingMarked = true;
+        } else if (!allAvailableItemTypes.isEmpty()){ // Fallback to all types if not preferring marked
+            finalAvailableBerryTypes = allAvailableItemTypes;
+            // cyclingMarked remains false
+        } else {
+            // No bait available at all (neither marked nor unmarked)
+            player.sendSystemMessage(Component.translatable("message.berrypouch.no_bait_in_pouch"), true);
+            // Save pouch state if bait was returned
+            if (returnedToPouch) {
+                pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
+            }
+            return;
         }
 
 
-        // --- Cycle to next bait ---
+        // --- Cycle to next bait type ---
+        // ... (Rest of the cycling logic: find currentIndex, nextIndex, nextBaitItem) ...
         int currentIndex = currentBaitItem != null ? finalAvailableBerryTypes.indexOf(currentBaitItem) : -1;
         if (currentIndex == -1 && !finalAvailableBerryTypes.isEmpty()){
-            currentIndex = isLeftCycle ? 0 : finalAvailableBerryTypes.size() - 1 ; // Adjust start for left cycle
+            currentIndex = isLeftCycle ? 0 : finalAvailableBerryTypes.size() - 1 ;
+        } else if (finalAvailableBerryTypes.isEmpty()) {
+            // Should be caught by earlier checks, but safety first
+            player.sendSystemMessage(Component.translatable("message.berrypouch.no_bait_in_pouch"), true);
+            if (returnedToPouch) {
+                pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
+            }
+            return;
         }
+
 
         int nextIndex = isLeftCycle
                 ? (currentIndex - 1 + finalAvailableBerryTypes.size()) % finalAvailableBerryTypes.size()
@@ -252,53 +281,67 @@ public class ModNetworking {
 
         if (nextIndex < 0 || nextIndex >= finalAvailableBerryTypes.size()) {
             ModCommon.LOG.error("Error calculating next bait index. Current: {}, Next: {}, Size: {}", currentIndex, nextIndex, finalAvailableBerryTypes.size());
-            return; // Avoid index out of bounds
+            if (returnedToPouch) { // Save potential changes
+                pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
+            }
+            return;
         }
 
         Item nextBaitItem = finalAvailableBerryTypes.get(nextIndex);
         boolean deducted = false;
 
-        // --- Deduct next bait from pouch (modifying pouchItems list) ---
-        // 1. Try deducting from marked slots first
-        for (int markedIndex : markedSlots) {
-            if (markedIndex >= 0 && markedIndex < pouchItems.size()) {
-                ItemStack stackInSlot = pouchItems.get(markedIndex);
-                if (!stackInSlot.isEmpty() && stackInSlot.is(nextBaitItem)) {
-                    stackInSlot.shrink(1);
-                    // No need to set back to EMPTY if shrink makes it empty, NonNullList handles it.
-                    deducted = true;
-                    break;
+        // --- Deduct next bait from pouch (using updated pouchItems list) ---
+        // ... (Deduction logic remains the same, respecting 'cyclingMarked') ...
+        if (cyclingMarked) {
+            // Requirement 1: Only deduct from MARKED slots if that's the mode
+            for (int markedIndex : markedSlots) {
+                if (markedIndex >= 0 && markedIndex < pouchItems.size()) {
+                    ItemStack stackInSlot = pouchItems.get(markedIndex);
+                    if (!stackInSlot.isEmpty() && stackInSlot.is(nextBaitItem)) {
+                        stackInSlot.shrink(1);
+                        deducted = true;
+                        break; // Deducted one, stop searching marked slots
+                    }
                 }
             }
-        }
-        // 2. Try deducting from any slot
-        if (!deducted) {
+        } else {
+            // Standard behavior: Deduct from any slot
             for (int i = 0; i < pouchItems.size(); i++) {
                 ItemStack stackInSlot = pouchItems.get(i);
                 if (!stackInSlot.isEmpty() && stackInSlot.is(nextBaitItem)) {
                     stackInSlot.shrink(1);
                     deducted = true;
-                    break;
+                    break; // Deducted one, stop searching all slots
                 }
             }
         }
 
+
+        // --- Handle Deduction Result ---
         if (!deducted) {
+            // If deduction failed, it should have been caught by the availability checks
+            // or the earlier `preferMarked && availableMarkedItemTypes.isEmpty()` check.
+            // This path suggests an inconsistency, possibly if the bait was removed between checks.
+            ModCommon.LOG.warn("Failed to deduct bait {} even though it was expected to be available.", nextBaitItem);
             player.sendSystemMessage(Component.translatable("message.berrypouch.berry_missing_after_selection"), true);
-            // Maybe clear bait from rod if deduction failed unexpectedly?
-            if (returnedToPouch) { // Only clear if we successfully put the old one back
-                PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY);
+
+            // Save changes if bait was returned earlier
+            if (returnedToPouch) {
+                pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
             }
-            // Save potential changes from returning the previous bait even if deduction fails
-            pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
+            // Ensure rod is clear since deduction failed
+            PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY);
+            player.inventoryMenu.broadcastChanges();
+            if (player.containerMenu != player.inventoryMenu) {
+                player.containerMenu.broadcastChanges();
+            }
             return;
         }
 
-        // --- Set new bait and save pouch changes ---
+        // --- Success: Set new bait and save pouch changes ---
         PokerodItem.Companion.setBait(heldStack, new ItemStack(nextBaitItem, 1));
-        // Save the modified pouchItems list back to the component
+        PouchDataHelper.setLastUsedBait(pouchStack, nextBaitItem);
         pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
-
 
         // --- Feedback and Sound ---
         player.sendSystemMessage(
@@ -309,12 +352,17 @@ public class ModNetworking {
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 0.5f, 1.5f);
 
         // --- Sync Inventory ---
-        // It seems broadcasting changes is necessary when modifying item components server-side
-        player.inventoryMenu.broadcastChanges(); // Sync player inventory (which includes held items)
-        if (player.containerMenu != player.inventoryMenu) { // Check if a different container is open
-            player.containerMenu.broadcastChanges(); // Sync the currently open container too
+        player.inventoryMenu.broadcastChanges();
+        if (player.containerMenu != player.inventoryMenu) {
+            player.containerMenu.broadcastChanges();
         }
     }
+
+
+    // handleToggleMarkSlot() method remains the same
+    // sendOpenPouchPacketToServer() method remains the same
+    // sendToggleMarkSlotPacketToServer() method remains the same
+
 
     // --- Update handleToggleMarkSlot ---
     private static void handleToggleMarkSlot(ToggleMarkSlotPayload packet, NetworkManager.PacketContext context) {

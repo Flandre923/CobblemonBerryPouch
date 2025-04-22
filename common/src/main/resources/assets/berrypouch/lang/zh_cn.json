@@ -14,5 +14,9 @@
   "message.berrypouch.bait_dropped": "你的树果袋已满， %s 已被丢到地上",
   "message.berrypouch.autobait": "自动装备鱼饵： %s",
   "accessories.slot.pouch": "袋",
-  "accessories.slot_group.utility": "方块宝可梦"
+  "accessories.slot_group.utility": "方块宝可梦",
+
+
+  "message.berrypouch.marked_bait_exhausted_switching_none": "标记的诱饵已耗尽！已切换为空。",
+  "message.berrypouch.marked_bait_exhausted": "标记的诱饵已耗尽！"
 }

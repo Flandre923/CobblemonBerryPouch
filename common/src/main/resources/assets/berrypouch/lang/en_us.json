@@ -14,5 +14,8 @@
   "message.berrypouch.bait_dropped": "Your pouch is full, dropped %s to the ground",
   "message.berrypouch.autobait": "Auto-equipped bait: %s",
   "accessories.slot.pouch": "Pouch",
-  "accessories.slot_group.utility": "Cobblemon"
+  "accessories.slot_group.utility": "Cobblemon",
+
+  "message.berrypouch.marked_bait_exhausted_switching_none": "Marked bait exhausted! Switched to none.",
+  "message.berrypouch.marked_bait_exhausted": "Marked bait exhausted!"
 }
