@@ -18,6 +18,7 @@
 package com.github.flandre923.berrypouch;
 
 
+import com.github.flandre923.berrypouch.component.MarkedSlotsComponent;
 import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.item.BerryPouch;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
@@ -29,6 +30,7 @@ import com.github.flandre923.berrypouch.recipe.BerryPouchUpgradeRecipe;
 import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -38,6 +40,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public final class ModRegistries {
@@ -87,6 +90,27 @@ public final class ModRegistries {
         });
     }
 
+    public class ModDataComponentes{
+        public static final DeferredRegister<DataComponentType<?>> DATA_COMPONENTS =
+                DeferredRegister.create( ModCommon.MOD_ID,Registries.DATA_COMPONENT_TYPE);
+
+
+        // Register the MARKED_SLOTS component
+        public static final RegistrySupplier<DataComponentType<List<Integer>>> MARKED_SLOTS =
+                DATA_COMPONENTS.register("marked_slots", () ->
+                        DataComponentType.<List<Integer>>builder()
+                                .persistent(MarkedSlotsComponent.CODEC) // Use the codec for saving
+                                .networkSynchronized(MarkedSlotsComponent.STREAM_CODEC) // Use the stream codec for networking
+                                // .cacheEncoding() // Optional: Cache encoding if frequently sent/saved unchanged
+                                .build()
+                );
+        public static void register() {
+            DATA_COMPONENTS.register();
+            ModCommon.LOG.info("Registered Data Components for {}", ModCommon.MOD_ID); // Add logging
+        }
+
+    }
+
 
     public static void init() {
         if(!ModRegistries.initialized) {
@@ -94,8 +118,8 @@ public final class ModRegistries {
             Items.REGISTRY.register();
             Tabs.TAB.register();
             Recipes.RECIPE_SERIALIZERS.register();
+            ModDataComponentes.register();
             ModRegistries.initialized = true;
-
             // event
             FishingRodEventHandler.register();
         }

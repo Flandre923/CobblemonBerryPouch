@@ -89,6 +89,7 @@ public class BaitRenderHandler  implements ClientGuiEvent.RenderHud {
         guiGraphics.blit(GUI_ICONS_TEXTURE, leftArrowX, baseY, // 屏幕坐标
                 LEFT_ARROW_U, LEFT_ARROW_V,           // UV 坐标
                 ICON_RENDER_SIZE, ICON_RENDER_SIZE,   // 渲染尺寸
+                ICON_TEXTURE_SIZE,ICON_TEXTURE_SIZE,
                 TEXTURE_SHEET_WIDTH, TEXTURE_SHEET_HEIGHT); // 纹理图纸尺寸
         // 绘制框
         guiGraphics.blit(GUI_ICONS_TEXTURE, frameX, baseY,

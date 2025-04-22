@@ -17,5 +17,8 @@
   "message.berrypouch.bait_dropped": "Your pouch is full, dropped %s to the ground",
   "message.berrypouch.autobait": "Auto-equipped bait: %s",
   "accessories.slot.pouch": "Pouch",
-  "accessories.slot_group.utility": "Cobblemon"
+  "accessories.slot_group.utility": "Cobblemon",
+
+  "message.berrypouch.no_marked_bait_in_pouch": "No marked bait found in pouch, cycling all available bait.",
+  "message.berrypouch.berry_missing_after_selection": "Selected bait type missing from pouch unexpectedly.",
 }

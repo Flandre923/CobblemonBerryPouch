@@ -1,11 +1,16 @@
 package com.github.flandre923.berrypouch.menu.screen;
 
+import com.github.flandre923.berrypouch.ModCommon;
+import com.github.flandre923.berrypouch.helper.MarkedSlotsHelper;
 import com.github.flandre923.berrypouch.helper.RenderHelper;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import com.github.flandre923.berrypouch.menu.container.AbstractBerryPouchContainer;
+import com.github.flandre923.berrypouch.network.ModNetworking;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +18,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 
 public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchContainer>
         extends AbstractContainerScreen<T> {
@@ -20,6 +26,11 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
     protected final BerryPouchType pouchType;
     protected final ResourceLocation texture;
     protected final Minecraft minecraft;
+
+    private static final ResourceLocation STAR_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "textures/gui/star.png");
+    private static final int STAR_SIZE = 32;
+
 
     public AbstractBerryPouchScreen(
             T menu, Inventory playerInv, Component title,
@@ -52,6 +63,7 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         renderBackgroundTexture(guiGraphics);
         renderSlotPlaceholders(guiGraphics);
+        renderMarkedSlotIndicators(guiGraphics); // <-- 新增调用: 渲染标记指示器
     }
     protected void renderBackgroundTexture(GuiGraphics guiGraphics) {
         int x = (width - imageWidth) / 2;
@@ -83,6 +95,52 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
                 }
             }
         }
+    }
+
+
+    protected void renderMarkedSlotIndicators(GuiGraphics guiGraphics) {
+        ItemStack pouchStack = menu.getPouchStack();
+        PoseStack poseStack = guiGraphics.pose();
+
+        for (Slot slot : menu.slots) {
+            if (slot.container == menu.getPouchInventory()) {
+                int pouchSlotIndex = slot.getContainerSlot();
+
+                if (MarkedSlotsHelper.isSlotMarked(pouchStack, pouchSlotIndex)) {
+                    poseStack.pushPose();
+                    poseStack.translate(0, 0, 299);
+//                    poseStack.scale(0.3f,0.3f,1f);
+                    // Adjust star positioning relative to slot (top-right corner)
+                    int starX = this.leftPos + slot.x ; // Slot width is 16
+                    int starY = this.topPos + slot.y;
+
+                    RenderSystem.enableBlend();
+                    RenderSystem.defaultBlendFunc();
+                    // Ensure last two args match the actual texture size (e.g., 8, 8 or 32, 32)
+//                    guiGraphics.blit(STAR_TEXTURE, starX, starY, 0, 0, STAR_SIZE, STAR_SIZE, STAR_SIZE, STAR_SIZE);
+                    guiGraphics.blit(STAR_TEXTURE, starX, starY, 8,8,0,0, STAR_SIZE, STAR_SIZE, STAR_SIZE, STAR_SIZE);
+                    RenderSystem.disableBlend();
+                    poseStack.popPose();
+                }
+            }
+        }
+    }
+
+
+    // --- mouseClicked remains the same (logic is correct) ---
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && Screen.hasShiftDown()) {
+            Slot clickedSlot = this.hoveredSlot;
+            if (clickedSlot != null && clickedSlot.container == menu.getPouchInventory()) {
+                int pouchSlotIndex = clickedSlot.getContainerSlot();
+                ModNetworking.sendToggleMarkSlotPacketToServer(pouchSlotIndex); // Send the network packet
+                // Optional: Client-side sound feedback
+                // this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true; // Indicate event was handled
+            }
+        }
+        return super.mouseClicked(mouseX, mouseY, button); // Default handling
     }
 
     protected abstract ItemStack getPlaceholderForSlot(int slotIndex);
