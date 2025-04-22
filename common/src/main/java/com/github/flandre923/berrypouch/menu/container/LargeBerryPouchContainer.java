@@ -1,13 +1,10 @@
 package com.github.flandre923.berrypouch.menu.container;
 
 import com.github.flandre923.berrypouch.ModRegistries;
-import com.github.flandre923.berrypouch.client.FindBerryPouchItemClient;
-import com.github.flandre923.berrypouch.item.BerryPouch;
-import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
+import com.github.flandre923.berrypouch.helper.PouchItemHelper;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Interaction;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -30,7 +27,7 @@ public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
         }else if(isHand == 1){
             item = inv.player.getItemInHand(InteractionHand.OFF_HAND);
         }else{
-            item = FindBerryPouchItemClient.findBerryPouch(inv.player);
+            item = PouchItemHelper.findBerryPouch(inv.player);
         }
         return new LargeBerryPouchContainer(windowId, inv,item);
     }
