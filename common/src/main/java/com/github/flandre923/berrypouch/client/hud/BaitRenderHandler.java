@@ -19,11 +19,7 @@ import net.minecraft.world.item.ItemStack;
 @Environment(EnvType.CLIENT)
 public class BaitRenderHandler  implements ClientGuiEvent.RenderHud {
     private static final ResourceLocation GUI_ICONS_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "textures/gui/guiIcon.png");
-    private static final int GUI_WIDTH = 16;
-    private static final int GUI_HEIGHT = 16;
-    private static final int GUI_X = Minecraft.getInstance().getWindow().getGuiScaledWidth() - 20;
-    private static final int GUI_Y = Minecraft.getInstance().getWindow().getGuiScaledHeight() - 20;
+            ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "textures/gui/gui_icon.png");
     // 图标在纹理文件中的尺寸
     private static final int ICON_TEXTURE_SIZE = 32;
     // 纹理文件的完整尺寸
