@@ -36,7 +36,7 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
 
     private static final ResourceLocation STAR_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "textures/gui/star.png");
-    private static final int STAR_SIZE = 32;
+    private static final int STAR_SIZE = 20;
 
 
     public AbstractBerryPouchScreen(
@@ -117,18 +117,18 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
 
                 if (MarkedSlotsHelper.isSlotMarked(currentPouchStack, pouchSlotIndex)) {
                     poseStack.pushPose();
-                    poseStack.translate(0, 0, 100);
+                    poseStack.translate(0, 0, 299);
 //                    poseStack.scale(0.3f,0.3f,1f);
                     // Adjust star positioning relative to slot (top-right corner)
                     int starX = this.leftPos + slot.x ; // Slot width is 16
                     int starY = this.topPos + slot.y;
 
-                    RenderSystem.enableBlend();
-                    RenderSystem.defaultBlendFunc();
+//                    RenderSystem.enableBlend();
+//                    RenderSystem.defaultBlendFunc();
                     // Ensure last two args match the actual texture size (e.g., 8, 8 or 32, 32)
 //                    guiGraphics.blit(STAR_TEXTURE, starX, starY, 0, 0, STAR_SIZE, STAR_SIZE, STAR_SIZE, STAR_SIZE);
                     guiGraphics.blit(STAR_TEXTURE, starX, starY, 16,16,0,0, STAR_SIZE, STAR_SIZE, STAR_SIZE, STAR_SIZE);
-                    RenderSystem.disableBlend();
+//                    RenderSystem.disableBlend();
                     poseStack.popPose();
                 }
             }

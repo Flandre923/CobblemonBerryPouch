@@ -14,7 +14,7 @@ public class MarkedSlotsComponent {
     public static final Codec<List<Integer>> CODEC = Codec.INT.listOf();
 
     public static final StreamCodec<ByteBuf, List<Integer>> STREAM_CODEC =
-            ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list(5));
+            ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list(69));
 
     public static List<Integer> getOrDefault(List<Integer> list) {
         return list == null ? EMPTY : list;
