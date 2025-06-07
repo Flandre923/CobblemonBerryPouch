@@ -19,6 +19,7 @@ package com.github.flandre923.berrypouch.fabric.client;
 
 import com.github.flandre923.berrypouch.ModClientCommon;
 import com.github.flandre923.berrypouch.ModRegistries;
+import com.github.flandre923.berrypouch.client.input.KeyBindingManager;
 import com.github.flandre923.berrypouch.menu.screen.LargeBerryPouchScreen;
 import com.github.flandre923.berrypouch.menu.screen.MediumBerryPouchScreen;
 import com.github.flandre923.berrypouch.menu.screen.SmallBerryPouchScreen;
@@ -34,6 +35,7 @@ public class FabricClient implements ClientModInitializer {
         MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), SmallBerryPouchScreen::new);
         MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), MediumBerryPouchScreen::new);
         MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(), LargeBerryPouchScreen::new);
+        KeyBindingManager.register();
         ModClientCommon.init();
     }
 }

@@ -15,11 +15,15 @@ public class KeyBindingManager {
     public static final String KEY_CATEGORY = "key.categories."+ ModCommon.MOD_ID;
 
     public static final String KEY_OPEN_POUCH = "key."+ModCommon.MOD_ID+".open_pouch";
-    public static final String KEY_CYCLE_BAIT = "key."+ModCommon.MOD_ID+".cycle_bait";
     public static final String KEY_CYCLE_BAIT_LEFT = "key." + ModCommon.MOD_ID + ".cycle_bait_left";
     public static final String KEY_CYCLE_BAIT_RIGHT = "key." + ModCommon.MOD_ID + ".cycle_bait_right";
+    public static final String KEY_TOGGLE_AUTO_BERRY = "key."+ModCommon.MOD_ID+".toggle_auto_berry";
 
     private static final Map<KeyMapping, KeyAction> KEY_ACTIONS = new HashMap<>();
+
+    public static Map<KeyMapping,KeyAction> getKeyActions() {
+        return KEY_ACTIONS;
+    }
     public static void register() {
         registerKeyBinding(
                 new KeyMapping(KEY_OPEN_POUCH, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, KEY_CATEGORY),
@@ -34,7 +38,13 @@ public class KeyBindingManager {
                 new KeyMapping(KEY_CYCLE_BAIT_RIGHT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_BRACKET, KEY_CATEGORY),
                 new CycleBaitAction(false)
         );
+
+        registerKeyBinding(
+                new KeyMapping(KEY_TOGGLE_AUTO_BERRY, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_BACKSLASH, KEY_CATEGORY),
+                new ToggleAutoBerryAction()
+        );
     }
+
     private static void registerKeyBinding(KeyMapping mapping, KeyAction action) {
         KEY_ACTIONS.put(mapping, action);
         KeyMappingRegistry.register(mapping);

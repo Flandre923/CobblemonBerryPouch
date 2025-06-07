@@ -21,14 +21,19 @@ import com.github.flandre923.berrypouch.ModClientCommon;
 import com.github.flandre923.berrypouch.ModCommon;
 
 import com.github.flandre923.berrypouch.ModRegistries;
+import com.github.flandre923.berrypouch.client.input.KeyBindingManager;
 import com.github.flandre923.berrypouch.menu.screen.LargeBerryPouchScreen;
 import com.github.flandre923.berrypouch.menu.screen.MediumBerryPouchScreen;
 import com.github.flandre923.berrypouch.menu.screen.SmallBerryPouchScreen;
+import net.minecraft.client.KeyMapping;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+
+import java.security.Key;
 
 @EventBusSubscriber(modid = ModCommon.MOD_ID,bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class NeoForgeClient {
@@ -44,6 +49,11 @@ public class NeoForgeClient {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         ModClientCommon.init();
+    }
+
+    @SubscribeEvent
+    public static void onKeyMappingRegister(RegisterKeyMappingsEvent event){
+        KeyBindingManager.register();
     }
 
 }

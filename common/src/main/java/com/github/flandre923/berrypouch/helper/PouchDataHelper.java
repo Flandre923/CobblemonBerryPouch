@@ -1,8 +1,10 @@
 package com.github.flandre923.berrypouch.helper; // 或者其他合适的包
 
 import com.github.flandre923.berrypouch.ModRegistries;
+import com.github.flandre923.berrypouch.mobinf.IAutoFillablePlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -42,4 +44,20 @@ public class PouchDataHelper {
         // 移除 Component 或将其设置为空 Optional 都可以
         pouchStack.set(ModRegistries.ModDataComponentes.LAST_USED_BAIT.get(), Optional.empty());
     }
+
+    public static boolean isAutoBerryEnabled(ServerPlayer player) {
+        if (player instanceof IAutoFillablePlayer mixin) {
+            return mixin.berryPouch$getAutoFillBerryuPouch();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public static void setAutoBerryEnabled(ServerPlayer player, boolean newState) {
+        if (player instanceof IAutoFillablePlayer mixin) {
+            mixin.berryPouch$setAutoFillBerryPouch(newState);
+        }
+    }
+
 }

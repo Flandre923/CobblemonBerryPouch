@@ -18,7 +18,7 @@ public class ModClientCommon {
         ItemProperties.register(ModRegistries.Items.BERRY_POUCH_69.get(),
                 ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "full"),
                 (stack, level, entity, seed) -> BerryPouchModelHelper.shouldUseFullModel(stack) ? 1.0F : 0.0F);
-        KeyBindingManager.register();
+
         ClientTickEvent.CLIENT_POST.register(__ -> KeyBindingManager.checkKeyInputs());
         ClientGuiEvent.RENDER_HUD.register(new BaitRenderHandler());
     }

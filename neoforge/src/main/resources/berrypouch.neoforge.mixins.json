@@ -5,7 +5,8 @@
   "package": "${maven_group}.${mod_id}.mixins",
   "mixins": [
     "ItemEntityMixin",
-    "ShapedRecipeMixin"
+    "ShapedRecipeMixin",
+    "EnableAutoFillMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -15,7 +15,8 @@
   "message.berrypouch.autobait": "自动装备鱼饵： %s",
   "accessories.slot.pouch": "袋",
   "accessories.slot_group.utility": "方块宝可梦",
-
+  "message.berrypouch.auto_berry_toggled.true": "开启自动装备树果",
+  "message.berrypouch.auto_berry_toggled.false": "关闭自动装备树果",
 
   "message.berrypouch.marked_bait_exhausted_switching_none": "标记的诱饵已耗尽！已切换为空。",
   "message.berrypouch.marked_bait_exhausted": "标记的诱饵已耗尽！"

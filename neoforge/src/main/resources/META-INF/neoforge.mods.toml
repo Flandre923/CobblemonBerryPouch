@@ -32,6 +32,12 @@ license="${license}"
   ordering="NONE"
   side="BOTH"
 
+[[dependencies.${mod_id}]]
+  modId="accessories"
+  mandatory=true
+  versionRange="[${accessories_version},)"
+  ordering="NONE"
+  side="BOTH"
 
 [[mixins]]
 config = "${mod_id}.neoforge.mixins.json"

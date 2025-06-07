@@ -30,7 +30,6 @@ public class FishingRodEventHandler {
 
     public static void register() {
         InteractionEvent.RIGHT_CLICK_ITEM.register(FishingRodEventHandler::onPlayerUseItem);
-
     }
 
 
@@ -38,13 +37,12 @@ public class FishingRodEventHandler {
         ItemStack heldStack = player.getItemInHand(hand);
         Level level = player.level();
 
-        // Server-side logic only
         if (level.isClientSide() || !(player instanceof ServerPlayer serverPlayer)) {
             return CompoundEventResult.pass(); // Only process on server side for ServerPlayer
         }
 
-        // 1. Check if it's a Cobblemon fishing rod
-        if (!isCobblemonFishingRod(heldStack)) {
+
+        if (!isCobblemonFishingRod(heldStack) || !PouchDataHelper.isAutoBerryEnabled((ServerPlayer)player)) {
             return CompoundEventResult.pass(); // Not a Cobblemon rod
         }
 

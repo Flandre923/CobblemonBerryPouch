@@ -32,6 +32,7 @@
     "fabric": "*",
     "minecraft": "${minecraft_version}",
     "cobblemon": ">=${cobblemon_min_ver}",
+    "accessories": ">=${accessories_version}",
     "forgeconfigapiport": ">=${fcap_min_ver}"
   }
 }

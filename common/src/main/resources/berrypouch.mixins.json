@@ -6,7 +6,8 @@
   "refmap": "${mod_id}.refmap.json",
   "mixins": [
     "ItemEntityMixin",
-    "ShapedRecipeMixin"
+    "ShapedRecipeMixin",
+    "EnableAutoFillMixin"
   ],
   "injectors": {
     "defaultRequire": 1

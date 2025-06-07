@@ -1,5 +1,6 @@
 package com.github.flandre923.berrypouch.network;
 
+import com.cobblemon.mod.common.api.fishing.FishingBait;
 import com.cobblemon.mod.common.item.interactive.PokerodItem;
 import com.github.flandre923.berrypouch.ModCommon;
 import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
@@ -68,6 +69,16 @@ public class ModNetworking {
                 ToggleMarkSlotPayload.TYPE,
                 ToggleMarkSlotPayload.CODEC,
                 ModNetworking::handleToggleMarkSlot // 新的处理方法
+        );
+
+        NetworkManager.registerReceiver(
+            NetworkManager.Side.C2S,
+            ToggleAutoBerryPayload.TYPE,
+            ToggleAutoBerryPayload.CODEC,
+            (packet, context) -> {
+                ServerPlayer player = (ServerPlayer) context.getPlayer();
+                context.queue(() -> handleToggleAutoBerry(player));
+            }
         );
     }
 
@@ -334,6 +345,35 @@ public class ModNetworking {
         });
     }
 
+    private static void handleToggleAutoBerry(ServerPlayer player) {
+        // 切换自动填充状态逻辑
+        boolean oldState = PouchDataHelper.isAutoBerryEnabled(player);
+        boolean newState = !oldState;
+        PouchDataHelper.setAutoBerryEnabled(player, newState);
+
+        if(oldState){
+            Level level = player.level();
+            InteractionHand[] hands ={InteractionHand.MAIN_HAND, InteractionHand.OFF_HAND};
+            for (InteractionHand hand : hands) {
+                ItemStack heldStack = player.getItemInHand(hand);
+                if(FishingRodEventHandler.isCobblemonFishingRod(heldStack)){
+                    ItemStack currentBait =PokerodItem.Companion.getBaitStackOnRod(heldStack);
+                    BerryPouch.onPickupItem(currentBait,player);
+                    if (!currentBait.isEmpty()) {
+                        PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY);
+                        break;
+                    }
+                }
+            }
+        }
+
+        Component message = Component.translatable("message.berrypouch.auto_berry_toggled." + newState);
+        player.sendSystemMessage(message, true);
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), 
+            SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 0.5f, 1.2f);
+    }
+
+    
     // --- 修改: 发送打开背包的请求 (如果需要，虽然你的代码是从 KeyBindingManager 发起的) ---
     public static void sendOpenPouchPacketToServer() {
         if (Minecraft.getInstance().player != null && Minecraft.getInstance().getConnection() != null) {
