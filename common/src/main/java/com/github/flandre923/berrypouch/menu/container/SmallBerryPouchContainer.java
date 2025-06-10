@@ -80,6 +80,7 @@ public class SmallBerryPouchContainer extends AbstractBerryPouchContainer{
             if (originalStack.isEmpty()) {
                 clickedSlot.set(ItemStack.EMPTY);
             } else {
+                clickedSlot.set(originalStack);
                 clickedSlot.setChanged();
             }
 

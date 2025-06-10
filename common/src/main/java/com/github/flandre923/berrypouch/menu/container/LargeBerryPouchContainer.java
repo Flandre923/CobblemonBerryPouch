@@ -95,6 +95,7 @@ public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
             if (originalStack.isEmpty()) {
                 clickedSlot.set(ItemStack.EMPTY);
             } else {
+                clickedSlot.set(originalStack);
                 clickedSlot.setChanged();
             }
 

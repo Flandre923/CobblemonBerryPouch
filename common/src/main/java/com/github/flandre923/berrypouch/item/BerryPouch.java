@@ -54,7 +54,14 @@ public class BerryPouch extends AccessoryItem {
         if (!isBerry(itemStack)) {
             return false; // 不是莓果，不进行特殊处理，返回 false 让原版逻辑处理
         }
-        return onPickupItem(itemEntity.getItem(), player);
+
+        if(onPickupItem(itemEntity.getItem(), player)){
+            if(itemEntity.getItem().isEmpty() || itemEntity.getItem().getCount() == 0)
+                itemEntity.discard();
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public static boolean onPickupItem(ItemStack itemStack,Player player){
@@ -70,7 +77,7 @@ public class BerryPouch extends AccessoryItem {
                     stack -> stack.getItem() instanceof BerryPouch
             );
             for (SlotEntryReference entryRef : equippedPouches) {
-                if (tryInsertItemStack(entryRef.stack(), itemStack.copy(), player.level(),player)) {
+                if (tryInsertItemStack(entryRef.stack(), itemStack, player.level(),player)) {
                     return true;
                 }
             }
@@ -82,7 +89,7 @@ public class BerryPouch extends AccessoryItem {
             ItemStack pouchStack = playerInventory.getItem(i);
             if (pouchStack.getItem() instanceof BerryPouch berryPouch) {
                 // d. 找到 BerryPouch 后，检查对应槽位是否有空间
-                if (tryInsertItemStack(pouchStack, itemStack.copy(), player.level(),player)) { // 尝试将掉落的莓果 ItemStack 复制一份插入 BerryPouch
+                if (tryInsertItemStack(pouchStack, itemStack, player.level(),player)) { // 尝试将掉落的莓果 ItemStack 复制一份插入 BerryPouch
                     // 如果成功插入，移除世界上的掉落物
                     return true; // 阻止原版拾取逻辑，返回 true
                 }
