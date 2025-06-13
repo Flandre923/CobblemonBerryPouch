@@ -1,0 +1,24 @@
+{
+  "item.berrypouch.berry_pouch_30": "Маленький мешочек для ягод",
+  "item.berrypouch.berry_pouch_69": "Большой мешочек для ягод",
+  "berrypouch.berry_pouch.tab": "Мешочек для ягод",
+  "key.categories.berrypouch": "Мешочек для ягод",
+  "key.berrypouch.open_pouch": "Открыть мешочек для ягод в слоте",
+  "key.berrypouch.cycle_bait_left": "Предыдущая наживка",
+  "key.berrypouch.cycle_bait_right": "Следующая наживка",
+  "key.berrypouch.toggle_auto_berry": "Автоматически экипированная приманка",
+  "message.berrypouch.not_holding_rod": "Вы должны держать удочку из Cobblemon.",
+  "message.berrypouch.capability_missing": "Ошибка системы аксессуаров",
+  "message.berrypouch.need_pouch": "Необходимо экипировать мешочек для ягод",
+  "message.berrypouch.no_bait_in_pouch": "В мешочке нет доступных ягод",
+  "message.berrypouch.switched_bait": "Наживка: %s",
+  "message.berrypouch.bait_dropped": "Мешочек полон, %s выброшен на землю",
+  "message.berrypouch.autobait": "Автоматически экипирована наживка: %s",
+  "accessories.slot.pouch": "Мешочек",
+  "accessories.slot_group.utility": "Cobblemon",
+  "message.berrypouch.auto_berry_toggled.true": "Автонаживка включена",
+  "message.berrypouch.auto_berry_toggled.false": "Автонаживка выключена",
+
+  "message.berrypouch.marked_bait_exhausted_switching_none": "Отмеченная наживка закончилась! Переключено на отсутствие наживки.",
+  "message.berrypouch.marked_bait_exhausted": "Отмеченная наживка закончилась!"
+}

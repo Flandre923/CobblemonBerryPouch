@@ -6,6 +6,7 @@
   "key.berrypouch.open_pouch": "打开装备的树果袋",
   "key.berrypouch.cycle_bait_left": "上一个鱼饵",
   "key.berrypouch.cycle_bait_right": "下一个鱼饵",
+  "key.berrypouch.toggle_auto_berry": "鱼饵自动填充",
   "message.berrypouch.not_holding_rod": "你需要手持Cobblemon钓竿",
   "message.berrypouch.capability_missing": "饰品系统错误",
   "message.berrypouch.need_pouch": "你需要装备树果袋",
@@ -15,8 +16,8 @@
   "message.berrypouch.autobait": "自动装备鱼饵： %s",
   "accessories.slot.pouch": "袋",
   "accessories.slot_group.utility": "方块宝可梦",
-  "message.berrypouch.auto_berry_toggled.true": "开启自动装备树果",
-  "message.berrypouch.auto_berry_toggled.false": "关闭自动装备树果",
+  "message.berrypouch.auto_berry_toggled.true": "鱼饵自动填充 - 开启",
+  "message.berrypouch.auto_berry_toggled.false": "鱼饵自动填充 - 关闭",
 
   "message.berrypouch.marked_bait_exhausted_switching_none": "标记的诱饵已耗尽！已切换为空。",
   "message.berrypouch.marked_bait_exhausted": "标记的诱饵已耗尽！"

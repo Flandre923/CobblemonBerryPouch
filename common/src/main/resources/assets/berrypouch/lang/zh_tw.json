@@ -1,0 +1,24 @@
+{
+  "item.berrypouch.berry_pouch_30": "小樹果袋",
+  "item.berrypouch.berry_pouch_69": "大樹果袋",
+  "berrypouch.berry_pouch.tab": "樹果袋",
+  "key.categories.berrypouch": "樹果袋",
+  "key.berrypouch.open_pouch": "打開裝備的樹果袋",
+  "key.berrypouch.cycle_bait_left": "上一個魚餌",
+  "key.berrypouch.cycle_bait_right": "下一個魚餌",
+  "key.berrypouch.toggle_auto_berry": "魚餌自動填充",
+  "message.berrypouch.not_holding_rod": "你需要手持Cobblemon釣竿",
+  "message.berrypouch.capability_missing": "飾品系統錯誤",
+  "message.berrypouch.need_pouch": "你需要裝備樹果袋",
+  "message.berrypouch.no_bait_in_pouch": "樹果袋中沒有可用的樹果",
+  "message.berrypouch.switched_bait": "魚餌： %s",
+  "message.berrypouch.bait_dropped": "你的樹果袋已滿， %s 已被丟到地上",
+  "message.berrypouch.autobait": "自動裝備魚餌： %s",
+  "accessories.slot.pouch": "袋",
+  "accessories.slot_group.utility": "方塊寶可夢",
+  "message.berrypouch.auto_berry_toggled.true": "魚餌自動填充 - 開啟",
+  "message.berrypouch.auto_berry_toggled.false": "魚餌自動填充 - 關閉",
+  
+  "message.berrypouch.marked_bait_exhausted_switching_none": "標記的誘餌已耗盡！已切換為空。",
+  "message.berrypouch.marked_bait_exhausted": "標記的誘餌已耗盡！"
+}
