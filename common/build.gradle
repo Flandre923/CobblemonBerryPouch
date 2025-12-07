@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "2.0.0"
+    id "org.jetbrains.kotlin.jvm" version "2.2.20"
 }
 
 loom {
@@ -17,13 +17,12 @@ dependencies {
     // which get remapped to the correct annotations on each platform.
     // Do NOT use other classes from Fabric Loader.
     modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
-
     // Architectury API. This is optional, and you can comment it out if you don't need it.
     modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
 
     modApi "com.cobblemon:mod:$rootProject.cobblemon_version"
 
-    implementation "org.jetbrains.kotlin:kotlin-reflect:2.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:2.2.20"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlin_stdlib_version"
 
     // modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-common:${fcap_version}"
@@ -31,10 +30,10 @@ dependencies {
 //    modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
 //    modRuntimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
     modCompileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    modCompileOnly("org.sinytra.forgified-fabric-api:fabric-networking-api-v1:4.2.2+a92978fd19") { exclude group: "fabric-api" }
+//    modCompileOnly("org.sinytra.forgified-fabric-api:fabric-networking-api-v1:4.2.2+a92978fd19") { exclude group: "fabric-api" }
 
     modImplementation("io.wispforest:accessories-common:${project.accessories_version}")
-    modApi annotationProcessor("io.wispforest:owo-lib:${project.owo_version}")
+//    modApi annotationProcessor("io.wispforest:owo-lib:${project.owo_version}")
 
     // Radical Cobblemon Trainers API
 //    modImplementation "curse.maven:radical-cobblemon-trainers-api-1152792:${rctapi_common_version}"
