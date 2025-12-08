@@ -1,10 +1,8 @@
 package com.github.flandre923.berrypouch.network;
 
-import com.cobblemon.mod.common.api.fishing.FishingBait;
 import com.cobblemon.mod.common.item.interactive.PokerodItem;
 import com.github.flandre923.berrypouch.ModCommon;
 import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
-import com.github.flandre923.berrypouch.helper.ItemNBTHelper;
 import com.github.flandre923.berrypouch.helper.MarkedSlotsHelper;
 import com.github.flandre923.berrypouch.helper.PouchDataHelper;
 import com.github.flandre923.berrypouch.item.BerryPouch;
@@ -12,28 +10,16 @@ import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import com.github.flandre923.berrypouch.menu.container.AbstractBerryPouchContainer;
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.registry.menu.MenuRegistry;
-import io.netty.buffer.Unpooled; // For creating an empty buffer
 import io.wispforest.accessories.api.AccessoriesCapability;
 import io.wispforest.accessories.api.slot.SlotEntryReference;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level; // Import Level
 import net.minecraft.sounds.SoundEvents; // Import SoundEvents
 import net.minecraft.sounds.SoundSource; // Import SoundSource

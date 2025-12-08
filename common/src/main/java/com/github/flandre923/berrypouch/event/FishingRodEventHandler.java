@@ -1,7 +1,6 @@
 package com.github.flandre923.berrypouch.event;// 创建一个新的事件监听类，或者在你的主类/客户端类中注册
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
-import com.cobblemon.mod.common.api.fishing.FishingBaits;
 import com.cobblemon.mod.common.item.interactive.PokerodItem;
 import com.github.flandre923.berrypouch.helper.MarkedSlotsHelper;
 import com.github.flandre923.berrypouch.helper.PouchDataHelper;
@@ -270,6 +269,6 @@ public class FishingRodEventHandler {
     public static boolean isCobblemonBerry(ItemStack stack) {
         if (stack.isEmpty()) return false;
         // Cobblemon API check for fishing baits (which includes berries used as bait)
-        return FishingBaits.INSTANCE.getFromBaitItemStack(stack) != null;
+        return BerryPouch.isBerry(stack);
     }
 }
