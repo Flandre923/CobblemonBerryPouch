@@ -2,6 +2,7 @@ package com.github.flandre923.berrypouch.item;
 
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
+import com.github.flandre923.berrypouch.menu.container.AbstractBerryPouchContainer;
 import io.wispforest.accessories.api.AccessoriesCapability;
 import io.wispforest.accessories.api.AccessoryItem;
 import io.wispforest.accessories.api.slot.SlotEntryReference;
@@ -38,7 +39,7 @@ public class BerryPouch extends AccessoryItem {
         return this.pouchType;
     }
 
-    private static boolean isBerry(ItemStack stack) {
+    public static boolean isBerry(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
         }
@@ -46,11 +47,12 @@ public class BerryPouch extends AccessoryItem {
         return BerryPouchType.LARGE.getStorageSlot().has(item);
     }
 
+    public static boolean onPickupItem(ItemEntity itemEntity,Player player) {
+        if (player instanceof ServerPlayer sp && sp.containerMenu instanceof AbstractBerryPouchContainer) {
+            return false; // 玩家正在查看树果袋 GUI，不要自动装入
+        }
 
-    public static boolean onPickupItem(ItemEntity itemEntity,Player player)
-    {
         ItemStack itemStack = itemEntity.getItem();
-        // a. 首先检查掉落物是否是 berry
         if (!isBerry(itemStack)) {
             return false; // 不是莓果，不进行特殊处理，返回 false 让原版逻辑处理
         }
