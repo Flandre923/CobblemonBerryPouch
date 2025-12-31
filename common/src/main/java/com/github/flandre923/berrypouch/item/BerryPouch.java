@@ -43,8 +43,18 @@ public class BerryPouch extends AccessoryItem {
         if (stack.isEmpty()) {
             return false;
         }
-        Item item = stack.getItem();
-        return BerryPouchType.LARGE.getStorageSlot().has(item);
+        
+        // 检查物品是否有 natural、mutation 或 other 标签
+        return stack.is(net.minecraft.tags.TagKey.create(
+            net.minecraft.core.registries.Registries.ITEM,
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("berrypouch", "natural_berries")
+        )) || stack.is(net.minecraft.tags.TagKey.create(
+            net.minecraft.core.registries.Registries.ITEM,
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("berrypouch", "mutation_berries")
+        )) || stack.is(net.minecraft.tags.TagKey.create(
+            net.minecraft.core.registries.Registries.ITEM,
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("berrypouch", "other_baits")
+        ));
     }
 
     public static boolean onPickupItem(ItemEntity itemEntity,Player player) {

@@ -3,7 +3,7 @@ package com.github.flandre923.berrypouch.item.pouch;
 import com.github.flandre923.berrypouch.ModCommon;
 import com.github.flandre923.berrypouch.item.BerryPouchGui24StorageSlot;
 import com.github.flandre923.berrypouch.item.BerryPouchGui30StorageSlot;
-import com.github.flandre923.berrypouch.item.BerryPouchGui69StorageSlot;
+import com.github.flandre923.berrypouch.item.BerryPouchGui86StorageSlot;
 import com.github.flandre923.berrypouch.item.IBerryPouchStorage;
 import net.minecraft.resources.ResourceLocation;
 
@@ -16,9 +16,9 @@ public enum BerryPouchType {
     MEDIUM(30, 208, 202, "medium", "berry_pouch_medium",
             new BerryPouchGui30StorageSlot(30), // <-- 将尺寸 30 传递进去
             21, 2, 21, 84),
-    LARGE(69, 256, 255, "large", "berry_pouch_large",
-            new BerryPouchGui69StorageSlot(69), // <-- 将尺寸 69 传递进去
-            25, 2, 44, 147);
+    LARGE(86, 256, 257, "large", "berry_pouch_large",
+            new BerryPouchGui86StorageSlot(86), // 更新为86个槽位存储类 (70个树果 + 16个other_baits)
+            11, 4, 47, 161);
 
     private final int size;
     private final int guiWidth;

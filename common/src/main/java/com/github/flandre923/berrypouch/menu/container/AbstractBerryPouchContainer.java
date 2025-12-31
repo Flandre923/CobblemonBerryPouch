@@ -44,7 +44,7 @@ public abstract class AbstractBerryPouchContainer extends AbstractContainerMenu 
     private void addInventorySlots(Inventory playerInv) {
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
-                addSlot(new Slot(playerInv, col + row * 9 + 9, 48 + col * 18, 160 + row * 18));
+                addSlot(new Slot(playerInv, col + row * 9 + 9, 48 + col * 18, 176 + row * 18));
             }
         }
     }
@@ -52,9 +52,9 @@ public abstract class AbstractBerryPouchContainer extends AbstractContainerMenu 
     private void addHotbarSlots(Inventory playerInv, ItemStack bag) {
         for (int i = 0; i < 9; ++i) {
             if (bag.getItem() instanceof BerryPouch && playerInv.getItem(i) == bag ) {
-                addSlot(new SlotLocked(playerInv, i, 48 + i * 18, 218));
+                addSlot(new SlotLocked(playerInv, i, 48 + i * 18, 234));
             } else {
-                addSlot(new Slot(playerInv, i, 48 + i * 18, 218));
+                addSlot(new Slot(playerInv, i, 48 + i * 18, 234));
             }
         }
     }

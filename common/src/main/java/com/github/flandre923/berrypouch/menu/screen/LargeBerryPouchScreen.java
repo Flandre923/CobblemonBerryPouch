@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class LargeBerryPouchScreen extends AbstractBerryPouchScreen<LargeBerryPouchContainer> {
     private static final ResourceLocation TEXTURE =
-        ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "textures/gui/berry_pouch_69.png");
+        ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "textures/gui/berry_bag_0.5.png");
 
     public LargeBerryPouchScreen(LargeBerryPouchContainer menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title, BerryPouchType.LARGE, TEXTURE);
@@ -22,14 +22,18 @@ public class LargeBerryPouchScreen extends AbstractBerryPouchScreen<LargeBerryPo
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         
-        // 渲染上半部分
-        guiGraphics.blit(TEXTURE, x, y, 0, 0, 255, 142, 256, 256);
-        // 渲染下半部分
-        guiGraphics.blit(TEXTURE, x + 40, y + 143, 40, 157, 175, 98, 256, 256);
+        // 渲染整个背景纹理 (新图片大小: 256 * 300, 有效区域: 0,0 到 255,257)
+        guiGraphics.blit(TEXTURE, x, y, 0, 0, 255, 257, 256, 300);
     }
 
     @Override
     protected ItemStack getPlaceholderForSlot(int slotIndex) {
-        return new ItemStack(BerryPouchType.LARGE.getStorageSlot().getSlotItem(slotIndex + 1));
+        if (slotIndex < 70) {
+            // 树果槽位 (0-69)
+            return new ItemStack(BerryPouchType.LARGE.getStorageSlot().getSlotItem(slotIndex + 1));
+        } else {
+            // Other baits槽位 (70-85) - 不显示占位符，因为这些槽位通过标签检查
+            return ItemStack.EMPTY;
+        }
     }
 }
