@@ -59,6 +59,7 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
         this.inventoryLabelX = pouchType.getInventoryX();
         this.inventoryLabelY = pouchType.getInventoryY();
     }
+
     @Override
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(gui, mouseX, mouseY, partialTicks);
@@ -72,6 +73,7 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
         renderSlotPlaceholders(guiGraphics);
         renderMarkedSlotIndicators(guiGraphics); // <-- 新增调用: 渲染标记指示器
     }
+
     protected void renderBackgroundTexture(GuiGraphics guiGraphics) {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
@@ -93,16 +95,115 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
                         RenderHelper.renderGuiItemAlpha(placeholder, itemX, itemY, 0x5F, minecraft.getItemRenderer());
                     }
                 }
-                // 特殊渲染数量1的物品
-                else if (slot.getItem().getCount() == 1) {
-                    poseStack.pushPose();
-                    poseStack.translate(0, 0, 300);
-                    guiGraphics.drawString(minecraft.font, "1", itemX + 11, itemY + 9, 0xFFFFFF);
-                    poseStack.popPose();
-                }
+//                // 特殊渲染数量1的物品
+//                else if (slot.getItem().getCount() == 1) {
+//                    poseStack.pushPose();
+//                    poseStack.translate(0, 0, 300);
+//                    guiGraphics.drawString(minecraft.font, "1", itemX + 11, itemY + 9, 0xFFFFFF);
+//                    poseStack.popPose();
+//                }
             }
         }
     }
+    @Override
+    protected void renderSlot(GuiGraphics guiGraphics, Slot slot) {
+        // 只对袋子槽位特殊处理
+        if (slot.container == menu.getPouchInventory() && slot.hasItem()) {
+            ItemStack stack = slot.getItem();
+            int x = slot.x;
+            int y = slot.y;
+
+            // 手动渲染物品（不带装饰）
+            guiGraphics.renderItem(stack, x, y);
+
+            // 渲染耐久条等（但不渲染数量）
+            guiGraphics.renderItemDecorations(minecraft.font, stack, x, y, ""); // 空字符串隐藏数量
+
+            // 渲染自定义数量
+            int count = stack.getCount();
+            if (count > 0) {
+                renderCustomItemCount(guiGraphics, x, y, count);
+            }
+        } else {
+            // 其他槽位使用默认渲染
+            super.renderSlot(guiGraphics, slot);
+        }
+    }
+
+    /**
+     * 渲染自定义物品数量（带缩写和动态缩放）
+     */
+    protected void renderCustomItemCount(GuiGraphics guiGraphics, int slotX, int slotY, int count) {
+        String countStr = formatCount(count);
+        float scale = getScaleForCount(countStr);
+
+        PoseStack poseStack = guiGraphics.pose();
+        poseStack.pushPose();
+        poseStack.translate(0, 0, 350);
+
+        int textWidth = minecraft.font.width(countStr);
+
+        // 右下角对齐，基于槽位内坐标（槽位大小16x16）
+        float textX = slotX + 18 - textWidth * scale - 1;
+        float textY = slotY + 18 - 8 * scale - 1;
+
+        poseStack.translate(textX, textY, 0);
+        poseStack.scale(scale, scale, 1.0f);
+
+        // 绘制带阴影的文字
+        guiGraphics.drawString(minecraft.font, countStr, 0, 0, 0xFFFFFF, true);
+
+        poseStack.popPose();
+    }
+
+    /**
+     * 格式化数量显示
+     * 64 -> "64"
+     * 1500 -> "1.5K"
+     * 2300000 -> "2.3M"
+     */
+    protected String formatCount(int count) {
+        if (count < 1000) {
+            return String.valueOf(count);
+        } else if (count < 1000000) {
+            double k = count / 1000.0;
+            if (k >= 100) {
+                return String.format("%.0fK", k);
+            } else if (k >= 10) {
+                return String.format("%.1fK", k).replace(".0K", "K");
+            } else {
+                return String.format("%.1fK", k).replace(".0K", "K");
+            }
+        } else {
+            double m = count / 1000000.0;
+            if (m >= 100) {
+                return String.format("%.0fM", m);
+            } else if (m >= 10) {
+                return String.format("%.1fM", m).replace(".0M", "M");
+            } else {
+                return String.format("%.1fM", m).replace(".0M", "M");
+            }
+        }
+    }
+
+    /**
+     * 根据文字长度动态缩放
+     */
+    protected float getScaleForCount(String countStr) {
+        int length = countStr.length();
+        if (length <= 2) {
+            return 1.0f;
+        } else if (length == 3) {
+            return 0.85f;
+        } else if (length == 4) {
+            return 0.7f;
+        } else {
+            return 0.6f;
+        }
+    }
+
+
+
 
 
     protected void renderMarkedSlotIndicators(GuiGraphics guiGraphics) {
@@ -118,17 +219,9 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
                 if (MarkedSlotsHelper.isSlotMarked(currentPouchStack, pouchSlotIndex)) {
                     poseStack.pushPose();
                     poseStack.translate(0, 0, 299);
-//                    poseStack.scale(0.3f,0.3f,1f);
-                    // Adjust star positioning relative to slot (top-right corner)
                     int starX = this.leftPos + slot.x ; // Slot width is 16
                     int starY = this.topPos + slot.y;
-
-//                    RenderSystem.enableBlend();
-//                    RenderSystem.defaultBlendFunc();
-                    // Ensure last two args match the actual texture size (e.g., 8, 8 or 32, 32)
-//                    guiGraphics.blit(STAR_TEXTURE, starX, starY, 0, 0, STAR_SIZE, STAR_SIZE, STAR_SIZE, STAR_SIZE);
                     guiGraphics.blit(STAR_TEXTURE, starX, starY, 16,16,0,0, STAR_SIZE, STAR_SIZE, STAR_SIZE, STAR_SIZE);
-//                    RenderSystem.disableBlend();
                     poseStack.popPose();
                 }
             }
@@ -190,10 +283,8 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
             Slot clickedSlot = this.hoveredSlot;
             if (clickedSlot != null && clickedSlot.container == menu.getPouchInventory()) {
                 int pouchSlotIndex = clickedSlot.getContainerSlot();
-                ModNetworking.sendToggleMarkSlotPacketToServer(pouchSlotIndex); // Send the network packet
-                // Optional: Client-side sound feedback
-                // this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                return true; // Indicate event was handled
+                ModNetworking.sendToggleMarkSlotPacketToServer(pouchSlotIndex);
+                return true;
             }
         }
         return super.mouseClicked(mouseX, mouseY, button); // Default handling

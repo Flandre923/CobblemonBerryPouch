@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.item.interactive.PokerodItem;
 import com.github.flandre923.berrypouch.helper.MarkedSlotsHelper;
 import com.github.flandre923.berrypouch.helper.PouchDataHelper;
 import com.github.flandre923.berrypouch.item.BerryPouch;
+import com.github.flandre923.berrypouch.item.pouch.BerryPouchInventory;
 import dev.architectury.event.CompoundEventResult;
 import dev.architectury.event.events.common.InteractionEvent;
 import net.minecraft.core.NonNullList;
@@ -214,19 +215,15 @@ public class FishingRodEventHandler {
                 PokerodItem.Companion.setBait(heldStack, baitToSet);
 
                 // 6. Remove bait from pouch inventory (use the mutable list)
-                ItemStack originalStack = pouchItems.get(foundSlotIndex);
-                originalStack.shrink(1);
+                BerryPouchInventory pouchInventory = new BerryPouchInventory(pouchStack, level, berryPouch.getPouchType());
+                pouchInventory.removeFromSlot(foundSlotIndex, 1);
 
                 // 7. Update pouch Data Components (Inventory and Last Used)
-                pouchStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(pouchItems));
-                // Set Last Used Bait to the one we just applied - THIS IS WHERE LAST USED IS UPDATED
                 PouchDataHelper.setLastUsedBait(pouchStack, usedBaitItem);
 
                 // 8. Send message to player
                 serverPlayer.sendSystemMessage(Component.translatable("message.berrypouch.autobait", baitToSet.getHoverName()), true);
 
-                // 9. Interrupt event. We successfully added bait, the rod is now ready for casting.
-                // Interrupting prevents the default PokerodItem use logic from running without bait.
                 return CompoundEventResult.interruptTrue(heldStack);
 
             } else {

@@ -11,6 +11,7 @@ public class BerryPouchModelHelper {
     public static boolean shouldUseFullModel(ItemStack stack) {
         if (stack.isEmpty()) return false;
         if(stack.getItem() instanceof BerryPouch){
+            // TODO 后续需要优化，这里会每rendertick都打开inventory 。
             SimpleContainer inventory = BerryPouchManager.getInventory(stack, Minecraft.getInstance().level);
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 if (!inventory.getItem(i).isEmpty()) {

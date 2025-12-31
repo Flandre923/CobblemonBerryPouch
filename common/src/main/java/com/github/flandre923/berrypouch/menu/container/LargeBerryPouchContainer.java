@@ -3,12 +3,12 @@ package com.github.flandre923.berrypouch.menu.container;
 import com.github.flandre923.berrypouch.ModRegistries;
 import com.github.flandre923.berrypouch.helper.PouchItemHelper;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
+import com.github.flandre923.berrypouch.menu.slot.BerryPouchSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
@@ -39,7 +39,7 @@ public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
         }
         return stack.is(net.minecraft.tags.TagKey.create(
             net.minecraft.core.registries.Registries.ITEM,
-            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("cobblemon", "other_baits")
+            net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("berrypouch", "other_baits")
         ));
     }
     public static LargeBerryPouchContainer fromNetwork(int windowId, Inventory inv, FriendlyByteBuf buf) {
@@ -86,7 +86,7 @@ public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
     }
 
     private void addBerrySlot(int slotIndex, int x, int y) {
-        addSlot(new Slot(pouchInventory, slotIndex, x, y) {
+        addSlot(new BerryPouchSlot(pouchInventory, slotIndex, x, y) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 // 使用辅助方法判断是否是树果，并且检查是否匹配特定槽位
@@ -97,7 +97,7 @@ public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
     }
     
     private void addOtherBaitsSlot(int slotIndex, int x, int y) {
-        addSlot(new Slot(pouchInventory, slotIndex, x, y) {
+        addSlot(new BerryPouchSlot(pouchInventory, slotIndex, x, y) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 // 使用辅助方法判断是否是other_baits
@@ -108,50 +108,87 @@ public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
 
     @Override
     public ItemStack quickMoveStack(Player player, int slotIndex) {
-        ItemStack returnStack = ItemStack.EMPTY;
         Slot clickedSlot = this.slots.get(slotIndex);
+        if (clickedSlot == null || !clickedSlot.hasItem()) {
+            return ItemStack.EMPTY;
+        }
 
-        if (clickedSlot != null && clickedSlot.hasItem()) {
-            ItemStack originalStack = clickedSlot.getItem().copy();
-            returnStack = originalStack.copy();
+        ItemStack originalStack = clickedSlot.getItem();
+        ItemStack returnStack = originalStack.copy();
 
-            if (slotIndex < BerryPouchType.LARGE.getSize()) { // 从袋子移到背包
-                if (!this.moveItemStackTo(originalStack, BerryPouchType.LARGE.getSize(), this.slots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else { // 从背包移到袋子
-                boolean moved = false;
-                
-                // 先尝试移动到树果槽位 (0-69)
-                if (BerryPouchType.LARGE.getStorageSlot().has(originalStack.getItem())) {
-                    moved = this.moveItemStackTo(originalStack, 0, 70, false);
-                }
-                
-                // 如果树果槽位移动失败，尝试移动到other_baits槽位 (70-85)
-                if (!moved && originalStack.is(net.minecraft.tags.TagKey.create(
-                    net.minecraft.core.registries.Registries.ITEM,
-                    net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("berrypouch", "other_baits")
-                ))) {
-                    moved = this.moveItemStackTo(originalStack, 70, 86, false);
-                }
-                
-                if (!moved) {
-                    return ItemStack.EMPTY;
-                }
-            }
+        if (slotIndex < BerryPouchType.LARGE.getSize()) {
+            // 从袋子移到背包：每次只移动物品堆叠上限
+            int maxMove = originalStack.getMaxStackSize();
+            int toMove = Math.min(originalStack.getCount(), maxMove);
 
-            if (originalStack.isEmpty()) {
-                clickedSlot.set(ItemStack.EMPTY);
-            } else {
-                clickedSlot.set(originalStack);
-                clickedSlot.setChanged();
-            }
+            ItemStack toTransfer = originalStack.copyWithCount(toMove);
 
-            if (originalStack.getCount() == returnStack.getCount()) {
+            if (!this.moveItemStackTo(toTransfer, BerryPouchType.LARGE.getSize(), this.slots.size(), true)) {
                 return ItemStack.EMPTY;
             }
-            clickedSlot.onTake(player, originalStack);
+
+            // 计算实际移动了多少
+            int actualMoved = toMove - toTransfer.getCount();
+            if (actualMoved > 0 ) {
+                pouchInventory.removeFromSlot(slotIndex, actualMoved);
+            }
+
+        } else {
+            // 从背包移到袋子
+            boolean moved = false;
+            int countBefore = originalStack.getCount();
+
+            if (BerryPouchType.LARGE.getStorageSlot().has(originalStack.getItem())) {
+                moved = this.moveItemStackToPouch(originalStack, 0, 70);
+            }
+
+            if (!moved && originalStack.is(net.minecraft.tags.TagKey.create(
+                    net.minecraft.core.registries.Registries.ITEM,
+                    net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("berrypouch", "other_baits")
+            ))) {
+                moved = this.moveItemStackToPouch(originalStack, 70, 86);
+            }
+
+            if (!moved) {
+                return ItemStack.EMPTY;
+            }
+
+            // 更新源槽位
+            clickedSlot.set(originalStack);
         }
+
         return returnStack;
+    }
+
+
+    // 自定义方法：移动物品到袋子（支持超堆叠）
+    private boolean moveItemStackToPouch(ItemStack stack, int startSlot, int endSlot) {
+
+        boolean moved = false;
+
+        // 先堆叠到同类物品
+        for (int i = startSlot; i < endSlot && !stack.isEmpty(); i++) {
+            Slot slot = this.slots.get(i);
+            ItemStack existing = slot.getItem();
+
+            if (!existing.isEmpty() && ItemStack.isSameItemSameComponents(existing, stack)) {
+                int toAdd = stack.getCount();
+                this.pouchInventory.addToSlot(i, toAdd);
+                stack.setCount(0);
+                moved = true;
+            }
+        }
+
+        // 再放入空槽位
+        for (int i = startSlot; i < endSlot && !stack.isEmpty(); i++) {
+            Slot slot = this.slots.get(i);
+            if (!slot.hasItem() && slot.mayPlace(stack)) {
+                this.pouchInventory.setItem(i, stack.copy());
+                stack.setCount(0);
+                moved = true;
+            }
+        }
+
+        return moved;
     }
 }

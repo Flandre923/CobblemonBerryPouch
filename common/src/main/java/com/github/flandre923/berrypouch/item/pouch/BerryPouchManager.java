@@ -39,7 +39,7 @@ public class BerryPouchManager {
         }
     }
 
-    public static SimpleContainer getInventory(ItemStack stack, Level level) {
+    public static BerryPouchInventory getInventory(ItemStack stack, Level level) {
         BerryPouchType type = getPouchType(stack);
         return new BerryPouchInventory(stack, level, type);
     }

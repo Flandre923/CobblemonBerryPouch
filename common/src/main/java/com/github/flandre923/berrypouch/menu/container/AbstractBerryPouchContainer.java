@@ -2,9 +2,11 @@ package com.github.flandre923.berrypouch.menu.container;
 
 import com.github.flandre923.berrypouch.helper.PouchItemHelper;
 import com.github.flandre923.berrypouch.item.BerryPouch;
+import com.github.flandre923.berrypouch.item.pouch.BerryPouchInventory;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import com.github.flandre923.berrypouch.menu.slot.SlotLocked;
+import com.github.flandre923.berrypouch.storage.SlotLimitData;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -15,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 public abstract class AbstractBerryPouchContainer extends AbstractContainerMenu {
     protected final ItemStack pouchStack;
-    protected final Container pouchInventory;
+    protected final BerryPouchInventory pouchInventory;
     protected final BerryPouchType pouchType;
 
     public AbstractBerryPouchContainer(

@@ -1,5 +1,6 @@
 package com.github.flandre923.berrypouch.item;
 
+import com.github.flandre923.berrypouch.item.pouch.BerryPouchInventory;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import com.github.flandre923.berrypouch.menu.container.AbstractBerryPouchContainer;
@@ -115,52 +116,50 @@ public class BerryPouch extends AccessoryItem {
             return false;
         }
         SimpleContainer inventory = BerryPouchManager.getInventory(container, level);
+        if (!(inventory instanceof BerryPouchInventory pouchInventory)) {
+            return false;
+        }
         boolean success = false;
+        int remaining = itemToInsert.getCount();
 
         // First try to stack with existing items
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            ItemStack existingStack = inventory.getItem(i);
+        for (int i = 0; i < pouchInventory.getContainerSize() && remaining > 0; i++) {
+            ItemStack existingStack = pouchInventory.getItems().get(i); // 获取类型标记
             if (!existingStack.isEmpty() && ItemStack.isSameItem(existingStack, itemToInsert)) {
-                int space = existingStack.getMaxStackSize() - existingStack.getCount();
-                if (space > 0) {
-                    int toTransfer = Math.min(space, itemToInsert.getCount());
-                    existingStack.grow(toTransfer);
-                    itemToInsert.shrink(toTransfer);
-                    if (itemToInsert.isEmpty()) {
-                        inventory.setChanged(); // Add this line to save changes after stacking
-                        success = true;
-                        break;
-                    }
-                    inventory.setChanged();
-                    success = true;
-                }
+                pouchInventory.addToSlot(i, remaining);
+                remaining = 0;
+                success = true;
+                break;
             }
         }
 
         // Then try to put in empty slot
-        if (!success && !itemToInsert.isEmpty()) {
-            for (int i = 0; i < inventory.getContainerSize(); i++) {
-                if (inventory.getItem(i).isEmpty()) {
-                    if (inventory.canPlaceItem(i, itemToInsert)) {
-                        inventory.setItem(i, itemToInsert.copy());
-                        itemToInsert.setCount(0);
-                        success = true;
-                        break;
-                    }
+        if (!success && remaining > 0) {
+            for (int i = 0; i < pouchInventory.getContainerSize(); i++) {
+                if (pouchInventory.getItems().get(i).isEmpty() && pouchInventory.canPlaceItem(i, itemToInsert)) {
+                    pouchInventory.getItems().set(i, itemToInsert.copyWithCount(1)); // 设置类型标记
+                    pouchInventory.setSlotCount(i, remaining);
+                    remaining = 0;
+                    success = true;
+                    break;
                 }
             }
         }
-        // Play sound if insertion was successful
-        if (success && !level.isClientSide) {
-            // You can adjust the position, volume and pitch as needed
-            level.playSound(null,
-                    player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.ITEM_PICKUP,
-                    SoundSource.PLAYERS,
-                    0.2F,
-                    ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F
-            );
+
+        if (success) {
+            itemToInsert.setCount(0);
+
+            if (!level.isClientSide) {
+                level.playSound(null,
+                        player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.ITEM_PICKUP,
+                        SoundSource.PLAYERS,
+                        0.2F,
+                        ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.0F) * 2.0F
+                );
+            }
         }
+
         return success;
     }
 
