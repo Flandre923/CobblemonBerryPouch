@@ -13,8 +13,8 @@ public class InventorySorterIntegration {
 
 	@SubscribeEvent
 	private static void sendImc(InterModEnqueueEvent evt) {
-		InterModComms.sendTo("inventorysorter", "containerblacklist",
-				() -> BuiltInRegistries.MENU.getKey(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get()));
+//		InterModComms.sendTo("inventorysorter", "containerblacklist",
+//				() -> BuiltInRegistries.MENU.getKey(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get()));
 		InterModComms.sendTo("inventorysorter", "containerblacklist",
 				() -> BuiltInRegistries.MENU.getKey(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get()));
 	}

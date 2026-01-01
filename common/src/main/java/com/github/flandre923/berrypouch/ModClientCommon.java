@@ -11,9 +11,9 @@ import dev.architectury.event.events.client.ClientTickEvent;
 public class ModClientCommon {
 
     public static void init() {
-        ItemProperties.register(ModRegistries.Items.BERRY_POUCH_30.get(),
-                ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "full"),
-                (stack, level, entity, seed) -> BerryPouchModelHelper.shouldUseFullModel(stack) ? 1.0F : 0.0F);
+//        ItemProperties.register(ModRegistries.Items.BERRY_POUCH_30.get(),
+//                ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "full"),
+//                (stack, level, entity, seed) -> BerryPouchModelHelper.shouldUseFullModel(stack) ? 1.0F : 0.0F);
 
         ItemProperties.register(ModRegistries.Items.BERRY_POUCH_69.get(),
                 ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "full"),
