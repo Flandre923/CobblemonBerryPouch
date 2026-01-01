@@ -22,6 +22,7 @@ import com.github.flandre923.berrypouch.ModRegistries;
 import com.github.flandre923.berrypouch.client.input.KeyBindingManager;
 import com.github.flandre923.berrypouch.menu.screen.LargeBerryPouchScreen;
 import com.github.flandre923.berrypouch.menu.screen.MediumBerryPouchScreen;
+import com.github.flandre923.berrypouch.menu.screen.PokeBallBeltScreen;
 import com.github.flandre923.berrypouch.menu.screen.SmallBerryPouchScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -32,8 +33,9 @@ import net.minecraft.client.gui.screens.MenuScreens;
 public class FabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), SmallBerryPouchScreen::new);
-        MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), MediumBerryPouchScreen::new);
+//        MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), SmallBerryPouchScreen::new);
+//        MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), MediumBerryPouchScreen::new);
+        MenuScreens.register(ModRegistries.ModMenuTypes.POKEBALL_BELT_MENU.get(), PokeBallBeltScreen::new);
         MenuScreens.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(), LargeBerryPouchScreen::new);
         KeyBindingManager.register();
         ModClientCommon.init();

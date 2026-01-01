@@ -2,6 +2,8 @@ package com.github.flandre923.berrypouch.client.hud;
 
 import com.cobblemon.mod.common.item.interactive.PokerodItem; // 引入 PokerodItem
 import com.github.flandre923.berrypouch.ModCommon;
+import com.github.flandre923.berrypouch.item.PokeBallBelt;
+import com.github.flandre923.berrypouch.item.pouch.PokeBallBeltHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import io.wispforest.owo.ui.hud.Hud;
@@ -54,18 +56,13 @@ public class BaitRenderHandler  implements ClientGuiEvent.RenderHud {
         if (player == null) {
             return;
         }
-        // 获取玩家主手物品
-        ItemStack heldItem = player.getMainHandItem(); // 或者检查副手: player.getOffhandItem()
-        if (!(heldItem.getItem() instanceof PokerodItem pokerodItem)) {
-            heldItem = player.getOffhandItem();
-            if (!(heldItem.getItem() instanceof PokerodItem)) {
-                return;
-            }
-        }
-        ItemStack baitStack = PokerodItem.Companion.getBaitStackOnRod(heldItem);
-        if (baitStack.isEmpty()) {
+
+        ItemStack displayStack = getDisplayStack(player);
+        if (displayStack.isEmpty()) {
             return;
         }
+
+
         // --- 开始渲染 ---
         int screenWidth = guiGraphics.guiWidth();
         int screenHeight = guiGraphics.guiHeight();
@@ -107,13 +104,52 @@ public class BaitRenderHandler  implements ClientGuiEvent.RenderHud {
         RenderSystem.disableBlend(); // 关闭混合
 
 
-        // --- 绘制诱饵物品图标 ---
-        // 物品图标通常是 16x16，我们需要将其绘制在框的中心
         int itemRenderX = frameX + (ICON_RENDER_SIZE - 16) / 2; // (24 - 16) / 2 = 4px 偏移
         int itemRenderY = baseY + (ICON_RENDER_SIZE - 16) / 2;
-        // 使用 GuiGraphics 渲染物品（它会自动处理 ItemRenderer 的设置）
-        guiGraphics.renderItem(baitStack, itemRenderX, itemRenderY);
-        // 如果需要显示物品数量（比如诱饵堆叠），可以取消下面的注释
-        // guiGraphics.renderItemDecorations(client.font, baitStack, itemRenderX, itemRenderY, null); // null 表示不显示特定文本
+        guiGraphics.renderItem(displayStack, itemRenderX, itemRenderY);
     }
+
+    /**
+     * 获取要显示的物品堆
+     * 优先级：主手 > 副手
+     * 支持：PokerodItem（树果）、PokeBallBelt（选中的精灵球）
+     */
+    private ItemStack getDisplayStack(Player player) {
+        // 检查主手
+        ItemStack mainHand = player.getMainHandItem();
+        ItemStack result = tryGetDisplayFromStack(mainHand);
+        if (!result.isEmpty()) {
+            return result;
+        }
+
+        // 检查副手
+        ItemStack offHand = player.getOffhandItem();
+        return tryGetDisplayFromStack(offHand);
+    }
+
+
+
+    /**
+     * 尝试从指定物品堆获取要显示的物品
+     */
+    private ItemStack tryGetDisplayFromStack(ItemStack heldStack) {
+        if (heldStack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
+        // 钓竿 - 显示鱼饵/树果
+        if (heldStack.getItem() instanceof PokerodItem) {
+            return PokerodItem.Companion.getBaitStackOnRod(heldStack);
+        }
+
+        // 精灵球腰带 - 显示选中的精灵球
+        if (heldStack.getItem() instanceof PokeBallBelt) {
+            return PokeBallBeltHelper.getItemAt(heldStack,PokeBallBeltHelper.getSelectedIndex(heldStack));
+        }
+
+        return ItemStack.EMPTY;
+    }
+
+
+
 }

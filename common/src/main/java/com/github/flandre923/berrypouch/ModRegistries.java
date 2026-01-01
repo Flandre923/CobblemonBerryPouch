@@ -21,10 +21,12 @@ package com.github.flandre923.berrypouch;
 import com.github.flandre923.berrypouch.component.MarkedSlotsComponent;
 import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.item.BerryPouch;
+import com.github.flandre923.berrypouch.item.PokeBallBelt;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import com.github.flandre923.berrypouch.menu.container.LargeBerryPouchContainer;
 import com.github.flandre923.berrypouch.menu.container.MediumBerryPouchContainer;
+import com.github.flandre923.berrypouch.menu.container.PokeBallBeltContainer;
 import com.github.flandre923.berrypouch.menu.container.SmallBerryPouchContainer;
 import com.github.flandre923.berrypouch.recipe.BerryPouchUpgradeRecipe;
 import dev.architectury.registry.menu.MenuRegistry;
@@ -58,6 +60,12 @@ public final class ModRegistries {
         public static final RegistrySupplier<MenuType<LargeBerryPouchContainer>> BERRY_POUCH_CONTAINER_69 =
                 MENU_TYPES.register("berry_pouch_container_69", () ->
                         MenuRegistry.ofExtended(LargeBerryPouchContainer::fromNetwork));
+        public static final Supplier<MenuType<PokeBallBeltContainer>> POKEBALL_BELT_MENU = MENU_TYPES.register("pokeball_belt_menu",
+                () -> MenuRegistry.ofExtended(PokeBallBeltContainer::fromNetwork)
+        );
+
+
+
     }
 
     public class Items {
@@ -65,11 +73,13 @@ public final class ModRegistries {
         //public static final RegistrySupplier<BerryPouch.java> BERRY_POUCH_24;
 //        public static final RegistrySupplier<BerryPouch> BERRY_POUCH_30;
         public static final RegistrySupplier<BerryPouch> BERRY_POUCH_69;
+        public static final RegistrySupplier<PokeBallBelt> POKEBALL_BELT ;
 
         static {
             //BERRY_POUCH_24 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_24"), ()->new BerryPouch.java(24));
 //            BERRY_POUCH_30 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_30"), ()->new BerryPouch(BerryPouchType.MEDIUM));
             BERRY_POUCH_69 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_69"), ()->new BerryPouch(BerryPouchType.LARGE));
+            POKEBALL_BELT = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"pokeball_belt"),()->new PokeBallBelt((new Item.Properties().stacksTo(1))));
         }
     }
 

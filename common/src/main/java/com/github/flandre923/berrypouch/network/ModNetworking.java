@@ -6,8 +6,10 @@ import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.helper.MarkedSlotsHelper;
 import com.github.flandre923.berrypouch.helper.PouchDataHelper;
 import com.github.flandre923.berrypouch.item.BerryPouch;
+import com.github.flandre923.berrypouch.item.PokeBallBelt;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
+import com.github.flandre923.berrypouch.item.pouch.PokeBallBeltHelper;
 import com.github.flandre923.berrypouch.menu.container.AbstractBerryPouchContainer;
 import dev.architectury.networking.NetworkManager;
 import io.wispforest.accessories.api.AccessoriesCapability;
@@ -46,7 +48,7 @@ public class ModNetworking {
                 CycleBaitPacket.CODEC,
                 (packet, context) -> {
                     ServerPlayer player = (ServerPlayer) context.getPlayer();
-                    context.queue(() -> handleCycleBaitRequest(player, packet.isMainHand(), packet.isLeftCycle()));
+                    context.queue(() -> handleCycleRequest(player, packet.isMainHand(), packet.isLeftCycle()));
                 }
         );
 
@@ -97,15 +99,55 @@ public class ModNetworking {
     }
 
 
-    private static void handleCycleBaitRequest(ServerPlayer player, boolean isMainHand, boolean isLeftCycle) {
+    private static void handleCycleRequest(ServerPlayer player, boolean isMainHand, boolean isLeftCycle) {
         Level level = player.level();
         InteractionHand hand = isMainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         ItemStack heldStack = player.getItemInHand(hand); // Rod ItemStack
-
-        if (!FishingRodEventHandler.isCobblemonFishingRod(heldStack)) {
-            player.sendSystemMessage(Component.translatable("message.berrypouch.not_holding_rod"), true);
+        // 精灵球腰带 - 切换选中的index
+        if (heldStack.getItem() instanceof PokeBallBelt) {
+            handleCyclePokeBallBelt(player, heldStack, isLeftCycle);
             return;
         }
+        // 钓竿 - 切换鱼饵
+        if (FishingRodEventHandler.isCobblemonFishingRod(heldStack)) {
+            handleCycleBaitRequest(player, heldStack, isLeftCycle);
+            return;
+        }
+
+        // 都不是，提示玩家
+        player.sendSystemMessage(Component.translatable("message.berrypouch.not_holding_valid_item"), true);
+
+
+    }
+
+    private static void handleCyclePokeBallBelt(ServerPlayer player, ItemStack beltStack, boolean isLeftCycle) {
+        if (isLeftCycle) {
+            PokeBallBeltHelper.cyclePrev(beltStack);
+        } else {
+            PokeBallBeltHelper.cycleNext(beltStack);
+        }
+
+        // 获取新选中的物品名称用于提示
+        ItemStack selectedItem = PokeBallBeltHelper.getSelectedItem(beltStack);
+
+        if (!selectedItem.isEmpty()) {
+            player.sendSystemMessage(
+                    Component.translatable("message.berrypouch.switched_pokeball", selectedItem.getHoverName()),
+                    true
+            );
+        } else {
+            player.sendSystemMessage(
+                    Component.translatable("message.berrypouch.slot_empty", PokeBallBeltHelper.getSelectedIndex(beltStack) + 1),
+                    true
+            );
+        }
+
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 0.5f, 1.5f);
+    }
+
+    private static void handleCycleBaitRequest(ServerPlayer player, ItemStack heldStack, boolean isLeftCycle) {
+        Level level = player.level();
 
         AccessoriesCapability capability = AccessoriesCapability.get(player);
         if (capability == null) return;
@@ -297,6 +339,7 @@ public class ModNetworking {
             player.containerMenu.broadcastChanges();
         }
     }
+
 
     // --- Update handleToggleMarkSlot ---
     private static void handleToggleMarkSlot(ToggleMarkSlotPayload packet, NetworkManager.PacketContext context) {

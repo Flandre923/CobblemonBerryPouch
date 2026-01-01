@@ -22,8 +22,10 @@ import com.github.flandre923.berrypouch.ModCommon;
 
 import com.github.flandre923.berrypouch.ModRegistries;
 import com.github.flandre923.berrypouch.client.input.KeyBindingManager;
+import com.github.flandre923.berrypouch.menu.container.PokeBallBeltContainer;
 import com.github.flandre923.berrypouch.menu.screen.LargeBerryPouchScreen;
 import com.github.flandre923.berrypouch.menu.screen.MediumBerryPouchScreen;
+import com.github.flandre923.berrypouch.menu.screen.PokeBallBeltScreen;
 import com.github.flandre923.berrypouch.menu.screen.SmallBerryPouchScreen;
 import net.minecraft.client.KeyMapping;
 import net.neoforged.api.distmarker.Dist;
@@ -40,8 +42,9 @@ public class NeoForgeClient {
     @SubscribeEvent
     public static  void registerScreen(RegisterMenuScreensEvent event)
     {
-        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), SmallBerryPouchScreen::new);
-        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), MediumBerryPouchScreen::new);
+//        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), SmallBerryPouchScreen::new);
+//        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), MediumBerryPouchScreen::new);
+        event.register(ModRegistries.ModMenuTypes.POKEBALL_BELT_MENU.get(), PokeBallBeltScreen::new);
         event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(), LargeBerryPouchScreen::new);
     }
 
