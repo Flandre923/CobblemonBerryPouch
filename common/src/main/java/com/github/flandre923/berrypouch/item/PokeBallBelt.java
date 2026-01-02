@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity;
 import com.cobblemon.mod.common.item.PokeBallItem;
 import com.cobblemon.mod.common.pokeball.PokeBall;
 import com.github.flandre923.berrypouch.item.pouch.PokeBallBeltHelper;
+import com.github.flandre923.berrypouch.item.pouch.PokeBallBeltInventory;
 import com.github.flandre923.berrypouch.menu.container.PokeBallBeltContainer;
 import dev.architectury.registry.menu.ExtendedMenuProvider;
 import dev.architectury.registry.menu.MenuRegistry;
@@ -13,12 +14,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
 
 public class PokeBallBelt extends Item {
     public PokeBallBelt(Properties properties) {
@@ -31,9 +34,9 @@ public class PokeBallBelt extends Item {
         ItemStack stack = player.getItemInHand(interactionHand);
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             if (player.isShiftKeyDown()) {
-                return throwSelectedItem(level, serverPlayer, stack);
-            }else {
                 openGui(serverPlayer, stack);
+            }else {
+                return throwSelectedItem(level, serverPlayer, stack);
             }
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
@@ -85,9 +88,6 @@ public class PokeBallBelt extends Item {
         return InteractionResultHolder.fail(beltStack);
     }
 
-
-
-
     private void openGui(ServerPlayer player, ItemStack stack) {
         MenuRegistry.openExtendedMenu(player, new ExtendedMenuProvider() {
             @Override
@@ -106,5 +106,40 @@ public class PokeBallBelt extends Item {
         });
     }
 
+    public static boolean onPickupItem(ItemEntity itemEntity, Player player) {
+        // 玩家正在查看精灵球腰带 GUI，不要自动装入
+        if (player instanceof ServerPlayer sp && sp.containerMenu instanceof PokeBallBeltContainer) {
+            return false;
+        }
+
+        ItemStack itemStack = itemEntity.getItem();
+        if (!PokeBallBeltContainer.PokeBallSlot.isPokeBall(itemStack)) {
+            return false; // 不是精灵球，不进行特殊处理
+        }
+
+        if (tryInsertIntoBelt(itemStack, player)) {
+            if (itemStack.isEmpty() || itemStack.getCount() == 0) {
+                itemEntity.discard();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 尝试将精灵球放入玩家装备的腰带中
+     */
+    private static boolean tryInsertIntoBelt(ItemStack stack, Player player) {
+        // 查找玩家背包中的精灵球腰带
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack invStack = player.getInventory().getItem(i);
+            if (invStack.getItem() instanceof PokeBallBelt) {
+                if (PokeBallBeltInventory.tryInsertToStack(invStack, stack)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }

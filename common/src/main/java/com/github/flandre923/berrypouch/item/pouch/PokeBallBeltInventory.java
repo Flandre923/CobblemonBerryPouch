@@ -58,4 +58,58 @@ public class PokeBallBeltInventory extends SimpleContainer {
         saveToStack();
         return result;
     }
+
+
+
+    /**
+     * 尝试将物品插入腰带
+     * @param toInsert 要插入的物品（会被修改count）
+     * @return 是否成功插入（全部或部分）
+     */
+    public boolean tryInsert(ItemStack toInsert) {
+        if (toInsert.isEmpty()) return false;
+
+        int originalCount = toInsert.getCount();
+
+        // 先尝试堆叠到现有的同类型物品
+        for (int i = 0; i < getContainerSize(); i++) {
+            ItemStack slotStack = getItem(i);
+            if (!slotStack.isEmpty() && ItemStack.isSameItemSameComponents(slotStack, toInsert)) {
+                int space = slotStack.getMaxStackSize() - slotStack.getCount();
+                if (space > 0) {
+                    int toAdd = Math.min(space, toInsert.getCount());
+                    slotStack.grow(toAdd);
+                    toInsert.shrink(toAdd);
+                    setItem(i, slotStack); // 触发保存
+                    if (toInsert.isEmpty()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // 再尝试放入空槽位
+        for (int i = 0; i < getContainerSize(); i++) {
+            if (getItem(i).isEmpty()) {
+                setItem(i, toInsert.copy());
+                toInsert.setCount(0);
+                return true;
+            }
+        }
+
+        return toInsert.getCount() < originalCount; // 部分插入也算成功
+    }
+
+
+
+    /**
+     * 静态方法：直接操作 ItemStack 而不创建 Inventory 实例
+     */
+    public static boolean tryInsertToStack(ItemStack beltStack, ItemStack toInsert) {
+        PokeBallBeltInventory inv = new PokeBallBeltInventory(beltStack, 9);
+        return inv.tryInsert(toInsert);
+    }
+
+
+
 }

@@ -98,6 +98,7 @@ public final class ModRegistries {
 //                        pOutput.accept(Items.BERRY_POUCH_24.get());
 //                        pOutput.accept(Items.BERRY_POUCH_30.get());
                         pOutput.accept(Items.BERRY_POUCH_69.get());
+                        pOutput.accept(Items.POKEBALL_BELT.get());
                     }).build();
         });
     }

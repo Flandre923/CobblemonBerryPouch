@@ -1,6 +1,7 @@
 package com.github.flandre923.berrypouch.mixins;
 
 import com.github.flandre923.berrypouch.item.BerryPouch;
+import com.github.flandre923.berrypouch.item.PokeBallBelt;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,9 +23,17 @@ public class ItemEntityMixin {
     @Inject(at = @At("HEAD"), method = "playerTouch", cancellable = true)
     private void onPickup(Player player, CallbackInfo ci) {
         ItemEntity self = (ItemEntity) (Object) this;
-        if (!player.level().isClientSide && pickupDelay == 0 && (thrower == null || thrower.equals(player.getUUID()))
-                && BerryPouch.onPickupItem(self, player)) {
-            ci.cancel();
+        if (!player.level().isClientSide && pickupDelay == 0 && (thrower == null || thrower.equals(player.getUUID()))) {
+            // 先尝试树果袋
+            if (BerryPouch.onPickupItem(self, player)) {
+                ci.cancel();
+                return;
+            }
+            // 再尝试精灵球腰带
+            if (PokeBallBelt.onPickupItem(self, player)) {
+                ci.cancel();
+                return;
+            }
         }
     }
 }
