@@ -20,7 +20,7 @@ public class PokeBallBeltScreen extends AbstractContainerScreen<PokeBallBeltCont
     // 选中框在纹理中的位置
     private static final int SELECTION_U = 191;
     private static final int SELECTION_V = 15;
-    private static final int SELECTION_SIZE = 16;
+    private static final int SELECTION_SIZE = 18;
 
 
     public PokeBallBeltScreen(PokeBallBeltContainer menu, Inventory playerInv, Component title) {
@@ -60,8 +60,8 @@ public class PokeBallBeltScreen extends AbstractContainerScreen<PokeBallBeltCont
                     poseStack.pushPose();
                     poseStack.translate(0, 0, 200); // 确保渲染在物品上层
 
-                    int x = this.leftPos + slot.x;
-                    int y = this.topPos + slot.y;
+                    int x = this.leftPos + slot.x-1;
+                    int y = this.topPos + slot.y-1;
 
                     gui.blit(TEXTURE, x, y,
                             SELECTION_U, SELECTION_V,

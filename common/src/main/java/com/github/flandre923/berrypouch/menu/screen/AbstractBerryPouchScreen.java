@@ -7,6 +7,7 @@ import com.github.flandre923.berrypouch.item.BerryPouch;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import com.github.flandre923.berrypouch.menu.container.AbstractBerryPouchContainer;
 import com.github.flandre923.berrypouch.network.ModNetworking;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.wispforest.accessories.api.AccessoriesCapability;
@@ -203,15 +204,13 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
     }
 
 
-
-
-
     protected void renderMarkedSlotIndicators(GuiGraphics guiGraphics) {
         ItemStack currentPouchStack = findCurrentPouchStack();
         if (currentPouchStack.isEmpty()) {
             return;
         }
         PoseStack poseStack = guiGraphics.pose();
+
         for (Slot slot : menu.slots) {
             if (slot.container == menu.getPouchInventory()) {
                 int pouchSlotIndex = slot.getContainerSlot();
@@ -227,8 +226,6 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
             }
         }
     }
-
-    // --- Add Helper Method to find the current pouch stack ---
     private ItemStack findCurrentPouchStack() {
         Player player = this.minecraft.player;
         if (player == null) {
@@ -238,48 +235,87 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
         // Get the Item type we expect based on the menu's initial stack
         Item targetItem = this.menu.getPouchStack().getItem();
         if (!(targetItem instanceof BerryPouch)) {
-            // Should not happen if the menu opened correctly
             return ItemStack.EMPTY;
         }
 
+        // 【关键修复】根据打开方式智能查找当前实际持有的栈
+        int openFlag = this.menu.getOpenFlag();
 
-        // 1. Check Main Hand
-        ItemStack mainHandStack = player.getMainHandItem();
-        if (mainHandStack.is(targetItem)) {
-            return mainHandStack;
+        switch (openFlag) {
+            case 0: // 主手打开 - 优先检查主手
+                ItemStack mainHandStack = player.getMainHandItem();
+                if (mainHandStack.is(targetItem) && !mainHandStack.isEmpty()) {
+                    return mainHandStack;
+                }
+                // 主手没有，再检查装备栏
+                AccessoriesCapability capability = AccessoriesCapability.get(player);
+                if (capability != null) {
+                    SlotEntryReference equippedRef = capability.getFirstEquipped(targetItem);
+                    if (equippedRef != null && !equippedRef.stack().isEmpty()) {
+                        return equippedRef.stack();
+                    }
+                }
+                // 最后检查副手
+                ItemStack offHandStack = player.getOffhandItem();
+                if (offHandStack.is(targetItem) && !offHandStack.isEmpty()) {
+                    return offHandStack;
+                }
+                break;
+
+            case 1: // 副手打开 - 优先检查副手
+                 offHandStack = player.getOffhandItem();
+                if (offHandStack.is(targetItem) && !offHandStack.isEmpty()) {
+                    return offHandStack;
+                }
+                // 副手没有，再检查主手
+                 mainHandStack = player.getMainHandItem();
+                if (mainHandStack.is(targetItem) && !mainHandStack.isEmpty()) {
+                    return mainHandStack;
+                }
+                // 最后检查装备栏
+                 capability = AccessoriesCapability.get(player);
+                if (capability != null) {
+                    SlotEntryReference equippedRef = capability.getFirstEquipped(targetItem);
+                    if (equippedRef != null && !equippedRef.stack().isEmpty()) {
+                        return equippedRef.stack();
+                    }
+                }
+                break;
+
+            case 2: // 快捷键打开（装备栏）- 优先检查装备栏
+                 capability = AccessoriesCapability.get(player);
+                if (capability != null) {
+                    SlotEntryReference equippedRef = capability.getFirstEquipped(targetItem);
+                    if (equippedRef != null && !equippedRef.stack().isEmpty()) {
+                        return equippedRef.stack();
+                    }
+                }
+                // 装备栏没有，再检查主手
+                 mainHandStack = player.getMainHandItem();
+                if (mainHandStack.is(targetItem) && !mainHandStack.isEmpty()) {
+                    return mainHandStack;
+                }
+                // 最后检查副手
+                 offHandStack = player.getOffhandItem();
+                if (offHandStack.is(targetItem) && !offHandStack.isEmpty()) {
+                    return offHandStack;
+                }
+                break;
+
+            default:
+                // 未知情况，使用通用逻辑
+                break;
         }
 
-        // 2. Check Off Hand
-        ItemStack offHandStack = player.getOffhandItem();
-        if (offHandStack.is(targetItem)) {
-            return offHandStack;
-        }
-
-
-        // 3. Check Accessory Slots
-        AccessoriesCapability capability = AccessoriesCapability.get(player);
-        if (capability != null) {
-            // Use the correct method name: getFirstEquipped
-            // It returns SlotEntryReference or null directly
-            SlotEntryReference equippedRef = capability.getFirstEquipped(targetItem);
-            if (equippedRef != null) {
-                return equippedRef.stack(); // Return the stack from the accessory slot
-            }
-        }
-
-        // 4. Not found in expected locations
-        // As a last resort, return the potentially stale stack from the menu?
-        // This might cause the old behavior. Returning EMPTY is safer for ensuring correctness.
-        // ModCommon.LOG.warn("Could not find current pouch stack for rendering marks. Item: {}", targetItem); // Optional Warning
+        // 如果都找不到，返回空栈
         return ItemStack.EMPTY;
-        // return menu.getPouchStack(); // Returning this might show stale stars if the item was removed
     }
 
 
     // --- mouseClicked remains the same (logic is correct) ---
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && Screen.hasShiftDown()) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_S)) {
             Slot clickedSlot = this.hoveredSlot;
             if (clickedSlot != null && clickedSlot.container == menu.getPouchInventory()) {
                 int pouchSlotIndex = clickedSlot.getContainerSlot();

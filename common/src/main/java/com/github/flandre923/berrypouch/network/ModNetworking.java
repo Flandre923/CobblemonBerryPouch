@@ -198,13 +198,20 @@ public class ModNetworking {
             currentBaitItem = currentBaitStackOnRod.getItem();
             ItemStack baitToReturn = currentBaitStackOnRod.copy();
 
-            for (int i =0;i< pouchItems.getContainerSize();i++){
-                int space = pouchItems.getItem(i).getMaxStackSize() - pouchItems.getItem(i).getCount();
-                if(pouchItems.canPlaceItem(i,baitToReturn) && space >0){
-                    pouchItems.getItem(i).grow(1);
-                    returnedToPouch =true;
+            for (int i = 0; i < pouchItems.getContainerSize(); i++) {
+                ItemStack slotStack = pouchItems.getItem(i);
+                // 必须检查是否是同类型物品！
+                if (!slotStack.isEmpty() && ItemStack.isSameItemSameComponents(slotStack, baitToReturn)) {
+                    int space = slotStack.getMaxStackSize() - slotStack.getCount();
+                    if (space > 0) {
+                        slotStack.grow(1);
+                        pouchItems.setItem(i, slotStack); // 触发保存
+                        returnedToPouch = true;
+                        break;
+                    }
                 }
             }
+
 
             if (returnedToPouch) {
                 PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY); // Clear rod bait IF returned
@@ -273,31 +280,32 @@ public class ModNetworking {
 
         Item nextBaitItem = finalAvailableBerryTypes.get(nextIndex);
         boolean deducted = false;
-
+        ItemStack baitToSet = ItemStack.EMPTY; // 新增：保存完整的物品副本
         if (cyclingMarked) {
-            // Requirement 1: Only deduct from MARKED slots if that's the mode
             for (int markedIndex : markedSlots) {
                 if (markedIndex >= 0 && markedIndex < pouchItems.getContainerSize()) {
                     ItemStack stackInSlot = pouchItems.getItem(markedIndex);
                     if (!stackInSlot.isEmpty() && stackInSlot.is(nextBaitItem)) {
+                        baitToSet = stackInSlot.copyWithCount(1);
                         stackInSlot.shrink(1);
+                        pouchItems.setItem(markedIndex, stackInSlot); // 触发保存
                         deducted = true;
-                        break; // Deducted one, stop searching marked slots
+                        break;
                     }
                 }
             }
         } else {
-            // Standard behavior: Deduct from any slot
             for (int i = 0; i < pouchItems.getContainerSize(); i++) {
                 ItemStack stackInSlot = pouchItems.getItem(i);
                 if (!stackInSlot.isEmpty() && stackInSlot.is(nextBaitItem)) {
+                    baitToSet = stackInSlot.copyWithCount(1);
                     stackInSlot.shrink(1);
+                    pouchItems.setItem(i, stackInSlot); // 触发保存
                     deducted = true;
-                    break; // Deducted one, stop searching all slots
+                    break;
                 }
             }
         }
-
 
         // --- Handle Deduction Result ---
         if (!deducted) {
@@ -321,7 +329,7 @@ public class ModNetworking {
         }
 
         // --- Success: Set new bait and save pouch changes ---
-        PokerodItem.Companion.setBait(heldStack, new ItemStack(nextBaitItem, 1));
+        PokerodItem.Companion.setBait(heldStack, baitToSet); // 使用完整副本
         PouchDataHelper.setLastUsedBait(pouchStack, nextBaitItem);
         pouchItems.setChanged();
 

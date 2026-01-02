@@ -5,6 +5,7 @@ import com.github.flandre923.berrypouch.ModCommon;
 import com.github.flandre923.berrypouch.item.PokeBallBelt;
 import com.github.flandre923.berrypouch.item.pouch.PokeBallBeltHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import io.wispforest.owo.ui.hud.Hud;
 import net.fabricmc.api.EnvType;
@@ -107,6 +108,23 @@ public class BaitRenderHandler  implements ClientGuiEvent.RenderHud {
         int itemRenderX = frameX + (ICON_RENDER_SIZE - 16) / 2; // (24 - 16) / 2 = 4px 偏移
         int itemRenderY = baseY + (ICON_RENDER_SIZE - 16) / 2;
         guiGraphics.renderItem(displayStack, itemRenderX, itemRenderY);
+
+        // 渲染物品数量
+        int count = displayStack.getCount();
+        if (count > 1) {
+            String countStr = String.valueOf(count);
+            int textX = itemRenderX + 17 - client.font.width(countStr); // 右对齐
+            int textY = itemRenderY + 9;
+
+            // 带阴影的文字
+            PoseStack poseStack = guiGraphics.pose();
+            poseStack.pushPose();
+            poseStack.translate(0, 0, 200); // 物品渲染在 Z=150 左右，文字需要更高
+            guiGraphics.drawString(client.font, countStr, textX, textY, 0xFFFFFF, true);
+            poseStack.popPose();
+        }
+
+
     }
 
     /**

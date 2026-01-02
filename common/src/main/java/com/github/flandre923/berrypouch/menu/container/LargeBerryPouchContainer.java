@@ -14,9 +14,9 @@ import net.minecraft.world.item.ItemStack;
 public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
     private final ItemStack pouchStack;
 
-    public LargeBerryPouchContainer(int windowId, Inventory playerInv, ItemStack pouchStack) {
+    public LargeBerryPouchContainer(int windowId, Inventory playerInv, ItemStack pouchStack ,int openFlag) {
         super(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(),
-                windowId, playerInv, pouchStack, BerryPouchType.LARGE);
+                windowId, playerInv, pouchStack, BerryPouchType.LARGE,openFlag);
         this.pouchStack = pouchStack;
     }
         
@@ -53,7 +53,7 @@ public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
         }else{
             item = PouchItemHelper.findBerryPouch(inv.player);
         }
-        return new LargeBerryPouchContainer(windowId, inv,item);
+        return new LargeBerryPouchContainer(windowId, inv,item,isHand);
     }
 
     @Override
