@@ -329,6 +329,16 @@ public abstract  class AbstractBerryPouchScreen <T extends AbstractBerryPouchCon
     protected abstract ItemStack getPlaceholderForSlot(int slotIndex);
 
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        // 修复BUG：当GUI打开时，阻止数字键1-9的快捷键行为
+        // 防止玩家在其他槽位按数字键时尝试移动树果袋导致崩溃
+        if (keyCode >= GLFW.GLFW_KEY_1 && keyCode <= GLFW.GLFW_KEY_9) {
+            return true; // 阻止数字键事件，不让它触发挥击栏切换
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
     public void onClose() {
         super.onClose();
         if (minecraft.player != null) {
