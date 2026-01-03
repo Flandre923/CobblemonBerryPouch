@@ -56,7 +56,7 @@ public final class ModRegistries {
 //                MENU_TYPES.register("berry_pouch_container_30", () ->
 //                        MenuRegistry.ofExtended(MediumBerryPouchContainer::fromNetwork));
         public static final RegistrySupplier<MenuType<LargeBerryPouchContainer>> BERRY_POUCH_CONTAINER_69 =
-                MENU_TYPES.register("berry_pouch_container_69", () ->
+                MENU_TYPES.register("berry_pouch_container", () ->
                         MenuRegistry.ofExtended(LargeBerryPouchContainer::fromNetwork));
         public static final Supplier<MenuType<PokeBallBeltContainer>> POKEBALL_BELT_MENU = MENU_TYPES.register("pokeball_belt_menu",
                 () -> MenuRegistry.ofExtended(PokeBallBeltContainer::fromNetwork)
@@ -76,7 +76,7 @@ public final class ModRegistries {
         static {
             //BERRY_POUCH_24 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_24"), ()->new BerryPouch.java(24));
 //            BERRY_POUCH_30 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_30"), ()->new BerryPouch(BerryPouchType.MEDIUM));
-            BERRY_POUCH_69 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_69"), ()->new BerryPouch(BerryPouchType.LARGE));
+            BERRY_POUCH_69 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch"), ()->new BerryPouch(BerryPouchType.LARGE));
             POKEBALL_BELT = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"pokeball_belt"),()->new PokeBallBelt((new Item.Properties().stacksTo(1))));
         }
     }
