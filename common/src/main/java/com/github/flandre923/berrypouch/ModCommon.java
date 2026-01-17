@@ -13,4 +13,8 @@ public class ModCommon {
         ModRegistries.init();
         ModNetworking.register();
     }
+
+    public static void registerCommands() {
+        // 由平台特定代码调用
+    }
 }

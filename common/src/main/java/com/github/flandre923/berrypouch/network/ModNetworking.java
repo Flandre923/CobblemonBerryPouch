@@ -6,10 +6,10 @@ import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.helper.MarkedSlotsHelper;
 import com.github.flandre923.berrypouch.helper.PouchDataHelper;
 import com.github.flandre923.berrypouch.item.BerryPouch;
-import com.github.flandre923.berrypouch.item.PokeBallBelt;
+import com.github.flandre923.berrypouch.item.PokeBallGun;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
-import com.github.flandre923.berrypouch.item.pouch.PokeBallBeltHelper;
+import com.github.flandre923.berrypouch.item.pouch.PokeBallGunHelper;
 import com.github.flandre923.berrypouch.menu.container.AbstractBerryPouchContainer;
 import dev.architectury.networking.NetworkManager;
 import io.wispforest.accessories.api.AccessoriesCapability;
@@ -103,9 +103,9 @@ public class ModNetworking {
         Level level = player.level();
         InteractionHand hand = isMainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         ItemStack heldStack = player.getItemInHand(hand); // Rod ItemStack
-        // 精灵球腰带 - 切换选中的index
-        if (heldStack.getItem() instanceof PokeBallBelt) {
-            handleCyclePokeBallBelt(player, heldStack, isLeftCycle);
+        // 精灵球发射器 - 切换选中的index
+        if (heldStack.getItem() instanceof PokeBallGun) {
+            handleCyclePokeBallGun(player, heldStack, isLeftCycle);
             return;
         }
         // 钓竿 - 切换鱼饵
@@ -120,15 +120,15 @@ public class ModNetworking {
 
     }
 
-    private static void handleCyclePokeBallBelt(ServerPlayer player, ItemStack beltStack, boolean isLeftCycle) {
+    private static void handleCyclePokeBallGun(ServerPlayer player, ItemStack gunStack, boolean isLeftCycle) {
         if (isLeftCycle) {
-            PokeBallBeltHelper.cyclePrev(beltStack);
+            PokeBallGunHelper.cyclePrev(gunStack);
         } else {
-            PokeBallBeltHelper.cycleNext(beltStack);
+            PokeBallGunHelper.cycleNext(gunStack);
         }
 
         // 获取新选中的物品名称用于提示
-        ItemStack selectedItem = PokeBallBeltHelper.getSelectedItem(beltStack);
+        ItemStack selectedItem = PokeBallGunHelper.getSelectedItem(gunStack);
 
         if (!selectedItem.isEmpty()) {
             player.sendSystemMessage(
@@ -137,7 +137,7 @@ public class ModNetworking {
             );
         } else {
             player.sendSystemMessage(
-                    Component.translatable("message.berrypouch.slot_empty", PokeBallBeltHelper.getSelectedIndex(beltStack) + 1),
+                    Component.translatable("message.berrypouch.slot_empty", PokeBallGunHelper.getSelectedIndex(gunStack) + 1),
                     true
             );
         }

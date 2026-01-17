@@ -2,8 +2,8 @@ package com.github.flandre923.berrypouch.client.hud;
 
 import com.cobblemon.mod.common.item.interactive.PokerodItem; // 引入 PokerodItem
 import com.github.flandre923.berrypouch.ModCommon;
-import com.github.flandre923.berrypouch.item.PokeBallBelt;
-import com.github.flandre923.berrypouch.item.pouch.PokeBallBeltHelper;
+import com.github.flandre923.berrypouch.item.PokeBallGun;
+import com.github.flandre923.berrypouch.item.pouch.PokeBallGunHelper;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.events.client.ClientGuiEvent;
@@ -130,7 +130,7 @@ public class BaitRenderHandler  implements ClientGuiEvent.RenderHud {
     /**
      * 获取要显示的物品堆
      * 优先级：主手 > 副手
-     * 支持：PokerodItem（树果）、PokeBallBelt（选中的精灵球）
+     * 支持：PokerodItem（树果）、PokeBallGun（选中的精灵球）
      */
     private ItemStack getDisplayStack(Player player) {
         // 检查主手
@@ -160,9 +160,9 @@ public class BaitRenderHandler  implements ClientGuiEvent.RenderHud {
             return PokerodItem.Companion.getBaitStackOnRod(heldStack);
         }
 
-        // 精灵球腰带 - 显示选中的精灵球
-        if (heldStack.getItem() instanceof PokeBallBelt) {
-            return PokeBallBeltHelper.getItemAt(heldStack,PokeBallBeltHelper.getSelectedIndex(heldStack));
+        // 精灵球发射器 - 显示选中的精灵球
+        if (heldStack.getItem() instanceof PokeBallGun) {
+            return PokeBallGunHelper.getItemAt(heldStack,PokeBallGunHelper.getSelectedIndex(heldStack));
         }
 
         return ItemStack.EMPTY;

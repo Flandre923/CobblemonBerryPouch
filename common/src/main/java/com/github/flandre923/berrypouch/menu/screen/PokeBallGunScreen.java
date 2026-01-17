@@ -1,8 +1,8 @@
 package com.github.flandre923.berrypouch.menu.screen;
 
 import com.github.flandre923.berrypouch.ModCommon;
-import com.github.flandre923.berrypouch.item.pouch.PokeBallBeltHelper;
-import com.github.flandre923.berrypouch.menu.container.PokeBallBeltContainer;
+import com.github.flandre923.berrypouch.item.pouch.PokeBallGunHelper;
+import com.github.flandre923.berrypouch.menu.container.PokeBallGunContainer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -11,9 +11,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 
-public class PokeBallBeltScreen extends AbstractContainerScreen<PokeBallBeltContainer> {
+public class PokeBallGunScreen extends AbstractContainerScreen<PokeBallGunContainer> {
     private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "textures/gui/pokeball_belt.png");
+            ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "textures/gui/pokeball_gun.png");
     // 纹理实际尺寸
     private static final int TEXTURE_WIDTH = 223;
     private static final int TEXTURE_HEIGHT = 129;
@@ -23,7 +23,7 @@ public class PokeBallBeltScreen extends AbstractContainerScreen<PokeBallBeltCont
     private static final int SELECTION_SIZE = 18;
 
 
-    public PokeBallBeltScreen(PokeBallBeltContainer menu, Inventory playerInv, Component title) {
+    public PokeBallGunScreen(PokeBallGunContainer menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title);
         this.imageWidth = 175;
         this.imageHeight = 128;
@@ -52,8 +52,8 @@ public class PokeBallBeltScreen extends AbstractContainerScreen<PokeBallBeltCont
         PoseStack poseStack = gui.pose();
 
         for (Slot slot : menu.slots) {
-            // 只处理腰带的槽位
-            if (slot.container == menu.getBeltInventory()) {
+            // 只处理发射器的槽位
+            if (slot.container == menu.getGunInventory()) {
                 int slotIndex = slot.getContainerSlot();
 
                 if (slotIndex == selectedIndex) {

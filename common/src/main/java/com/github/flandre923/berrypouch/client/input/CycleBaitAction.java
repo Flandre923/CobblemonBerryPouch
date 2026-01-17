@@ -2,7 +2,7 @@ package com.github.flandre923.berrypouch.client.input;
 
 import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.item.BerryPouch;
-import com.github.flandre923.berrypouch.item.PokeBallBelt;
+import com.github.flandre923.berrypouch.item.PokeBallGun;
 import com.github.flandre923.berrypouch.network.CycleBaitPacket;
 import dev.architectury.networking.NetworkManager;
 import io.wispforest.accessories.api.AccessoriesCapability;
@@ -33,8 +33,8 @@ public class CycleBaitAction implements KeyAction{
     @Override
     public boolean shouldTrigger(Player player) {
 
-        // 检查是否持有精灵球腰带
-        if (isHoldingPokeBallBelt(player)) {
+        // 检查是否持有精灵球发射器
+        if (isHoldingPokeBallGun(player)) {
             return true;
         }
         // 检查是否持有钓竿
@@ -60,15 +60,15 @@ public class CycleBaitAction implements KeyAction{
         return FishingRodEventHandler.isCobblemonFishingRod(player.getMainHandItem()) ||
                 FishingRodEventHandler.isCobblemonFishingRod(player.getOffhandItem());
     }
-    private boolean isHoldingPokeBallBelt(Player player) {
-        return player.getMainHandItem().getItem() instanceof PokeBallBelt ||
-                player.getOffhandItem().getItem() instanceof PokeBallBelt;
+    private boolean isHoldingPokeBallGun(Player player) {
+        return player.getMainHandItem().getItem() instanceof PokeBallGun ||
+                player.getOffhandItem().getItem() instanceof PokeBallGun;
     }
 
     private boolean isMainHandValid(Player player) {
         ItemStack mainHand = player.getMainHandItem();
-        // 主手是精灵球腰带或钓竿
-        return mainHand.getItem() instanceof PokeBallBelt ||
+        // 主手是精灵球发射器或钓竿
+        return mainHand.getItem() instanceof PokeBallGun ||
                 FishingRodEventHandler.isCobblemonFishingRod(mainHand);
     }
 }

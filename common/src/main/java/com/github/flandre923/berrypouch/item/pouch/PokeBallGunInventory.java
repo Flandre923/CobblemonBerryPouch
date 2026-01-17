@@ -5,12 +5,12 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 
-public class PokeBallBeltInventory extends SimpleContainer {
-    private final ItemStack beltStack;
+public class PokeBallGunInventory extends SimpleContainer {
+    private final ItemStack gunStack;
 
-    public PokeBallBeltInventory(ItemStack beltStack, int size) {
+    public PokeBallGunInventory(ItemStack gunStack, int size) {
         super(size);
-        this.beltStack = beltStack;
+        this.gunStack = gunStack;
         loadFromStack();
     }
 
@@ -18,8 +18,8 @@ public class PokeBallBeltInventory extends SimpleContainer {
      * 从物品组件加载数据
      */
     private void loadFromStack() {
-        if (beltStack.isEmpty()) return;
-        ItemContainerContents contents = beltStack.get(DataComponents.CONTAINER);
+        if (gunStack.isEmpty()) return;
+        ItemContainerContents contents = gunStack.get(DataComponents.CONTAINER);
         if (contents != null && contents != ItemContainerContents.EMPTY) {
             contents.copyInto(this.getItems());
         }
@@ -29,8 +29,8 @@ public class PokeBallBeltInventory extends SimpleContainer {
      * 保存数据到物品组件
      */
     private void saveToStack() {
-        if (beltStack.isEmpty()) return;
-        beltStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.getItems()));
+        if (gunStack.isEmpty()) return;
+        gunStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.getItems()));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class PokeBallBeltInventory extends SimpleContainer {
 
 
     /**
-     * 尝试将物品插入腰带
+     * 尝试将物品插入发射器
      * @param toInsert 要插入的物品（会被修改count）
      * @return 是否成功插入（全部或部分）
      */
@@ -105,8 +105,8 @@ public class PokeBallBeltInventory extends SimpleContainer {
     /**
      * 静态方法：直接操作 ItemStack 而不创建 Inventory 实例
      */
-    public static boolean tryInsertToStack(ItemStack beltStack, ItemStack toInsert) {
-        PokeBallBeltInventory inv = new PokeBallBeltInventory(beltStack, 9);
+    public static boolean tryInsertToStack(ItemStack gunStack, ItemStack toInsert) {
+        PokeBallGunInventory inv = new PokeBallGunInventory(gunStack, 9);
         return inv.tryInsert(toInsert);
     }
 

@@ -20,5 +20,15 @@
   "message.berrypouch.auto_berry_toggled.false": "Auto-equipped bait False",
 
   "message.berrypouch.marked_bait_exhausted_switching_none": "Marked bait exhausted! Switched to none.",
-  "message.berrypouch.marked_bait_exhausted": "Marked bait exhausted!"
+  "message.berrypouch.marked_bait_exhausted": "Marked bait exhausted!",
+  
+  "item.berrypouch.pokeball_gun": "Pokéball Launcher",
+  "message.berrypouch.switched_pokeball": "%s",
+  "message.berrypouch.gun_slot_empty": "The Pokéball Launcher is empty.",
+  "container.berrypouch.pokeball_gun": "Pokéball Launcher",
+
+  "message.berrypouch.gun_not_found": "You must hold a Pokéball Launcher in your hand.",
+  "message.berrypouch.gun_offset_set": "Pokéball Launcher offset set to X:%d Y:%d Z:%d",
+  "message.berrypouch.gun_offset_reset": "Pokéball Launcher offset reset to default.",
+  "message.berrypouch.gun_offset_show": "Current offset: X:%d Y:%d Z:%d"
 }

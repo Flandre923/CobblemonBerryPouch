@@ -1,7 +1,7 @@
 package com.github.flandre923.berrypouch.mixins;
 
 import com.github.flandre923.berrypouch.item.BerryPouch;
-import com.github.flandre923.berrypouch.item.PokeBallBelt;
+import com.github.flandre923.berrypouch.item.PokeBallGun;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,8 +29,8 @@ public class ItemEntityMixin {
                 ci.cancel();
                 return;
             }
-            // 再尝试精灵球腰带
-            if (PokeBallBelt.onPickupItem(self, player)) {
+            // 再尝试精灵球发射器
+            if (PokeBallGun.onPickupItem(self, player)) {
                 ci.cancel();
                 return;
             }
