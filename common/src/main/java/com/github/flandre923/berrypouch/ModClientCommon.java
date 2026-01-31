@@ -25,9 +25,19 @@ public class ModClientCommon {
                 (stack, level, entity, seed) -> {
                     String id = PokeBallGunHelper.getSelectedItemId(stack);
 
-                    if (id == null) return 0.0F;
+                    if (id == null || id.isEmpty()) {
+                        ModCommon.LOG.info("Pokeball Gun: id is null or empty");
+                        return 0.0F;
+                    }
 
-                    return getPokeBallModelIndex(id.split(":")[1]);
+                    String[] parts = id.split(":");
+                    if (parts.length > 1) {
+                        float index = getPokeBallModelIndex(parts[1]);
+                        ModCommon.LOG.info("Pokeball Gun: id={}, path={}, index={}", id, parts[1], index);
+                        return index;
+                    }
+                    ModCommon.LOG.info("Pokeball Gun: id={}, parts.length={}", id, parts.length);
+                    return 0f;
                 });
 
         ClientTickEvent.CLIENT_POST.register(__ -> KeyBindingManager.checkKeyInputs());

@@ -44,6 +44,7 @@ public class PokeBallGunContainer extends AbstractContainerMenu {
             @Override
             public void set(int value) {
                 selectedIndex = value;
+                PokeBallGunHelper.updateSelectedItemId(gunStack);
             }
         });
 
@@ -90,6 +91,8 @@ public class PokeBallGunContainer extends AbstractContainerMenu {
             } else {
                 slot.setChanged();
             }
+            
+            PokeBallGunHelper.updateSelectedItemId(gunStack);
         }
         return result;
     }

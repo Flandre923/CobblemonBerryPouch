@@ -1,7 +1,6 @@
 {
   "format_version": "1.9.0",
   "credit": "Made with Blockbench",
-  "parent": "berrypouch:item/pokeball_gun",
   "texture_size": [128, 128],
   "textures": {
     "0": "cobblemon:item/poke_balls/models/poke_ball",
@@ -551,6 +550,104 @@
           ]
         }
       ]
+    }
+  ],
+  "overrides": [
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 1.0
+      },
+      "model": "berrypouch:item/pokeball_gun_poke_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 2.0
+      },
+      "model": "berrypouch:item/pokeball_gun_citrine_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 3.0
+      },
+      "model": "berrypouch:item/pokeball_gun_verdant_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 4.0
+      },
+      "model": "berrypouch:item/pokeball_gun_azure_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 5.0
+      },
+      "model": "berrypouch:item/pokeball_gun_roseate_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 6.0
+      },
+      "model": "berrypouch:item/pokeball_gun_slate_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 7.0
+      },
+      "model": "berrypouch:item/pokeball_gun_premier_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 8.0
+      },
+      "model": "berrypouch:item/pokeball_gun_great_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 9.0
+      },
+      "model": "berrypouch:item/pokeball_gun_ultra_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 10.0
+      },
+      "model": "berrypouch:item/pokeball_gun_safari_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 27.0
+      },
+      "model": "berrypouch:item/pokeball_gun_heal_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 26.0
+      },
+      "model": "berrypouch:item/pokeball_gun_dusk_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 28.0
+      },
+      "model": "berrypouch:item/pokeball_gun_quick_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 24.0
+      },
+      "model": "berrypouch:item/pokeball_gun_timer_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 25.0
+      },
+      "model": "berrypouch:item/pokeball_gun_luxury_ball"
+    },
+    {
+      "predicate": {
+        "berrypouch:poke_ball": 31.0
+      },
+      "model": "berrypouch:item/pokeball_gun_master_ball"
     }
   ]
 }

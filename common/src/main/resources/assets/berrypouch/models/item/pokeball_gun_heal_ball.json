@@ -1,0 +1,8 @@
+{
+  "parent": "berrypouch:item/pokeball_gun",
+  "textures": {
+    "0": "cobblemon:item/poke_balls/models/heal_ball",
+    "1": "berrypouch:item/pokeball_gun",
+    "particle": "heal_ball"
+  }
+}
