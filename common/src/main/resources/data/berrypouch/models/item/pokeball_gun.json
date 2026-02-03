@@ -1,0 +1,20 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "berrypouch:item/pokeball_gun"
+  },
+  "overrides": [
+    {
+      "predicate": { "berrypouch:poke_ball": 0.0 },
+      "model": "berrypouch:item/pokeball_gun/base"
+    },
+    {
+      "predicate": { "berrypouch:poke_ball": 1.0 },
+      "model": "berrypouch:item/pokeball_gun/ball/poke_ball"
+    },
+    {
+      "predicate": { "berrypouch:poke_ball": 2.0 },
+      "model": "berrypouch:item/pokeball_gun/ball/citrine_ball"
+    }
+  ]
+}
