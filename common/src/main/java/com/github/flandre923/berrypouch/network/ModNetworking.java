@@ -216,10 +216,18 @@ public class ModNetworking {
             if (returnedToPouch) {
                 PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY); // Clear rod bait IF returned
             } else {
-                ItemEntity itemEntity = new ItemEntity(level, player.getX(), player.getY() + player.getEyeHeight(), player.getZ(), baitToReturn);
-                itemEntity.setPickUpDelay(10);
-                level.addFreshEntity(itemEntity);
-                player.sendSystemMessage(Component.translatable("message.berrypouch.bait_dropped", Component.translatable(currentBaitItem.getDescriptionId())), true);
+                // 尝试放入树果袋的其他空槽位（不是同类型的槽位）
+                ItemStack remaining = pouchItems.addItem(baitToReturn);
+                if (remaining.isEmpty()) {
+                    // 成功放入树果袋的其他槽位
+                    returnedToPouch = true;
+                } else {
+                    // 树果袋满了，丢到世界上
+                    ItemEntity itemEntity = new ItemEntity(level, player.getX(), player.getY() + player.getEyeHeight(), player.getZ(), remaining);
+                    itemEntity.setPickUpDelay(10);
+                    level.addFreshEntity(itemEntity);
+                    player.sendSystemMessage(Component.translatable("message.berrypouch.bait_dropped", Component.translatable(currentBaitItem.getDescriptionId())), true);
+                }
                 PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY);
             }
         }

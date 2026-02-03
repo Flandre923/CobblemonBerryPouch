@@ -12,7 +12,7 @@
   "message.berrypouch.need_pouch": "你需要装备树果袋",
   "message.berrypouch.no_bait_in_pouch": "树果袋中没有可用的树果",
   "message.berrypouch.switched_bait": "鱼饵： %s",
-  "message.berrypouch.bait_dropped": "你的树果袋已满， %s 已被丢到地上",
+  "message.berrypouch.bait_dropped": "树果袋已满， %s 已丢到地上",
   "message.berrypouch.autobait": "自动装备鱼饵： %s",
   "accessories.slot.pouch": "袋",
   "accessories.slot_group.utility": "方块宝可梦",

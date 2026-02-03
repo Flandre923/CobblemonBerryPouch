@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class LargeBerryPouchScreen extends AbstractBerryPouchScreen<LargeBerryPouchContainer> {
     private static final ResourceLocation TEXTURE =
-        ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "textures/gui/berry_bag_0.5.png");
+        ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID, "textures/gui/berry_bag.png");
 
     public LargeBerryPouchScreen(LargeBerryPouchContainer menu, Inventory playerInv, Component title) {
         super(menu, playerInv, title, BerryPouchType.LARGE, TEXTURE);
