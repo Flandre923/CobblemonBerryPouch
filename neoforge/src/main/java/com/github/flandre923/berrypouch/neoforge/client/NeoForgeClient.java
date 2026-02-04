@@ -22,9 +22,9 @@ import com.github.flandre923.berrypouch.ModCommon;
 
 import com.github.flandre923.berrypouch.ModRegistries;
 import com.github.flandre923.berrypouch.client.input.KeyBindingManager;
+import com.github.flandre923.berrypouch.menu.container.PokeBallGunContainer;
 import com.github.flandre923.berrypouch.menu.screen.LargeBerryPouchScreen;
-import com.github.flandre923.berrypouch.menu.screen.MediumBerryPouchScreen;
-import com.github.flandre923.berrypouch.menu.screen.SmallBerryPouchScreen;
+import com.github.flandre923.berrypouch.menu.screen.PokeBallGunScreen;
 import net.minecraft.client.KeyMapping;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -40,17 +40,17 @@ public class NeoForgeClient {
     @SubscribeEvent
     public static  void registerScreen(RegisterMenuScreensEvent event)
     {
-        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), SmallBerryPouchScreen::new);
-        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), MediumBerryPouchScreen::new);
+//        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_24.get(), SmallBerryPouchScreen::new);
+//        event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_30.get(), MediumBerryPouchScreen::new);
+        event.register(ModRegistries.ModMenuTypes.POKEBALL_GUN_MENU.get(), PokeBallGunScreen::new);
         event.register(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(), LargeBerryPouchScreen::new);
     }
 
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            ModClientCommon.init();
-        });
+<<<<<<< HEAD
+        event.enqueueWork(ModClientCommon::init);
     }
 
     @SubscribeEvent

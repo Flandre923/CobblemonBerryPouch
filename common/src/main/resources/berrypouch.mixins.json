@@ -7,7 +7,8 @@
   "mixins": [
     "ItemEntityMixin",
     "ShapedRecipeMixin",
-    "EnableAutoFillMixin"
+    "EnableAutoFillMixin",
+    "client.ItemInHandRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

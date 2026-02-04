@@ -21,11 +21,11 @@ package com.github.flandre923.berrypouch;
 import com.github.flandre923.berrypouch.component.MarkedSlotsComponent;
 import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.item.BerryPouch;
+import com.github.flandre923.berrypouch.item.PokeBallGun;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import com.github.flandre923.berrypouch.menu.container.LargeBerryPouchContainer;
-import com.github.flandre923.berrypouch.menu.container.MediumBerryPouchContainer;
-import com.github.flandre923.berrypouch.menu.container.SmallBerryPouchContainer;
+import com.github.flandre923.berrypouch.menu.container.PokeBallGunContainer;
 import com.github.flandre923.berrypouch.recipe.BerryPouchUpgradeRecipe;
 import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -49,15 +49,21 @@ public final class ModRegistries {
     public class ModMenuTypes {
         public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ModCommon.MOD_ID, Registries.MENU);
 
-        public static final RegistrySupplier<MenuType<SmallBerryPouchContainer>> BERRY_POUCH_CONTAINER_24 =
-                MENU_TYPES.register("berry_pouch_container_24", () ->
-                        MenuRegistry.ofExtended(SmallBerryPouchContainer::fromNetwork));
-        public static final RegistrySupplier<MenuType<MediumBerryPouchContainer>> BERRY_POUCH_CONTAINER_30 =
-                MENU_TYPES.register("berry_pouch_container_30", () ->
-                        MenuRegistry.ofExtended(MediumBerryPouchContainer::fromNetwork));
+//        public static final RegistrySupplier<MenuType<SmallBerryPouchContainer>> BERRY_POUCH_CONTAINER_24 =
+//                MENU_TYPES.register("berry_pouch_container_24", () ->
+//                        MenuRegistry.ofExtended(SmallBerryPouchContainer::fromNetwork));
+//        public static final RegistrySupplier<MenuType<MediumBerryPouchContainer>> BERRY_POUCH_CONTAINER_30 =
+//                MENU_TYPES.register("berry_pouch_container_30", () ->
+//                        MenuRegistry.ofExtended(MediumBerryPouchContainer::fromNetwork));
         public static final RegistrySupplier<MenuType<LargeBerryPouchContainer>> BERRY_POUCH_CONTAINER_69 =
-                MENU_TYPES.register("berry_pouch_container_69", () ->
+                MENU_TYPES.register("berry_pouch_container", () ->
                         MenuRegistry.ofExtended(LargeBerryPouchContainer::fromNetwork));
+        public static final Supplier<MenuType<PokeBallGunContainer>> POKEBALL_GUN_MENU = MENU_TYPES.register("pokeball_gun_menu",
+                () -> MenuRegistry.ofExtended(PokeBallGunContainer::fromNetwork)
+        );
+
+
+
     }
 
     public class Items {
@@ -65,11 +71,13 @@ public final class ModRegistries {
         //public static final RegistrySupplier<BerryPouch.java> BERRY_POUCH_24;
 //        public static final RegistrySupplier<BerryPouch> BERRY_POUCH_30;
         public static final RegistrySupplier<BerryPouch> BERRY_POUCH_69;
+        public static final RegistrySupplier<PokeBallGun> POKEBALL_GUN ;
 
         static {
             //BERRY_POUCH_24 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_24"), ()->new BerryPouch.java(24));
 //            BERRY_POUCH_30 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_30"), ()->new BerryPouch(BerryPouchType.MEDIUM));
-            BERRY_POUCH_69 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch_69"), ()->new BerryPouch(BerryPouchType.LARGE));
+            BERRY_POUCH_69 = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"berry_pouch"), ()->new BerryPouch(BerryPouchType.LARGE));
+            POKEBALL_GUN = REGISTRY.register(ResourceLocation.fromNamespaceAndPath(ModCommon.MOD_ID,"pokeball_gun"),()->new PokeBallGun((new Item.Properties().stacksTo(1))));
         }
     }
 
@@ -88,6 +96,7 @@ public final class ModRegistries {
 //                        pOutput.accept(Items.BERRY_POUCH_24.get());
 //                        pOutput.accept(Items.BERRY_POUCH_30.get());
                         pOutput.accept(Items.BERRY_POUCH_69.get());
+                        pOutput.accept(Items.POKEBALL_GUN.get());
                     }).build();
         });
     }
@@ -114,15 +123,7 @@ public final class ModRegistries {
                         .networkSynchronized(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional))
                         .build()
         );
-        
-        // Register the SLOT_LIMITS component for dynamic slot limits
-        public static final RegistrySupplier<DataComponentType<com.github.flandre923.berrypouch.component.SlotLimitComponent>> SLOT_LIMITS =
-                DATA_COMPONENTS.register("slot_limits", () ->
-                        DataComponentType.<com.github.flandre923.berrypouch.component.SlotLimitComponent>builder()
-                                .persistent(com.github.flandre923.berrypouch.component.SlotLimitComponent.CODEC)
-                                .networkSynchronized(com.github.flandre923.berrypouch.component.SlotLimitComponent.STREAM_CODEC)
-                                .build()
-                );
+
         public static void register() {
             DATA_COMPONENTS.register();
             ModCommon.LOG.info("Registered Data Components for {}", ModCommon.MOD_ID); // Add logging

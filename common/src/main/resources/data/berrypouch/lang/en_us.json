@@ -1,0 +1,28 @@
+{
+  "item.berrypouch.berry_pouch_69": "Berry Pouch",
+  "berrypouch.berry_pouch.tab": "Berry Pouch",
+  "key.categories.berrypouch": "Berry Pouch",
+  "key.berrypouch.open_pouch": "Open the Berry Pouch in the slot",
+  "key.berrypouch.cycle_bait_left": "Previous Bait",
+  "key.berrypouch.cycle_bait_right": "Next Bait",
+  "key.berrypouch.toggle_auto_berry": "Auto-equipped Bait",
+  "message.berrypouch.not_holding_rod": "You must holding a Cobblemon fishing rod.",
+  "message.berrypouch.capability_missing": "Accessories system error",
+  "message.berrypouch.need_pouch": "You need to equip a Berry Pouch",
+  "message.berrypouch.no_bait_in_pouch": "No available berries in pouch",
+  "message.berrypouch.switched_bait": "Bait: %s",
+  "message.berrypouch.bait_dropped": "Your pouch is full, dropped %s to the ground",
+  "message.berrypouch.autobait": "Auto-equipped bait: %s",
+  "accessories.slot.pouch": "Pouch",
+  "accessories.slot_group.utility": "Cobblemon",
+  "message.berrypouch.auto_berry_toggled.true": "Auto-equipped bait True",
+  "message.berrypouch.auto_berry_toggled.false": "Auto-equipped bait False",
+
+  "message.berrypouch.marked_bait_exhausted_switching_none": "Marked bait exhausted! Switched to none.",
+  "message.berrypouch.marked_bait_exhausted": "Marked bait exhausted!",
+  
+  "item.berrypouch.pokeball_belt": "Pokéball Launcher",
+  "message.berrypouch.switched_pokeball": "%s",
+  "message.berrypouch.slot_empty": "Empty.",
+  "container.berrypouch.pokeball_belt": "Pokéball Launcher"
+}

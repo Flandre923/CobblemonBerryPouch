@@ -6,7 +6,6 @@ import com.github.flandre923.berrypouch.item.pouch.BerryPouchInventory;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import com.github.flandre923.berrypouch.menu.slot.SlotLocked;
-import com.github.flandre923.berrypouch.storage.SlotLimitData;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -19,15 +18,16 @@ public abstract class AbstractBerryPouchContainer extends AbstractContainerMenu 
     protected final ItemStack pouchStack;
     protected final BerryPouchInventory pouchInventory;
     protected final BerryPouchType pouchType;
-
+    protected final int openFlag; // 标识树果袋打开来源
     public AbstractBerryPouchContainer(
             MenuType<?> type, int windowId, Inventory playerInv,
-            ItemStack pouchStack, BerryPouchType pouchType
+            ItemStack pouchStack, BerryPouchType pouchType,int openFlag
     ) {
         super(type, windowId);
         this.pouchStack = pouchStack;
         this.pouchType = pouchType;
         this.pouchInventory = BerryPouchManager.getInventory(pouchStack, playerInv.player.level());
+        this.openFlag = openFlag;
 
         addPouchSlots();
         addPlayerSlots(playerInv,pouchStack);
@@ -73,4 +73,9 @@ public abstract class AbstractBerryPouchContainer extends AbstractContainerMenu 
     public BerryPouchType getPouchType() {
         return this.pouchType;
     }
+
+    public int getOpenFlag() {
+        return openFlag;
+    }
+
 }

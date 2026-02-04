@@ -14,9 +14,9 @@ import net.minecraft.world.item.ItemStack;
 public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
     private final ItemStack pouchStack;
 
-    public LargeBerryPouchContainer(int windowId, Inventory playerInv, ItemStack pouchStack) {
+    public LargeBerryPouchContainer(int windowId, Inventory playerInv, ItemStack pouchStack ,int openFlag) {
         super(ModRegistries.ModMenuTypes.BERRY_POUCH_CONTAINER_69.get(),
-                windowId, playerInv, pouchStack, BerryPouchType.LARGE);
+                windowId, playerInv, pouchStack, BerryPouchType.LARGE,openFlag);
         this.pouchStack = pouchStack;
     }
         
@@ -53,7 +53,7 @@ public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
         }else{
             item = PouchItemHelper.findBerryPouch(inv.player);
         }
-        return new LargeBerryPouchContainer(windowId, inv,item);
+        return new LargeBerryPouchContainer(windowId, inv,item,isHand);
     }
 
     @Override
@@ -117,26 +117,28 @@ public class LargeBerryPouchContainer extends  AbstractBerryPouchContainer {
         ItemStack returnStack = originalStack.copy();
 
         if (slotIndex < BerryPouchType.LARGE.getSize()) {
-            // 从袋子移到背包：每次只移动物品堆叠上限
-            int maxMove = originalStack.getMaxStackSize();
-            int toMove = Math.min(originalStack.getCount(), maxMove);
+            int maxMove = Math.min(64, originalStack.getItem().getDefaultMaxStackSize());
+            int currentCount = originalStack.getCount();
+            int toMove = Math.min(currentCount, maxMove);
 
             ItemStack toTransfer = originalStack.copyWithCount(toMove);
+            boolean moved = this.moveItemStackTo(toTransfer, BerryPouchType.LARGE.getSize(), this.slots.size(), true);
 
-            if (!this.moveItemStackTo(toTransfer, BerryPouchType.LARGE.getSize(), this.slots.size(), true)) {
-                return ItemStack.EMPTY;
+            if (moved) {                // 从树果袋移除实际移动的数量
+                int actuallyMoved = toMove - toTransfer.getCount();
+                // 如果背包已满，实际移除的可能比预期的少
+                if (actuallyMoved > 0) {
+                    pouchInventory.removeFromSlot(slotIndex, actuallyMoved);
+                    // 返回实际移动后的副本，用于同步客户端
+                    ItemStack finalReturn = returnStack.copy();
+                    finalReturn.setCount(actuallyMoved);
+                    return ItemStack.EMPTY;
+                }
             }
-
-            // 计算实际移动了多少
-            int actualMoved = toMove - toTransfer.getCount();
-            if (actualMoved > 0 ) {
-                pouchInventory.removeFromSlot(slotIndex, actualMoved);
-            }
-
+            return ItemStack.EMPTY; // 如果完全没法移动（比如背包满），返回空
         } else {
             // 从背包移到袋子
             boolean moved = false;
-            int countBefore = originalStack.getCount();
 
             if (BerryPouchType.LARGE.getStorageSlot().has(originalStack.getItem())) {
                 moved = this.moveItemStackToPouch(originalStack, 0, 70);

@@ -6,8 +6,10 @@ import com.github.flandre923.berrypouch.event.FishingRodEventHandler;
 import com.github.flandre923.berrypouch.helper.MarkedSlotsHelper;
 import com.github.flandre923.berrypouch.helper.PouchDataHelper;
 import com.github.flandre923.berrypouch.item.BerryPouch;
+import com.github.flandre923.berrypouch.item.PokeBallGun;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
+import com.github.flandre923.berrypouch.item.pouch.PokeBallGunHelper;
 import com.github.flandre923.berrypouch.menu.container.AbstractBerryPouchContainer;
 import dev.architectury.networking.NetworkManager;
 import io.wispforest.accessories.api.AccessoriesCapability;
@@ -46,7 +48,7 @@ public class ModNetworking {
                 CycleBaitPacket.CODEC,
                 (packet, context) -> {
                     ServerPlayer player = (ServerPlayer) context.getPlayer();
-                    context.queue(() -> handleCycleBaitRequest(player, packet.isMainHand(), packet.isLeftCycle()));
+                    context.queue(() -> handleCycleRequest(player, packet.isMainHand(), packet.isLeftCycle()));
                 }
         );
 
@@ -97,15 +99,55 @@ public class ModNetworking {
     }
 
 
-    private static void handleCycleBaitRequest(ServerPlayer player, boolean isMainHand, boolean isLeftCycle) {
+    private static void handleCycleRequest(ServerPlayer player, boolean isMainHand, boolean isLeftCycle) {
         Level level = player.level();
         InteractionHand hand = isMainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         ItemStack heldStack = player.getItemInHand(hand); // Rod ItemStack
-
-        if (!FishingRodEventHandler.isCobblemonFishingRod(heldStack)) {
-            player.sendSystemMessage(Component.translatable("message.berrypouch.not_holding_rod"), true);
+        // 精灵球发射器 - 切换选中的index
+        if (heldStack.getItem() instanceof PokeBallGun) {
+            handleCyclePokeBallGun(player, heldStack, isLeftCycle);
             return;
         }
+        // 钓竿 - 切换鱼饵
+        if (FishingRodEventHandler.isCobblemonFishingRod(heldStack)) {
+            handleCycleBaitRequest(player, heldStack, isLeftCycle);
+            return;
+        }
+
+        // 都不是，提示玩家
+        player.sendSystemMessage(Component.translatable("message.berrypouch.not_holding_valid_item"), true);
+
+
+    }
+
+    private static void handleCyclePokeBallGun(ServerPlayer player, ItemStack gunStack, boolean isLeftCycle) {
+        if (isLeftCycle) {
+            PokeBallGunHelper.cyclePrev(gunStack);
+        } else {
+            PokeBallGunHelper.cycleNext(gunStack);
+        }
+
+        // 获取新选中的物品名称用于提示
+        ItemStack selectedItem = PokeBallGunHelper.getSelectedItem(gunStack);
+
+        if (!selectedItem.isEmpty()) {
+            player.sendSystemMessage(
+                    Component.translatable("message.berrypouch.switched_pokeball", selectedItem.getHoverName()),
+                    true
+            );
+        } else {
+            player.sendSystemMessage(
+                    Component.translatable("message.berrypouch.slot_empty", PokeBallGunHelper.getSelectedIndex(gunStack) + 1),
+                    true
+            );
+        }
+
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 0.5f, 1.5f);
+    }
+
+    private static void handleCycleBaitRequest(ServerPlayer player, ItemStack heldStack, boolean isLeftCycle) {
+        Level level = player.level();
 
         AccessoriesCapability capability = AccessoriesCapability.get(player);
         if (capability == null) return;
@@ -127,24 +169,44 @@ public class ModNetworking {
 
         SimpleContainer pouchItems = BerryPouchManager.getInventory(pouchStack,level);
         // --- Determine Available Bait *Types* based on intent and *current* availability ---
-        List<Item> availableMarkedItemTypes = new ArrayList<>();
+        // 使用 ItemStack 列表来存储完整的诱饵信息（包括 Components/NBT），以正确区分不同属性的 poke bait
+        List<ItemStack> availableMarkedItemTypes = new ArrayList<>();
         if (preferMarked) {
             for (int markedIndex : markedSlots) {
                 if (markedIndex >= 0 && markedIndex < pouchItems.getContainerSize()) {
                     ItemStack stackInSlot = pouchItems.getItem(markedIndex);
                     // Check if it's a non-empty berry and the type isn't already added
-                    if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot) && !availableMarkedItemTypes.contains(stackInSlot.getItem())) {
-                        availableMarkedItemTypes.add(stackInSlot.getItem());
+                    // 使用 isSameItemSameComponents 来正确区分不同属性的 poke bait
+                    if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot)) {
+                        boolean alreadyAdded = false;
+                        for (ItemStack existing : availableMarkedItemTypes) {
+                            if (ItemStack.isSameItemSameComponents(existing, stackInSlot)) {
+                                alreadyAdded = true;
+                                break;
+                            }
+                        }
+                        if (!alreadyAdded) {
+                            availableMarkedItemTypes.add(stackInSlot.copy());
+                        }
                     }
                 }
             }
         }
 
         // --- Determine *all* available bait types (still needed for fallback if not preferring marked) ---
-        List<Item> allAvailableItemTypes = new ArrayList<>();
+        List<ItemStack> allAvailableItemTypes = new ArrayList<>();
         for (ItemStack stackInSlot : pouchItems.getItems()) {
-            if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot) && !allAvailableItemTypes.contains(stackInSlot.getItem())) {
-                allAvailableItemTypes.add(stackInSlot.getItem());
+            if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot)) {
+                boolean alreadyAdded = false;
+                for (ItemStack existing : allAvailableItemTypes) {
+                    if (ItemStack.isSameItemSameComponents(existing, stackInSlot)) {
+                        alreadyAdded = true;
+                        break;
+                    }
+                }
+                if (!alreadyAdded) {
+                    allAvailableItemTypes.add(stackInSlot.copy());
+                }
             }
         }
 
@@ -156,21 +218,36 @@ public class ModNetworking {
             currentBaitItem = currentBaitStackOnRod.getItem();
             ItemStack baitToReturn = currentBaitStackOnRod.copy();
 
-            for (int i =0;i< pouchItems.getContainerSize();i++){
-                int space = pouchItems.getItem(i).getMaxStackSize() - pouchItems.getItem(i).getCount();
-                if(pouchItems.canPlaceItem(i,baitToReturn) && space >0){
-                    pouchItems.getItem(i).grow(1);
-                    returnedToPouch =true;
+            for (int i = 0; i < pouchItems.getContainerSize(); i++) {
+                ItemStack slotStack = pouchItems.getItem(i);
+                // 必须检查是否是同类型物品！
+                if (!slotStack.isEmpty() && ItemStack.isSameItemSameComponents(slotStack, baitToReturn)) {
+                    int space = slotStack.getMaxStackSize() - slotStack.getCount();
+                    if (space > 0) {
+                        slotStack.grow(1);
+                        pouchItems.setItem(i, slotStack); // 触发保存
+                        returnedToPouch = true;
+                        break;
+                    }
                 }
             }
+
 
             if (returnedToPouch) {
                 PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY); // Clear rod bait IF returned
             } else {
-                ItemEntity itemEntity = new ItemEntity(level, player.getX(), player.getY() + player.getEyeHeight(), player.getZ(), baitToReturn);
-                itemEntity.setPickUpDelay(10);
-                level.addFreshEntity(itemEntity);
-                player.sendSystemMessage(Component.translatable("message.berrypouch.bait_dropped", Component.translatable(currentBaitItem.getDescriptionId())), true);
+                // 尝试放入树果袋的其他空槽位（不是同类型的槽位）
+                ItemStack remaining = pouchItems.addItem(baitToReturn);
+                if (remaining.isEmpty()) {
+                    // 成功放入树果袋的其他槽位
+                    returnedToPouch = true;
+                } else {
+                    // 树果袋满了，丢到世界上
+                    ItemEntity itemEntity = new ItemEntity(level, player.getX(), player.getY() + player.getEyeHeight(), player.getZ(), remaining);
+                    itemEntity.setPickUpDelay(10);
+                    level.addFreshEntity(itemEntity);
+                    player.sendSystemMessage(Component.translatable("message.berrypouch.bait_dropped", Component.translatable(currentBaitItem.getDescriptionId())), true);
+                }
                 PokerodItem.Companion.setBait(heldStack, ItemStack.EMPTY);
             }
         }
@@ -188,7 +265,7 @@ public class ModNetworking {
             return;
         }
 
-        List<Item> finalAvailableBerryTypes;
+        List<ItemStack> finalAvailableBerryTypes;
         boolean cyclingMarked = false;
 
         if (preferMarked) {
@@ -205,7 +282,9 @@ public class ModNetworking {
         }
 
 
-        int currentIndex = currentBaitItem != null ? finalAvailableBerryTypes.indexOf(currentBaitItem) : -1;
+        int currentIndex = currentBaitStackOnRod != null && !currentBaitStackOnRod.isEmpty() 
+            ? findBaitIndex(finalAvailableBerryTypes, currentBaitStackOnRod) 
+            : -1;
         if (currentIndex == -1 && !finalAvailableBerryTypes.isEmpty()){
             currentIndex = isLeftCycle ? 0 : finalAvailableBerryTypes.size() - 1 ;
         } else if (finalAvailableBerryTypes.isEmpty()) {
@@ -229,33 +308,35 @@ public class ModNetworking {
             return;
         }
 
-        Item nextBaitItem = finalAvailableBerryTypes.get(nextIndex);
+        ItemStack nextBaitStack = finalAvailableBerryTypes.get(nextIndex);
+        Item nextBaitItem = nextBaitStack.getItem();
         boolean deducted = false;
-
+        ItemStack baitToSet = ItemStack.EMPTY; // 新增：保存完整的物品副本
         if (cyclingMarked) {
-            // Requirement 1: Only deduct from MARKED slots if that's the mode
             for (int markedIndex : markedSlots) {
                 if (markedIndex >= 0 && markedIndex < pouchItems.getContainerSize()) {
                     ItemStack stackInSlot = pouchItems.getItem(markedIndex);
-                    if (!stackInSlot.isEmpty() && stackInSlot.is(nextBaitItem)) {
+                    if (!stackInSlot.isEmpty() && ItemStack.isSameItemSameComponents(stackInSlot, nextBaitStack)) {
+                        baitToSet = stackInSlot.copyWithCount(1);
                         stackInSlot.shrink(1);
+                        pouchItems.setItem(markedIndex, stackInSlot); // 触发保存
                         deducted = true;
-                        break; // Deducted one, stop searching marked slots
+                        break;
                     }
                 }
             }
         } else {
-            // Standard behavior: Deduct from any slot
             for (int i = 0; i < pouchItems.getContainerSize(); i++) {
                 ItemStack stackInSlot = pouchItems.getItem(i);
-                if (!stackInSlot.isEmpty() && stackInSlot.is(nextBaitItem)) {
+                if (!stackInSlot.isEmpty() && ItemStack.isSameItemSameComponents(stackInSlot, nextBaitStack)) {
+                    baitToSet = stackInSlot.copyWithCount(1);
                     stackInSlot.shrink(1);
+                    pouchItems.setItem(i, stackInSlot); // 触发保存
                     deducted = true;
-                    break; // Deducted one, stop searching all slots
+                    break;
                 }
             }
         }
-
 
         // --- Handle Deduction Result ---
         if (!deducted) {
@@ -279,14 +360,14 @@ public class ModNetworking {
         }
 
         // --- Success: Set new bait and save pouch changes ---
-        PokerodItem.Companion.setBait(heldStack, new ItemStack(nextBaitItem, 1));
+        PokerodItem.Companion.setBait(heldStack, baitToSet); // 使用完整副本
         PouchDataHelper.setLastUsedBait(pouchStack, nextBaitItem);
         pouchItems.setChanged();
 
         // --- Feedback and Sound ---
         player.sendSystemMessage(
                 Component.translatable("message.berrypouch.switched_bait",
-                        Component.translatable(nextBaitItem.getDescriptionId())),
+                        baitToSet.getHoverName()),
                 true
         );
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 0.5f, 1.5f);
@@ -297,6 +378,7 @@ public class ModNetworking {
             player.containerMenu.broadcastChanges();
         }
     }
+
 
     // --- Update handleToggleMarkSlot ---
     private static void handleToggleMarkSlot(ToggleMarkSlotPayload packet, NetworkManager.PacketContext context) {
@@ -376,5 +458,18 @@ public class ModNetworking {
         } else {
             ModCommon.LOG.warn("Attempted to send ToggleMarkSlotPayload when not in a valid client context!");
         }
+    }
+
+    // --- 辅助方法: 在诱饵列表中查找指定 ItemStack 的索引 ---
+    private static int findBaitIndex(List<ItemStack> baitList, ItemStack target) {
+        if (target == null || target.isEmpty()) {
+            return -1;
+        }
+        for (int i = 0; i < baitList.size(); i++) {
+            if (ItemStack.isSameItemSameComponents(baitList.get(i), target)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

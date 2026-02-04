@@ -1,6 +1,4 @@
 package com.github.flandre923.berrypouch.event;// 创建一个新的事件监听类，或者在你的主类/客户端类中注册
-import com.cobblemon.mod.common.Cobblemon;
-import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import com.cobblemon.mod.common.item.interactive.PokerodItem;
 import com.github.flandre923.berrypouch.helper.MarkedSlotsHelper;
 import com.github.flandre923.berrypouch.helper.PouchDataHelper;
@@ -257,7 +255,6 @@ public class FishingRodEventHandler {
     }
 
 
-    // 辅助方法 (保持不变)
     public static boolean isCobblemonFishingRod(ItemStack stack) {
         if (stack.isEmpty()) return false;
         return stack.getItem() instanceof PokerodItem;

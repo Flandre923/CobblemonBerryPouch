@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "berrypouch:item/berry_pouch_30"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "berrypouch:full": 1
+      },
+      "model": "berrypouch:item/berry_pouch_full"
+    }
+  ]
+}
