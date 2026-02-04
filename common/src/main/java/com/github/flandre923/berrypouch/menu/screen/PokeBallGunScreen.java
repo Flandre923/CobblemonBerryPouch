@@ -1,7 +1,6 @@
 package com.github.flandre923.berrypouch.menu.screen;
 
 import com.github.flandre923.berrypouch.ModCommon;
-import com.github.flandre923.berrypouch.item.pouch.PokeBallGunHelper;
 import com.github.flandre923.berrypouch.menu.container.PokeBallGunContainer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;

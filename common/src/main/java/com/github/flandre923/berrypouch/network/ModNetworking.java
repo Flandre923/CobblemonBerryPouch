@@ -169,24 +169,44 @@ public class ModNetworking {
 
         SimpleContainer pouchItems = BerryPouchManager.getInventory(pouchStack,level);
         // --- Determine Available Bait *Types* based on intent and *current* availability ---
-        List<Item> availableMarkedItemTypes = new ArrayList<>();
+        // 使用 ItemStack 列表来存储完整的诱饵信息（包括 Components/NBT），以正确区分不同属性的 poke bait
+        List<ItemStack> availableMarkedItemTypes = new ArrayList<>();
         if (preferMarked) {
             for (int markedIndex : markedSlots) {
                 if (markedIndex >= 0 && markedIndex < pouchItems.getContainerSize()) {
                     ItemStack stackInSlot = pouchItems.getItem(markedIndex);
                     // Check if it's a non-empty berry and the type isn't already added
-                    if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot) && !availableMarkedItemTypes.contains(stackInSlot.getItem())) {
-                        availableMarkedItemTypes.add(stackInSlot.getItem());
+                    // 使用 isSameItemSameComponents 来正确区分不同属性的 poke bait
+                    if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot)) {
+                        boolean alreadyAdded = false;
+                        for (ItemStack existing : availableMarkedItemTypes) {
+                            if (ItemStack.isSameItemSameComponents(existing, stackInSlot)) {
+                                alreadyAdded = true;
+                                break;
+                            }
+                        }
+                        if (!alreadyAdded) {
+                            availableMarkedItemTypes.add(stackInSlot.copy());
+                        }
                     }
                 }
             }
         }
 
         // --- Determine *all* available bait types (still needed for fallback if not preferring marked) ---
-        List<Item> allAvailableItemTypes = new ArrayList<>();
+        List<ItemStack> allAvailableItemTypes = new ArrayList<>();
         for (ItemStack stackInSlot : pouchItems.getItems()) {
-            if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot) && !allAvailableItemTypes.contains(stackInSlot.getItem())) {
-                allAvailableItemTypes.add(stackInSlot.getItem());
+            if (!stackInSlot.isEmpty() && FishingRodEventHandler.isCobblemonBerry(stackInSlot)) {
+                boolean alreadyAdded = false;
+                for (ItemStack existing : allAvailableItemTypes) {
+                    if (ItemStack.isSameItemSameComponents(existing, stackInSlot)) {
+                        alreadyAdded = true;
+                        break;
+                    }
+                }
+                if (!alreadyAdded) {
+                    allAvailableItemTypes.add(stackInSlot.copy());
+                }
             }
         }
 
@@ -245,7 +265,7 @@ public class ModNetworking {
             return;
         }
 
-        List<Item> finalAvailableBerryTypes;
+        List<ItemStack> finalAvailableBerryTypes;
         boolean cyclingMarked = false;
 
         if (preferMarked) {
@@ -262,7 +282,9 @@ public class ModNetworking {
         }
 
 
-        int currentIndex = currentBaitItem != null ? finalAvailableBerryTypes.indexOf(currentBaitItem) : -1;
+        int currentIndex = currentBaitStackOnRod != null && !currentBaitStackOnRod.isEmpty() 
+            ? findBaitIndex(finalAvailableBerryTypes, currentBaitStackOnRod) 
+            : -1;
         if (currentIndex == -1 && !finalAvailableBerryTypes.isEmpty()){
             currentIndex = isLeftCycle ? 0 : finalAvailableBerryTypes.size() - 1 ;
         } else if (finalAvailableBerryTypes.isEmpty()) {
@@ -286,14 +308,15 @@ public class ModNetworking {
             return;
         }
 
-        Item nextBaitItem = finalAvailableBerryTypes.get(nextIndex);
+        ItemStack nextBaitStack = finalAvailableBerryTypes.get(nextIndex);
+        Item nextBaitItem = nextBaitStack.getItem();
         boolean deducted = false;
         ItemStack baitToSet = ItemStack.EMPTY; // 新增：保存完整的物品副本
         if (cyclingMarked) {
             for (int markedIndex : markedSlots) {
                 if (markedIndex >= 0 && markedIndex < pouchItems.getContainerSize()) {
                     ItemStack stackInSlot = pouchItems.getItem(markedIndex);
-                    if (!stackInSlot.isEmpty() && stackInSlot.is(nextBaitItem)) {
+                    if (!stackInSlot.isEmpty() && ItemStack.isSameItemSameComponents(stackInSlot, nextBaitStack)) {
                         baitToSet = stackInSlot.copyWithCount(1);
                         stackInSlot.shrink(1);
                         pouchItems.setItem(markedIndex, stackInSlot); // 触发保存
@@ -305,7 +328,7 @@ public class ModNetworking {
         } else {
             for (int i = 0; i < pouchItems.getContainerSize(); i++) {
                 ItemStack stackInSlot = pouchItems.getItem(i);
-                if (!stackInSlot.isEmpty() && stackInSlot.is(nextBaitItem)) {
+                if (!stackInSlot.isEmpty() && ItemStack.isSameItemSameComponents(stackInSlot, nextBaitStack)) {
                     baitToSet = stackInSlot.copyWithCount(1);
                     stackInSlot.shrink(1);
                     pouchItems.setItem(i, stackInSlot); // 触发保存
@@ -344,7 +367,7 @@ public class ModNetworking {
         // --- Feedback and Sound ---
         player.sendSystemMessage(
                 Component.translatable("message.berrypouch.switched_bait",
-                        Component.translatable(nextBaitItem.getDescriptionId())),
+                        baitToSet.getHoverName()),
                 true
         );
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.UI_BUTTON_CLICK, SoundSource.PLAYERS, 0.5f, 1.5f);
@@ -435,5 +458,18 @@ public class ModNetworking {
         } else {
             ModCommon.LOG.warn("Attempted to send ToggleMarkSlotPayload when not in a valid client context!");
         }
+    }
+
+    // --- 辅助方法: 在诱饵列表中查找指定 ItemStack 的索引 ---
+    private static int findBaitIndex(List<ItemStack> baitList, ItemStack target) {
+        if (target == null || target.isEmpty()) {
+            return -1;
+        }
+        for (int i = 0; i < baitList.size(); i++) {
+            if (ItemStack.isSameItemSameComponents(baitList.get(i), target)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

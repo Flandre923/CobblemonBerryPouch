@@ -123,15 +123,7 @@ public final class ModRegistries {
                         .networkSynchronized(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional))
                         .build()
         );
-        
-        // Register the SLOT_LIMITS component for dynamic slot limits
-        public static final RegistrySupplier<DataComponentType<com.github.flandre923.berrypouch.component.SlotLimitComponent>> SLOT_LIMITS =
-                DATA_COMPONENTS.register("slot_limits", () ->
-                        DataComponentType.<com.github.flandre923.berrypouch.component.SlotLimitComponent>builder()
-                                .persistent(com.github.flandre923.berrypouch.component.SlotLimitComponent.CODEC)
-                                .networkSynchronized(com.github.flandre923.berrypouch.component.SlotLimitComponent.STREAM_CODEC)
-                                .build()
-                );
+
         public static void register() {
             DATA_COMPONENTS.register();
             ModCommon.LOG.info("Registered Data Components for {}", ModCommon.MOD_ID); // Add logging

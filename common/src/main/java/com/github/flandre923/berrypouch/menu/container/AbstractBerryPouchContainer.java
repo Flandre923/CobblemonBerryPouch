@@ -6,7 +6,6 @@ import com.github.flandre923.berrypouch.item.pouch.BerryPouchInventory;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchManager;
 import com.github.flandre923.berrypouch.item.pouch.BerryPouchType;
 import com.github.flandre923.berrypouch.menu.slot.SlotLocked;
-import com.github.flandre923.berrypouch.storage.SlotLimitData;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

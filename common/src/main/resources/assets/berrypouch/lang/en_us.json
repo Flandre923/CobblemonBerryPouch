@@ -1,11 +1,10 @@
 {
-  "item.berrypouch.berry_pouch_30": "Small Berry Pouch",
-  "item.berrypouch.berry_pouch_69": "Large Berry Pouch",
+  "item.berrypouch.berry_pouch": "Berry Pouch",
   "berrypouch.berry_pouch.tab": "Berry Pouch",
   "key.categories.berrypouch": "Berry Pouch",
-  "key.berrypouch.open_pouch": "Open the Berry Pouch in the slot",
-  "key.berrypouch.cycle_bait_left": "Previous Bait",
-  "key.berrypouch.cycle_bait_right": "Next Bait",
+  "key.berrypouch.open_pouch": "Open equipped Berry Pouch.",
+  "key.berrypouch.cycle_bait_left": "Switch Left",
+  "key.berrypouch.cycle_bait_right": "Switch Right",
   "key.berrypouch.toggle_auto_berry": "Auto-equipped Bait",
   "message.berrypouch.not_holding_rod": "You must holding a Cobblemon fishing rod.",
   "message.berrypouch.capability_missing": "Accessories system error",
@@ -18,17 +17,11 @@
   "accessories.slot_group.utility": "Cobblemon",
   "message.berrypouch.auto_berry_toggled.true": "Auto-equipped bait True",
   "message.berrypouch.auto_berry_toggled.false": "Auto-equipped bait False",
-
   "message.berrypouch.marked_bait_exhausted_switching_none": "Marked bait exhausted! Switched to none.",
   "message.berrypouch.marked_bait_exhausted": "Marked bait exhausted!",
-  
   "item.berrypouch.pokeball_gun": "Pokéball Launcher",
   "message.berrypouch.switched_pokeball": "%s",
-  "message.berrypouch.gun_slot_empty": "The Pokéball Launcher is empty.",
-  "container.berrypouch.pokeball_gun": "Pokéball Launcher",
-
-  "message.berrypouch.gun_not_found": "You must hold a Pokéball Launcher in your hand.",
-  "message.berrypouch.gun_offset_set": "Pokéball Launcher offset set to X:%d Y:%d Z:%d",
-  "message.berrypouch.gun_offset_reset": "Pokéball Launcher offset reset to default.",
-  "message.berrypouch.gun_offset_show": "Current offset: X:%d Y:%d Z:%d"
+  "message.berrypouch.gun_slot_empty": "Empty",
+  "container.berrypouch.pokeball_gun": "Pokéball Launcher"
 }
+

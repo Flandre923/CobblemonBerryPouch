@@ -30,7 +30,7 @@ public class ModClientCommon {
                     String[] parts = id.split(":");
                     if (parts.length > 1) {
                         float index = getPokeBallModelIndex(parts[1]);
-                        return index;
+                        return index/100f;
                     }
                     return 0f;
                 });

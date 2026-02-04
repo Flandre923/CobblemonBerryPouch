@@ -1,13 +1,7 @@
 package com.github.flandre923.berrypouch.item.pouch;
 
-import com.github.flandre923.berrypouch.ModRegistries;
-import com.github.flandre923.berrypouch.component.SlotLimitComponent;
 import com.github.flandre923.berrypouch.helper.ItemNBTHelper;
-import com.github.flandre923.berrypouch.item.BerryPouch;
 import com.github.flandre923.berrypouch.item.IBerryPouchStorage;
-import com.github.flandre923.berrypouch.storage.SlotLimitData;
-import com.github.flandre923.berrypouch.storage.ExtendedContainer;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,15 +13,12 @@ public class BerryPouchInventory extends SimpleContainer {
     private final ItemStack pouchStack;
     private final Level level;  // 添加 level 字段
     private IBerryPouchStorage pouchStorageSlot;
-    private final BerryPouchType pouchType;
-    private final int MAX_STACK_SIZE = 256;
     private final int[] slotCounts;
 
     public BerryPouchInventory(ItemStack pouchStack, Level level, BerryPouchType pouchType) {
         super(pouchType.getSize()); // 使用BerryPouchType中定义的大小
         this.pouchStack = pouchStack;
         this.level = level;
-        this.pouchType = pouchType;
         this.slotCounts = new int[pouchType.getSize()];
         this.pouchStorageSlot = pouchType.getStorageSlot();
         loadFromNBT();

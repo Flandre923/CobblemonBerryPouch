@@ -21,29 +21,6 @@ public class MarkedSlotsHelper {
         stack.set(ModRegistries.ModDataComponentes.MARKED_SLOTS.get(), Objects.requireNonNullElse(markedSlots, MarkedSlotsComponent.EMPTY));
     }
 
-    // Add a slot index to the marked list if not already present.
-    public static void addMarkedSlot(ItemStack stack, int slotIndex) {
-        List<Integer> currentMarked = getMarkedSlots(stack);
-        if (!currentMarked.contains(slotIndex)) {
-            // Create a mutable copy, add, then set
-            List<Integer> newMarked = new ArrayList<>(currentMarked);
-            newMarked.add(slotIndex);
-            setMarkedSlots(stack, newMarked);
-        }
-    }
-
-    // Remove a slot index from the marked list if present.
-    public static void removeMarkedSlot(ItemStack stack, int slotIndex) {
-        List<Integer> currentMarked = getMarkedSlots(stack);
-        if (currentMarked.contains(slotIndex)) {
-            // Create a mutable copy, remove, then set
-            List<Integer> newMarked = new ArrayList<>(currentMarked);
-            // Use Integer.valueOf for correct removal by object, not index
-            newMarked.remove(Integer.valueOf(slotIndex));
-            setMarkedSlots(stack, newMarked);
-        }
-    }
-
     // Toggle the marked state of a slot index.
     public static void toggleMarkedSlot(ItemStack stack, int slotIndex) {
         List<Integer> currentMarked = getMarkedSlots(stack);
