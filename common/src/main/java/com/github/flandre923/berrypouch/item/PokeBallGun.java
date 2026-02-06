@@ -12,6 +12,8 @@ import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -128,6 +130,16 @@ public class PokeBallGun extends Item {
         }
 
         if (tryInsertIntoGun(itemStack, player)) {
+            if (!player.level().isClientSide) {
+                player.level().playSound(
+                        null,
+                        player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.ITEM_PICKUP,
+                        SoundSource.PLAYERS,
+                        0.2F,
+                        ((player.level().random.nextFloat() - player.level().random.nextFloat()) * 0.7F + 1.0F) * 2.0F
+                );
+            }
             if (itemStack.isEmpty() || itemStack.getCount() == 0) {
                 itemEntity.discard();
             }
