@@ -49,7 +49,6 @@ public class NeoForgeClient {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-<<<<<<< HEAD
         event.enqueueWork(ModClientCommon::init);
     }
 
