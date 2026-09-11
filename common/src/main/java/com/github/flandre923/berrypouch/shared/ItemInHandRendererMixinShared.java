@@ -1,4 +1,4 @@
-package com.github.flandre923.berrypouch.mixins.shared;
+package com.github.flandre923.berrypouch.shared;
 
 import com.github.flandre923.berrypouch.item.PokeBallGun;
 import com.mojang.blaze3d.vertex.PoseStack;

@@ -13,6 +13,9 @@
   "entrypoints": {
     "main": [
       "${maven_group}.${mod_id}.fabric.FabricCommon"
+    ],
+    "client": [
+      "com.github.flandre923.berrypouch.fabric.client.FabricClient"
     ]
   },
   "mixins": [

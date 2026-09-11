@@ -1,6 +1,6 @@
 package com.github.flandre923.berrypouch.mixins;
 
-import com.github.flandre923.berrypouch.mixins.shared.ItemEntityMixinShared;
+import com.github.flandre923.berrypouch.shared.ItemEntityMixinShared;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,6 +1,6 @@
 package com.github.flandre923.berrypouch.mixins.client;
 
-import com.github.flandre923.berrypouch.mixins.shared.ItemInHandRendererMixinShared;
+import com.github.flandre923.berrypouch.shared.ItemInHandRendererMixinShared;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

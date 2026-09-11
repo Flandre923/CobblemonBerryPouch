@@ -1,4 +1,4 @@
-package com.github.flandre923.berrypouch.mixins.shared;
+package com.github.flandre923.berrypouch.shared;
 
 import net.minecraft.nbt.CompoundTag;
 
