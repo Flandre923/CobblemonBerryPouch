@@ -1,4 +1,4 @@
-package com.github.flandre923.berrypouch.shared;
+package com.github.flandre923.berrypouch.mixins.shared;
 
 import com.github.flandre923.berrypouch.item.BerryPouch;
 import com.github.flandre923.berrypouch.item.ApricornBasketItem;

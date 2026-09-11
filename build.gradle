@@ -102,9 +102,7 @@ subprojects {
     }
 
     processResources {
-        from project(":common").sourceSets.main.resources
-
-        filesMatching(['**/*.mods.toml', '**/pack.mcmeta', 'fabric.mod.json', '*.mixins.json']) {
+        filesMatching(['**/*.mods.toml', '**/pack.mcmeta', 'fabric.mod.json']) {
             expand project.properties
         }
     }
@@ -174,7 +172,6 @@ publishMods {
         requires("cobblemon")
         requires("accessories")
         requires("architectury-api")
-        requires("forge-config-api-port")
     }
     modrinth("modrinthFabric") {
         from mrOptions
@@ -184,7 +181,6 @@ publishMods {
         requires("cobblemon")
         requires("accessories")
         requires("architectury-api")
-        requires("forge-config-api-port")
     }
 
     curseforge("curseforgeNeoForge") {

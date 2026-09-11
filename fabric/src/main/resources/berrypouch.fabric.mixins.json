@@ -3,6 +3,7 @@
   "minVersion": "0.8.3",
   "compatibilityLevel": "JAVA_21",
   "package": "com.github.flandre923.berrypouch.fabric.mixins",
+  "refmap": "${mod_id}.refmap.json",
   "mixins": [],
   "client": [],
   "injectors": {

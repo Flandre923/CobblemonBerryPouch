@@ -1,2 +1,2 @@
-# 0.6-BETA
-- 1.8 Compatible 
+# 0.6.1-BETA
+- Added Apricorn Basket

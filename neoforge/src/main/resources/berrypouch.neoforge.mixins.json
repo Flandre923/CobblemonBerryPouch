@@ -2,16 +2,10 @@
   "required": true,
   "minVersion": "0.8.3",
   "compatibilityLevel": "JAVA_21",
-  "package": "${maven_group}.${mod_id}.mixins",
+  "package": "com.github.flandre923.berrypouch.neoforge.mixins",
   "refmap": "${mod_id}.refmap.json",
-  "mixins": [
-    "ShapedRecipeMixin",
-    "EnableAutoFillMixin",
-    "SlotAccessor"
-  ],
-  "client": [
-    "client.ItemInHandRendererMixin"
-  ],
+  "mixins": [],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }

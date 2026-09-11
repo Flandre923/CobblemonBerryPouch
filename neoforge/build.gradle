@@ -54,32 +54,15 @@ dependencies {
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
-
-    forgeRuntimeLibrary(implementation("blue.endless:jankson:1.2.2"))
-    forgeRuntimeLibrary("io.wispforest:endec:${rootProject.endec_version}")
-    forgeRuntimeLibrary("io.wispforest.endec:gson:${rootProject.endec_gson_version}")
-    forgeRuntimeLibrary("io.wispforest.endec:jankson:${rootProject.endec_jankson_version}")
-    forgeRuntimeLibrary("io.wispforest.endec:netty:${rootProject.endec_netty_version}")
-
-    modImplementation("org.sinytra:forgified-fabric-loader:${project.ffloader_version}")
-//    modApi("org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308dedd1") { exclude group: "fabric-api" }
-    modImplementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:${project.ffapi_version}"
-
-    modImplementation("io.wispforest:accessories-neoforge:${project.accessories_version}")
     modImplementation "io.wispforest:owo-lib-neoforge:${project.owo_neo_version}"
-//    modImplementation "net.neoforged:fabric-api-neoforge:1.21.1+1.0.0"
-    // Radical Cobblemon Trainers API
-//    modImplementation "curse.maven:radical-cobblemon-trainers-api-1152792:${rctapi_neoforge_version}"
+    modImplementation("io.wispforest:accessories-neoforge:${project.accessories_version}")
 
-    // Carry On (testing)
-    // runtimeOnly "curse.maven:carry-on-274259:5649344"
+    forgeRuntimeLibrary("blue.endless:jankson:1.2.2")
 
-    // runtimeOnly fg.deobf("curse.maven:simpletms-tms-and-trs-for-cobblemon-959184:${simpletms_version}")
-    // runtimeOnly fg.deobf("curse.maven:pkgbadges-889895:${pkgbadges_version}")
-    // runtimeOnly fg.deobf("curse.maven:patchouli-306770:${patchouli_version}")
-    // runtimeOnly fg.deobf("curse.maven:cobblepedia-850946:${cobblepedia_version}")
-    // runtimeOnly fg.deobf("curse.maven:configured-457570:${configured_version}")
-    // runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge:${jei_version}")
+    forgeRuntimeLibrary("io.wispforest:endec:0.1.5.1")
+    forgeRuntimeLibrary("io.wispforest.endec:gson:0.1.3.1")
+    forgeRuntimeLibrary("io.wispforest.endec:jankson:0.1.3.1")
+    forgeRuntimeLibrary("io.wispforest.endec:netty:0.1.2")
 }
 
 shadowJar {

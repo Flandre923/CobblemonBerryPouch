@@ -1,6 +1,6 @@
 package com.github.flandre923.berrypouch.mixins;
 
-import com.github.flandre923.berrypouch.shared.EnableAutoFillMixinShared;
+import com.github.flandre923.berrypouch.mixins.shared.EnableAutoFillMixinShared;
 import com.github.flandre923.berrypouch.mobinf.IAutoFillablePlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;

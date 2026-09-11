@@ -13,15 +13,6 @@
   "entrypoints": {
     "main": [
       "${maven_group}.${mod_id}.fabric.FabricCommon"
-    ],
-    "client": [
-      "${maven_group}.${mod_id}.fabric.client.FabricClient"
-    ],
-    "server": [
-      "${maven_group}.${mod_id}.fabric.server.FabricServer"
-    ],
-    "jei_mod_plugin": [
-      "${maven_group}.${mod_id}.compat.jei.BPPlugin"
     ]
   },
   "mixins": [
@@ -33,8 +24,7 @@
     "fabric": "*",
     "minecraft": "${minecraft_version}",
     "cobblemon": ">=${cobblemon_min_ver}",
-    "accessories": ">=${accessories_version}",
-    "forgeconfigapiport": ">=${fcap_min_ver}"
+    "accessories": ">=${accessories_version}"
   },
   "accessWidener": "berrypouch.accesswidener"
 }
