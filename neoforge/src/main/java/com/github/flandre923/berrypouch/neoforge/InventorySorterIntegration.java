@@ -8,7 +8,7 @@ import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 
-@EventBusSubscriber(modid = ModCommon.MOD_ID,bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ModCommon.MOD_ID)
 public class InventorySorterIntegration {
 
 	@SubscribeEvent

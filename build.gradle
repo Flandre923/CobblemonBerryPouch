@@ -104,28 +104,8 @@ subprojects {
     processResources {
         from project(":common").sourceSets.main.resources
 
-        def resourceExpandProps = [
-                maven_group            : project.maven_group,
-                mod_id                 : project.mod_id,
-                mod_name               : project.mod_name,
-                mod_version            : project.mod_version,
-                mod_description        : project.mod_description,
-                mod_author             : project.mod_author,
-                license                : project.license,
-                fabric_loader_version  : project.fabric_loader_version,
-                minecraft_version      : project.minecraft_version,
-                cobblemon_min_ver      : project.cobblemon_min_ver,
-                cobblemon_max_ver      : project.cobblemon_max_ver,
-                accessories_version    : project.accessories_version,
-                fcap_min_ver           : project.fcap_min_ver,
-                neoforge_loader_version: project.neoforge_loader_version,
-                neoforge_major_version : project.neoforge_major_version
-        ]
-
-        inputs.properties(resourceExpandProps)
-
         filesMatching(['**/*.mods.toml', '**/pack.mcmeta', 'fabric.mod.json', '*.mixins.json']) {
-            expand resourceExpandProps
+            expand project.properties
         }
     }
 
@@ -194,7 +174,7 @@ publishMods {
         requires("cobblemon")
         requires("accessories")
         requires("architectury-api")
-        requires("owo-lib")
+        requires("forge-config-api-port")
     }
     modrinth("modrinthFabric") {
         from mrOptions
@@ -204,7 +184,7 @@ publishMods {
         requires("cobblemon")
         requires("accessories")
         requires("architectury-api")
-        requires("owo-lib")
+        requires("forge-config-api-port")
     }
 
     curseforge("curseforgeNeoForge") {
@@ -214,7 +194,6 @@ publishMods {
         requires("cobblemon")
         requires("accessories")
         requires("architectury-api")
-        requires("owo-lib")
     }
     modrinth("modrinthNeoForge") {
         from mrOptions
@@ -223,6 +202,5 @@ publishMods {
         requires("cobblemon")
         requires("accessories")
         requires("architectury-api")
-        requires("owo-lib")
     }
 }

@@ -25,7 +25,8 @@
     ]
   },
   "mixins": [
-    "${mod_id}-common.mixins.json"
+    "berrypouch.common.mixins.json",
+    "berrypouch.fabric.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",

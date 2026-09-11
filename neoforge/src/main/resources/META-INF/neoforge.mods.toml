@@ -40,4 +40,7 @@ license="${license}"
   side="BOTH"
 
 [[mixins]]
-config = "${mod_id}-common.mixins.json"
+config = "berrypouch.common.mixins.json"
+
+[[mixins]]
+config = "berrypouch.neoforge.mixins.json"

@@ -5,7 +5,6 @@
   "package": "${maven_group}.${mod_id}.mixins",
   "refmap": "${mod_id}.refmap.json",
   "mixins": [
-    "ItemEntityMixin",
     "ShapedRecipeMixin",
     "EnableAutoFillMixin",
     "SlotAccessor"
