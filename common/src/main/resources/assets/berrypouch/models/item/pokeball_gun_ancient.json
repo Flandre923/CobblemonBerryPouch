@@ -208,6 +208,62 @@
 			}
 		},
 		{
+			"name": "lid",
+			"from": [7.25, 10, 5.25],
+			"to": [8.75, 10.5, 6.75],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8.75, 9, 4.75]},
+			"faces": {
+				"north": {"uv": [8.25, 1.5, 9, 2], "texture": "#ball"},
+				"east": {"uv": [7.5, 1.5, 8.25, 2], "texture": "#ball"},
+				"south": {"uv": [6.75, 1.5, 7.5, 2], "texture": "#ball"},
+				"west": {"uv": [6, 1.5, 6.75, 2], "texture": "#ball"},
+				"up": {"uv": [6.75, 0, 7.5, 1.5], "rotation": 90, "texture": "#ball"}
+			}
+		},
+		{
+			"name": "lid",
+			"from": [7.25, 10, 3.75],
+			"to": [8.75, 11.5, 5.25],
+			"rotation": {"angle": -45, "axis": "x", "origin": [7.25, 10, 5.25]},
+			"faces": {
+				"east": {"uv": [6.25, 7.5, 5.5, 9], "texture": "#ball"},
+				"south": {"uv": [7, 7.5, 6.25, 9], "texture": "#ball"},
+				"west": {"uv": [7.75, 7.5, 7, 9], "texture": "#ball"},
+				"up": {"uv": [7, 7.5, 6.25, 6], "rotation": 90, "texture": "#ball"}
+			}
+		},
+		{
+			"name": "lid",
+			"from": [7.25, 8.5, 6.75],
+			"to": [8.75, 10, 8.25],
+			"rotation": {"angle": -45, "axis": "x", "origin": [7.25, 10, 6.75]},
+			"faces": {
+				"east": {"uv": [3.25, 7.5, 4, 9], "rotation": 270, "texture": "#ball"},
+				"south": {"uv": [4, 7.5, 3.25, 6], "rotation": 90, "texture": "#ball"},
+				"west": {"uv": [3.25, 7.5, 2.5, 9], "rotation": 90, "texture": "#ball"},
+				"up": {"uv": [4, 7.5, 4.75, 9], "rotation": 180, "texture": "#ball"},
+				"down": {"uv": [5.5, 7.5, 4.75, 9], "texture": "#ball"}
+			}
+		},
+		{
+			"name": "lid",
+			"from": [10.3, 6.75, 4.75],
+			"to": [10.3, 8.25, 7.25],
+			"rotation": {"angle": 0, "axis": "y", "origin": [10.5, 6.75, 5]},
+			"faces": {
+				"east": {"uv": [0, 7.5, 1.25, 9], "texture": "#ball"}
+			}
+		},
+		{
+			"name": "lid",
+			"from": [10.325, 7.75, 4.75],
+			"to": [10.325, 9.25, 7.25],
+			"rotation": {"angle": 0, "axis": "y", "origin": [10.5, 7.75, 5]},
+			"faces": {
+				"east": {"uv": [0, 6, 1.25, 7.5], "texture": "#ball"}
+			}
+		},
+		{
 			"name": "bottom",
 			"from": [6, 6, 4],
 			"to": [10, 8, 8],
@@ -229,65 +285,15 @@
 		},
 		{
 			"name": "latch",
-			"from": [10.28, 7.375, 5.375],
-			"to": [10.28, 8.625, 6.625],
-			"rotation": {"angle": 0, "axis": "y", "origin": [10.5, 7, 5.75]},
+			"from": [10.35, 6.75, 5.375],
+			"to": [10.35, 8.25, 6.625],
+			"rotation": {"angle": 0, "axis": "y", "origin": [10.5, 6.75, 5.75]},
 			"faces": {
-				"east": {"uv": [0, 0, 0.5, 1], "texture": "#ball"}
+				"east": {"uv": [0, 0, 0.5, 1.5], "texture": "#ball"}
 			}
 		}
 	],
 	"gui_light": "front",
-	"overrides": [
-		{"predicate": {"berrypouch:poke_ball": 0.01}, "model": "berrypouch:item/pokeball_gun/poke_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.02}, "model": "berrypouch:item/pokeball_gun/citrine_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.03}, "model": "berrypouch:item/pokeball_gun/verdant_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.04}, "model": "berrypouch:item/pokeball_gun/azure_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.05}, "model": "berrypouch:item/pokeball_gun/roseate_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.06}, "model": "berrypouch:item/pokeball_gun/slate_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.07}, "model": "berrypouch:item/pokeball_gun/premier_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.08}, "model": "berrypouch:item/pokeball_gun/great_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.09}, "model": "berrypouch:item/pokeball_gun/ultra_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.1}, "model": "berrypouch:item/pokeball_gun/safari_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.11}, "model": "berrypouch:item/pokeball_gun/fast_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.12}, "model": "berrypouch:item/pokeball_gun/level_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.13}, "model": "berrypouch:item/pokeball_gun/lure_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.14}, "model": "berrypouch:item/pokeball_gun/heavy_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.15}, "model": "berrypouch:item/pokeball_gun/love_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.16}, "model": "berrypouch:item/pokeball_gun/friend_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.17}, "model": "berrypouch:item/pokeball_gun/moon_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.18}, "model": "berrypouch:item/pokeball_gun/sport_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.19}, "model": "berrypouch:item/pokeball_gun/park_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.2}, "model": "berrypouch:item/pokeball_gun/net_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.21}, "model": "berrypouch:item/pokeball_gun/dive_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.22}, "model": "berrypouch:item/pokeball_gun/nest_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.23}, "model": "berrypouch:item/pokeball_gun/repeat_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.24}, "model": "berrypouch:item/pokeball_gun/timer_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.25}, "model": "berrypouch:item/pokeball_gun/luxury_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.26}, "model": "berrypouch:item/pokeball_gun/dusk_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.27}, "model": "berrypouch:item/pokeball_gun/heal_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.28}, "model": "berrypouch:item/pokeball_gun/quick_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.29}, "model": "berrypouch:item/pokeball_gun/dream_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.3}, "model": "berrypouch:item/pokeball_gun/beast_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.31}, "model": "berrypouch:item/pokeball_gun/master_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.32}, "model": "berrypouch:item/pokeball_gun/cherish_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.33}, "model": "berrypouch:item/pokeball_gun/ancient_poke_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.34}, "model": "berrypouch:item/pokeball_gun/ancient_citrine_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.35}, "model": "berrypouch:item/pokeball_gun/ancient_verdant_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.36}, "model": "berrypouch:item/pokeball_gun/ancient_azure_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.37}, "model": "berrypouch:item/pokeball_gun/ancient_roseate_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.38}, "model": "berrypouch:item/pokeball_gun/ancient_slate_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.39}, "model": "berrypouch:item/pokeball_gun/ancient_ivory_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.4}, "model": "berrypouch:item/pokeball_gun/ancient_great_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.41}, "model": "berrypouch:item/pokeball_gun/ancient_ultra_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.42}, "model": "berrypouch:item/pokeball_gun/ancient_feather_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.43}, "model": "berrypouch:item/pokeball_gun/ancient_wing_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.44}, "model": "berrypouch:item/pokeball_gun/ancient_jet_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.45}, "model": "berrypouch:item/pokeball_gun/ancient_heavy_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.46}, "model": "berrypouch:item/pokeball_gun/ancient_leaden_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.47}, "model": "berrypouch:item/pokeball_gun/ancient_gigaton_ball"},
-		{"predicate": {"berrypouch:poke_ball": 0.48}, "model": "berrypouch:item/pokeball_gun/ancient_origin_ball"}
-	],
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [0, -180, 0],
@@ -383,21 +389,21 @@
 					"origin": [8, 8, 8],
 					"scope": 0,
 					"color": 0,
-					"children": [14, 15]
+					"children": [14, 15, 16, 17, 18, 19, 20]
 				},
 				{
 					"name": "bottom",
 					"origin": [8, 8, 8],
 					"scope": 0,
 					"color": 0,
-					"children": [16, 17]
+					"children": [21, 22]
 				},
 				{
 					"name": "latch",
 					"origin": [8, 8, 8],
 					"scope": 0,
 					"color": 0,
-					"children": [18]
+					"children": [23]
 				}
 			]
 		}

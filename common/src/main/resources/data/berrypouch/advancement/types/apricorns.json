@@ -1,0 +1,51 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:black_apricorn"
+    },
+    "title": {
+      "translate": "advancements.berrypouch.apricorns"
+    },
+    "description": {
+      "translate": "advancements.berrypouch.apricorns.description"
+    },
+    "frame": "challenge"
+  },
+  "parent": "berrypouch:containers/apricorn_basket",
+  "criteria": {
+    "get_red_apricorn": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:red_apricorn" }] }
+    },
+    "get_yellow_apricorn": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:yellow_apricorn" }] }
+    },
+    "get_green_apricorn": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:green_apricorn" }] }
+    },
+    "get_blue_apricorn": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:blue_apricorn" }] }
+    },
+    "get_pink_apricorn": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:pink_apricorn" }] }
+    },
+    "get_black_apricorn": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:black_apricorn" }] }
+    },
+    "get_white_apricorn": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:white_apricorn" }] }
+    }
+  },
+  "requirements": [
+    ["get_red_apricorn"], ["get_yellow_apricorn"], ["get_green_apricorn"],
+    ["get_blue_apricorn"], ["get_pink_apricorn"], ["get_black_apricorn"],
+    ["get_white_apricorn"]
+  ],
+  "sends_telemetry_event": false
+}

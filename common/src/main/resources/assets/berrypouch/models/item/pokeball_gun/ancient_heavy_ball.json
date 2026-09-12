@@ -1,0 +1,7 @@
+{
+    "parent":"berrypouch:item/pokeball_gun_ancient",
+    "textures":{
+        "0": "berrypouch:item/pokeball_gun",
+        "ball": "cobblemon:item/poke_balls/models/ancient_heavy_ball"
+    }
+}

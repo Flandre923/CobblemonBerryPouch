@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "id": "berrypouch:berry_pouch"
+    },
+    "title": {
+      "translate": "advancements.berrypouch.berry_pouch"
+    },
+    "description": {
+      "translate": "advancements.berrypouch.berry_pouch.description"
+    }
+  },
+  "parent": "berrypouch:root",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "berrypouch:berry_pouch"
+          }
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

@@ -4,7 +4,7 @@
     "common/palette.json"
   ],
   "background": {
-    "texture": "berrypouch:textures/gui/pokeball_gun_2.png",
+    "texture": "berrypouch:textures/gui/pokeball_gun.png",
     "textureWidth": 176,
     "textureHeight": 130,
     "srcRect": [0, 0, 175, 128]

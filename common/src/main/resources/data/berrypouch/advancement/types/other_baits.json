@@ -1,0 +1,30 @@
+{
+    "display": {
+      "icon": {
+        "id": "cobblemon:poke_bait",
+        "components": {
+          "cobblemon:food_colour": [ "white", "blue", "red" ]
+        }
+      },
+      "title": {
+        "translate": "advancements.berrypouch.other_baits"
+      },
+      "description": {
+        "translate": "advancements.berrypouch.other_baits.description"
+      }
+    },
+    "parent": "berrypouch:types/poke_rods",
+    "criteria": {
+      "get_other_bait": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": "#berrypouch:other_baits"
+            }
+          ]
+        }
+      }
+    },
+    "sends_telemetry_event": false
+  }

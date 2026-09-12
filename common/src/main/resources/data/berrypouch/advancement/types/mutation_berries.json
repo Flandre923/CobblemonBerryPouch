@@ -1,0 +1,190 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:leppa_berry"
+    },
+    "title": {
+      "translate": "advancements.berrypouch.mutation_berries"
+    },
+    "description": {
+      "translate": "advancements.berrypouch.mutation_berries.description"
+    },
+    "frame": "challenge"
+  },
+  "parent": "berrypouch:types/natural_berries",
+  "criteria": {
+    "get_leppa_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:leppa_berry" }] }
+    },
+    "get_lum_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:lum_berry" }] }
+    },
+    "get_figy_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:figy_berry" }] }
+    },
+    "get_wiki_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:wiki_berry" }] }
+    },
+    "get_mago_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:mago_berry" }] }
+    },
+    "get_aguav_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:aguav_berry" }] }
+    },
+    "get_iapapa_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:iapapa_berry" }] }
+    },
+    "get_sitrus_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:sitrus_berry" }] }
+    },
+    "get_touga_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:touga_berry" }] }
+    },
+    "get_cornn_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:cornn_berry" }] }
+    },
+    "get_magost_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:magost_berry" }] }
+    },
+    "get_rabuta_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:rabuta_berry" }] }
+    },
+    "get_nomel_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:nomel_berry" }] }
+    },
+    "get_enigma_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:enigma_berry" }] }
+    },
+    "get_pomeg_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:pomeg_berry" }] }
+    },
+    "get_kelpsy_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:kelpsy_berry" }] }
+    },
+    "get_qualot_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:qualot_berry" }] }
+    },
+    "get_hondew_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:hondew_berry" }] }
+    },
+    "get_grepa_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:grepa_berry" }] }
+    },
+    "get_tamato_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:tamato_berry" }] }
+    },
+    "get_spelon_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:spelon_berry" }] }
+    },
+    "get_pamtre_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:pamtre_berry" }] }
+    },
+    "get_watmel_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:watmel_berry" }] }
+    },
+    "get_durin_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:durin_berry" }] }
+    },
+    "get_belue_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:belue_berry" }] }
+    },
+    "get_kee_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:kee_berry" }] }
+    },
+    "get_maranga_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:maranga_berry" }] }
+    },
+    "get_hopo_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:hopo_berry" }] }
+    },
+    "get_liechi_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:liechi_berry" }] }
+    },
+    "get_ganlon_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:ganlon_berry" }] }
+    },
+    "get_salac_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:salac_berry" }] }
+    },
+    "get_petaya_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:petaya_berry" }] }
+    },
+    "get_apicot_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:apicot_berry" }] }
+    },
+    "get_lansat_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:lansat_berry" }] }
+    },
+    "get_starf_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:starf_berry" }] }
+    },
+    "get_micle_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:micle_berry" }] }
+    },
+    "get_custap_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:custap_berry" }] }
+    },
+    "get_jaboca_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:jaboca_berry" }] }
+    },
+    "get_rowap_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:rowap_berry" }] }
+    },
+    "get_eggant_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "cobblemon:eggant_berry" }] }
+    }
+  },
+  "requirements": [
+    ["get_leppa_berry"], ["get_lum_berry"], ["get_figy_berry"], ["get_wiki_berry"],
+    ["get_mago_berry"], ["get_aguav_berry"], ["get_iapapa_berry"], ["get_sitrus_berry"],
+    ["get_touga_berry"], ["get_cornn_berry"], ["get_magost_berry"], ["get_rabuta_berry"],
+    ["get_nomel_berry"], ["get_enigma_berry"], ["get_pomeg_berry"], ["get_kelpsy_berry"],
+    ["get_qualot_berry"], ["get_hondew_berry"], ["get_grepa_berry"], ["get_tamato_berry"],
+    ["get_spelon_berry"], ["get_pamtre_berry"], ["get_watmel_berry"], ["get_durin_berry"],
+    ["get_belue_berry"], ["get_kee_berry"], ["get_maranga_berry"], ["get_hopo_berry"],
+    ["get_liechi_berry"], ["get_ganlon_berry"], ["get_salac_berry"], ["get_petaya_berry"],
+    ["get_apicot_berry"], ["get_lansat_berry"], ["get_starf_berry"], ["get_micle_berry"],
+    ["get_custap_berry"], ["get_jaboca_berry"], ["get_rowap_berry"], ["get_eggant_berry"]
+  ],
+  "sends_telemetry_event": false
+}
