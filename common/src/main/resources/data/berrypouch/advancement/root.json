@@ -1,0 +1,60 @@
+{
+  "display": {
+    "icon": {
+      "id": "berrypouch:berry_pouch",
+      "components": {
+        "minecraft:container": [
+          {
+            "slot": 0,
+            "item": {
+              "id": "cobblemon:oran_berry"
+            }
+          }
+        ]
+      }
+    },
+    "title": {
+      "translate": "advancements.berrypouch.root"
+    },
+    "description": {
+      "translate": "advancements.berrypouch.root.description"
+    },
+    "background": "cobblemon:textures/gui/advancements/backgrounds/cobblemon.png"
+  },
+  "criteria": {
+    "get_apricorn": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#cobblemon:apricorns"
+          }
+        ]
+      }
+    },
+    "get_berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#berrypouch:natural_berries"
+          }
+        ]
+      }
+    },
+    "get_pokeball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#cobblemon:poke_balls"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    ["get_apricorn", "get_berry", "get_pokeball"]
+  ],
+  "sends_telemetry_event": false
+}

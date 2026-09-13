@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "id": "berrypouch:pokeball_gun"
+    },
+    "title": {
+      "translate": "advancements.berrypouch.pokeball_gun"
+    },
+    "description": {
+      "translate": "advancements.berrypouch.pokeball_gun.description"
+    }
+  },
+  "parent": "berrypouch:root",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "berrypouch:pokeball_gun"
+          }
+        ]
+      }
+    }
+  },
+  "sends_telemetry_event": false
+}

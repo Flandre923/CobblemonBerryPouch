@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "cobblemon:poke_rod"
+    },
+    "title": {
+      "translate": "advancements.berrypouch.poke_rods"
+    },
+    "description": {
+      "translate": "advancements.berrypouch.poke_rods.description"
+    }
+  },
+  "parent": "berrypouch:containers/berry_pouch",
+  "criteria": {
+    "craft_rod": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#cobblemon:poke_rods"
+          }
+        ]
+      }
+    }
+  }
+}
