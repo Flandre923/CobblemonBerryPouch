@@ -1,10 +1,15 @@
-# CobblemonBerryPouch
+# Cobblemon BerryPouch
+A simple mod that adds some small gadgets related to Cobblemon.
 
-## UI Layout Attribution (AE)
+## Download
+- https://www.curseforge.com/minecraft/mc-mods/berry-pouch
+- https://modrinth.com/mod/berry-pouch
 
-Parts of this project's UI layout implementation are based on code and ideas from Applied Energistics 2 (AE2):  
-https://github.com/AppliedEnergistics/Applied-Energistics-2
+## Issue
+- https://github.com/Flandre923/CobblemonBerryPouch/issues
 
-We sincerely thank the AE2 team and contributors for their excellent open-source work.
+## Discord
+- https://discord.gg/5grQ3jnhYZ
 
-No offense is intended. If any part of this usage is inappropriate, please contact us and we will promptly make corrections.
+## Other 
+- Working on it...
