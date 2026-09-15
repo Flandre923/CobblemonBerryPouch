@@ -5,26 +5,26 @@
   ],
   "background": {
     "texture": "berrypouch:textures/gui/apricorn_basket.png",
-    "textureWidth": 175,
-    "textureHeight": 129,
+    "textureWidth": 176,
+    "textureHeight": 130,
     "srcRect": [0, 0, 175, 128]
   },
   "images": {
   },
   "slots": {
     "BASKET_STORAGE": {
-      "left": 25,
-      "top": 15,
+      "left": 26,
+      "top": 16,
       "grid": "BREAK_AFTER_7COLS"
     },
     "PLAYER_INVENTORY": {
-      "left": 7,
-      "top": 47,
+      "left": 8,
+      "top": 48,
       "grid": "BREAK_AFTER_9COLS"
     },
     "PLAYER_HOTBAR": {
-      "left": 7,
-      "top": 105,
+      "left": 8,
+      "top": 106,
       "grid": "HORIZONTAL"
     }
   },
@@ -38,7 +38,7 @@
     "player_inventory": {
       "position": {
         "left": 8,
-        "top": 34
+        "top": 36
       }
     }
   }

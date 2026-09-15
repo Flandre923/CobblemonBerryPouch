@@ -42,13 +42,13 @@
     "dialog_title": {
       "position": {
         "left": 11,
-        "top": 4
+        "top": 6
       }
     },
     "player_inventory": {
       "position": {
         "left": 47,
-        "top": 161
+        "top": 164
       }
     }
   }
