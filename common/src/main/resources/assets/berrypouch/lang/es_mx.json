@@ -1,0 +1,53 @@
+{
+  "berrypouch.berry_pouch.tab": "Berry Pouch",
+
+  "accessories.slot.pouch": "Bolsa",
+  "accessories.slot_group.utility": "Cobblemon",
+
+  "advancements.berrypouch.apricorn_basket": "Canasta de Bonguris",
+  "advancements.berrypouch.apricorn_basket.description": "Una canasta dedicada para guardar bonguris, que además puede usarse para cosechar bonguris y bayas en una gran área.",
+  "advancements.berrypouch.apricorns": "¿Sólo siete colores?",
+  "advancements.berrypouch.apricorns.description": "¡Encuentra los siete colores de bonguris en tu aventura!",
+  "advancements.berrypouch.berry_pouch": "Bolsa de Bayas",
+  "advancements.berrypouch.berry_pouch.description": "Una bolsa para guardar Bayas. También puede guardar cebo.",
+  "advancements.berrypouch.mutation_berries": "La Gran Hazaña de Bayas Mutadas",
+  "advancements.berrypouch.mutation_berries.description": "¡Cultiva todas las bayas mutadas!",
+  "advancements.berrypouch.natural_berries": "La Gran Hazaña de Bayas Naturales",
+  "advancements.berrypouch.natural_berries.description": "¡Encuentra todas las bayas naturales en tu aventura!",
+  "advancements.berrypouch.other_baits": "Horas de Pesca",
+  "advancements.berrypouch.other_baits.description": "¡Obten cualquier cebo, o haz tu Poké Cebo en una cacerola!",
+  "advancements.berrypouch.pokeball_gun": "No Lastima",
+  "advancements.berrypouch.pokeball_gun.description": "¡Carga, elige y dispara un Cañón de Poké Balls!",
+  "advancements.berrypouch.poke_rods": "¡Muchas Horas de Pesca!",
+  "advancements.berrypouch.poke_rods.description": "¡Usa la Bolsa de Bayas para cargar tu Poké Caña!",
+  "advancements.berrypouch.root": "Berry Pouch",
+  "advancements.berrypouch.root.description": "¡Gracias por descargar y jugar con Berry Pouch!",
+
+  "container.berrypouch.apricorn_basket": "Canasta de bonguris",
+  "container.berrypouch.pokeball_gun": "Cañón de Poké Balls",
+
+  "item.berrypouch.apricorn_basket": "Canasta de bonguris",
+  "item.berrypouch.berry_pouch": "Bolsa de bayas",
+  "item.berrypouch.pokeball_gun": "Cañón de Poké Balls",
+
+  "key.berrypouch.cycle_bait_left": "Selección izquierda",
+  "key.berrypouch.cycle_bait_right": "Selección derecha",
+  "key.berrypouch.open_pouch": "Abrir bolsa equipada",
+  "key.berrypouch.toggle_auto_berry": "Cebo automático",
+  "key.categories.berrypouch": "Berry Pouch",
+  
+  "message.berrypouch.auto_berry_toggled.false": "Cebo automático desactivado",
+  "message.berrypouch.auto_berry_toggled.true": "Cebo automático activado",
+  "message.berrypouch.autobait": "Cebo automático: %s",
+  "message.berrypouch.bait_dropped": "Tu bolsa está llena, soltaste %s",
+  "message.berrypouch.capability_missing": "Error de Accessories",
+  "message.berrypouch.gun_slot_empty": "Vacío",
+  "message.berrypouch.marked_bait_exhausted": "¡Cebo marcado agotado!",
+  "message.berrypouch.marked_bait_exhausted_switching_none": "¡Cebo marcado agotado! Sin cebo seleccionado.",
+  "message.berrypouch.need_pouch": "Debes equiparte una bolsa de bayas",
+  "message.berrypouch.no_bait_in_pouch": "No tienes bayas",
+  "message.berrypouch.not_holding_rod": "Debes sostener una Poké Caña",
+  "message.berrypouch.slot_empty": "Vacío",
+  "message.berrypouch.switched_bait": "Cebo: %s",
+  "message.berrypouch.switched_pokeball": "%s"
+}

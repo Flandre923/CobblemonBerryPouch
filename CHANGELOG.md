@@ -2,6 +2,9 @@
 ## Berry Pouch Changelog
 ^^^
 --- 
+## v0.6.3
+- Added Spanish Translations. (Thanks JoallBlue!)
+
 ## v0.6.2
 - Made completely new models and textures for the Pokeball Launcher.
 - Added a custom Advancements tab to allow players to quickly get familiar with the mod's features and mechanics.
